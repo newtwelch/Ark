@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Ark_Logo.ico" />
+    <None Remove="Ark_LogoBW.ico" />
+    <None Remove="Resources\Fonts\GONTSERRAT-BOLD.TTF" />
+    <None Remove="Resources\Fonts\GONTSERRAT-BOLDITALIC.TTF" />
+    <None Remove="Resources\Fonts\GONTSERRAT-ITALIC.TTF" />
+    <None Remove="Resources\Fonts\GONTSERRAT-REGULAR.TTF" />
+    <None Remove="Resources\Fonts\Icons.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Ark_Logo.ico" />
+    <Resource Include="Ark_LogoBW.ico" />
+    <Resource Include="Resources\Fonts\GONTSERRAT-BOLD.TTF" />
+    <Resource Include="Resources\Fonts\GONTSERRAT-BOLDITALIC.TTF" />
+    <Resource Include="Resources\Fonts\GONTSERRAT-ITALIC.TTF" />
+    <Resource Include="Resources\Fonts\GONTSERRAT-REGULAR.TTF" />
+    <Resource Include="Resources\Fonts\Icons.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\BibleLibrary.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\BibleLibrary.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>

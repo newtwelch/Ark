@@ -1,0 +1,50 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Neutrals  -->
+    <Color x:Key="Background">#16191C</Color>
+    <SolidColorBrush x:Key="BackgroundBrush"
+                     Color="{StaticResource Background}" />
+
+    <Color x:Key="ContainerDark">#1F2327</Color>
+    <SolidColorBrush x:Key="ContainerDarkBrush"
+                     Color="{StaticResource ContainerDark}" />
+
+    <Color x:Key="Container">#292E33</Color>
+    <SolidColorBrush x:Key="ContainerBrush"
+                     Color="{StaticResource Container}" />
+
+    <Color x:Key="Thumb">#34383E</Color>
+    <SolidColorBrush x:Key="ThumbBrush"
+                     Color="{StaticResource Thumb}" />
+
+    <Color x:Key="ThumbHolder">#1C1E23</Color>
+    <SolidColorBrush x:Key="ThumbHolderBrush"
+                     Color="{StaticResource ThumbHolder}" />
+
+    <Color x:Key="Focused">#DAE4EB</Color>
+    <SolidColorBrush x:Key="FocusedBrush"
+                     Color="{StaticResource Focused}" />
+
+    <Color x:Key="Unfocused">#71757D</Color>
+    <SolidColorBrush x:Key="UnfocusedBrush"
+                     Color="{StaticResource Unfocused}" />
+
+    <!--  Hues  -->
+    <Color x:Key="Primary">#235DDA</Color>
+    <SolidColorBrush x:Key="PrimaryBrush"
+                     Color="{StaticResource Primary}" />
+
+    <Color x:Key="Red">#E74545</Color>
+    <SolidColorBrush x:Key="RedBrush"
+                     Color="{StaticResource Red}" />
+
+    <Color x:Key="Orange">#E59432</Color>
+    <SolidColorBrush x:Key="OrangeBrush"
+                     Color="{StaticResource Orange}" />
+
+    <Color x:Key="Green">#2AE441</Color>
+    <SolidColorBrush x:Key="GreenBrush"
+                     Color="{StaticResource Green}" />
+
+</ResourceDictionary>
