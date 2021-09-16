@@ -8,5 +8,24 @@
              d:DesignHeight="780" 
              d:DesignWidth="1240">
     <Grid>
+        <StackPanel>
+            
+            <TextBox x:Name="Search" TextChanged="TextBox_TextChanged" />
+            <ListBox ItemsSource="{Binding Songs}"
+                     Height="200">
+                <ListBox.ItemTemplate>
+                    
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}"/>
+                </DataTemplate>
+                </ListBox.ItemTemplate>
+                
+            </ListBox>
+        
+            <Button Content="BEEP BOOP"
+                    Click="Button_Click"
+                    Height="200"/>
+        </StackPanel>
+        
     </Grid>
 </UserControl>

@@ -41,6 +41,7 @@ namespace Ark.Views
             //!? ====================================================
             displayWindow = _viewModel.DisplayWindow;                                                       // Inititialize Display Window
             displayWindow.InitHwnd();                                                                       // Open it
+
         }
 
         #region Window Maximize Fix
