@@ -8,9 +8,11 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
 
-                <!-- ResourceDictionary Source="pack://application:,,,/Resources/Styles/WindowStyles.xaml" / -->
                 <ResourceDictionary Source="pack://application:,,,/Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Resources/Styles/ButtonStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Resources/Styles/TextBoxStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Resources/Styles/ListBoxStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Resources/Styles/ScrollBarStyles.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

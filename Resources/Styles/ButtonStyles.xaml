@@ -1,18 +1,21 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-
     <!-- =====================================
-    DEFAULT: use this for the most part
+    DEFAULT: base style
     ========================================== -->
     <Style x:Key="DefaultButton"
            TargetType="Button">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" /> 
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="FontFamily" Value="Gontserrat" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="20" />
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="ToolTipService.InitialShowDelay" Value="50"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="10000"/>
         <Setter Property="Background" Value="{StaticResource ContainerBrush}" />
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
         
@@ -51,7 +54,7 @@
     <!-- =====================================
     WINDOW BUTTON: Hide, MinMax, Close
     ========================================== -->
-    <Style x:Key="WindowButtons"
+    <Style x:Key="WindowButton"
            TargetType="Button"
            BasedOn="{StaticResource DefaultButton}">
         <Setter Property="Width" Value="15" />
@@ -81,9 +84,9 @@
     <Style x:Key="IconButton"
            TargetType="Button"
            BasedOn="{StaticResource DefaultButton}">
+        <Setter Property="FontWeight" Value="Regular"/>
                 <!-- Use the Font Icon made by me hehe -->
-        <Setter Property="FontFamily"
-                Value="pack://application:,,,/Resources/Fonts/#icomoon" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#icomoon" />
     </Style>
     
     
@@ -98,6 +101,7 @@
                 <!-- Use the Font Icon made by me hehe -->
         <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#icomoon" />
         <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="Regular" />
         <Setter Property="Width" Value="40" />
         <Setter Property="Height" Value="40" />
         

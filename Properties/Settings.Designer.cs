@@ -25,8 +25,8 @@ namespace Ark.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\welch\\Brackets Engi" +
-            "ne\\Ark\\Ark\\Databases\\SongDatabase.mdf\";Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"|DataDirectory|\\Databases\\So" +
+            "ngDatabase.mdf\";Integrated Security=True")]
         public string SongLibrary_Connection {
             get {
                 return ((string)(this["SongLibrary_Connection"]));

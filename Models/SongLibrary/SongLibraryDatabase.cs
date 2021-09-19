@@ -32,7 +32,7 @@ namespace Ark.Models.SongLibrary
             using (SqlConnection connection = new SqlConnection(Properties.Settings.Default.SongLibrary_Connection))
             {
                 connection.Open();
-                string readString = "select * from SongLibrary";
+                string readString = "select * from SongLibrary ORDER BY Title ASC";
                 using (SqlCommand command = new SqlCommand(readString, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())

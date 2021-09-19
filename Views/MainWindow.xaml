@@ -17,47 +17,30 @@
     WINDOW CHROME: custom title bar and window stuff
     ========================================== -->
     <shell:WindowChrome.WindowChrome>
-        <shell:WindowChrome CaptionHeight="40"
-                            ResizeBorderThickness="5"
-                            GlassFrameThickness="0"
-                            NonClientFrameEdges="None"/>
+        <shell:WindowChrome CaptionHeight="40" ResizeBorderThickness="5" 
+                            GlassFrameThickness="0" NonClientFrameEdges="None" />
     </shell:WindowChrome.WindowChrome>
-    
-    
-    <Grid>
-        <!-- =====================================
-        GRID DEFINITIONS: 2 Columns & 2 Rows
-        ========================================== -->
-            
-                <!-- COLUMNS -->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-            
-                <!-- ROWS -->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        
+
+    <DockPanel>
+
         <!-- =====================================
         TITLE BAR: Icon, Menus, and App Buttons
         ========================================== -->
-        <DockPanel Grid.ColumnSpan="2" LastChildFill="False" Background="{StaticResource ContainerDarkBrush}">
-                    <!--  Logo  -->
-            <Image x:Name="Logo" Height="30" Margin="5" 
-                   Source="pack://application:,,,/Ark_Logo.ico">
-            </Image>
+        <DockPanel Grid.ColumnSpan="2" LastChildFill="False" DockPanel.Dock="Top"
+                   Background="{StaticResource ContainerDarkBrush}">
             
-                    <!-- CLOSE -->
-            <Button x:Name="CloseButton" Style="{StaticResource WindowButtons}"
+                    <!--  Logo : ARK! -->
+            <Image x:Name="Logo" Height="30" Margin="5" 
+                   Source="pack://application:,,,/Ark_Logo.ico" />
+
+            <!-- CLOSE : close the app -->
+            <Button x:Name="CloseButton" Style="{StaticResource WindowButton}"
                     Background="{StaticResource RedBrush}" />
-                    <!-- MINIMIZE & MAXIMIZE -->
-            <Button x:Name="MinMaxButton" Style="{StaticResource WindowButtons}"
+                    <!-- MINIMIZE & MAXIMIZE : beep boop -->
+            <Button x:Name="MinMaxButton" Style="{StaticResource WindowButton}"
                     Background="{StaticResource OrangeBrush}" />
-                    <!-- HIDE -->
-            <Button x:Name="HideButton" Style="{StaticResource WindowButtons}"
+                    <!-- HIDE : where am i? -->
+            <Button x:Name="HideButton" Style="{StaticResource WindowButton}"
                     Background="{StaticResource GreenBrush}" />
         </DockPanel>
 
@@ -69,24 +52,23 @@
                     <!-- Song Library -->
             <RadioButton x:Name="SongLibraryTab"
                          Content="S"
-                         GroupName="Tabs"
-                         Checked="RadioTab_Checked"
+                         GroupName="Tabs" Checked="RadioTab_Checked"
                          Style="{StaticResource IconRadioButton}"
-                         Margin="0 40 0 0"  Height="40"/>
+                         Margin="0 40 0 0"/>
                     <!-- Bible Library -->
             <RadioButton x:Name="BibleLibraryTab" 
                          Content="B"
-                         GroupName="Tabs"
-                         Checked="RadioTab_Checked"
-                         Style="{StaticResource IconRadioButton}"
-                         Height="40" />
+                         GroupName="Tabs" Checked="RadioTab_Checked"
+                         Style="{StaticResource IconRadioButton}" />
             
         </StackPanel>
 
         <!-- =====================================
         CONTENT: tab contents goes here
         ========================================== -->
-        <Frame x:Name="ContentFrame" Grid.Column="1" Grid.Row="1"
-               Navigating="ContentFrame_Navigating"  NavigationUIVisibility="Hidden" />
-    </Grid>
+        <Frame x:Name="ContentFrame" Grid.Column="1" Grid.Row="1" Margin="40" 
+               Navigating="ContentFrame_Navigating" NavigationUIVisibility="Hidden"/>
+
+    </DockPanel>
+    
 </Window>

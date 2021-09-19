@@ -5,27 +5,105 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ark.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="780" 
-             d:DesignWidth="1240">
+             d:DesignHeight="740" 
+             d:DesignWidth="1200">
     <Grid>
-        <StackPanel>
-            
-            <TextBox x:Name="Search" TextChanged="TextBox_TextChanged" />
-            <ListBox ItemsSource="{Binding Songs}"
-                     Height="200">
-                <ListBox.ItemTemplate>
-                    
-                <DataTemplate>
-                    <TextBlock Text="{Binding Title}"/>
-                </DataTemplate>
-                </ListBox.ItemTemplate>
-                
-            </ListBox>
         
-            <Button Content="BEEP BOOP"
-                    Click="Button_Click"
-                    Height="200"/>
-        </StackPanel>
+        <!-- =====================================
+        GRID DEFINITIONS: 2 Columns & 2 Rows
+        ========================================== -->
+            
+                <!-- COLUMNS -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+                <!-- ROWS -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="70" />
+        </Grid.RowDefinitions>
+        
+        <!-- =====================================
+        SEARCH & SONG BUTTONS: search, add, and remove for songs
+        ========================================== -->
+        <DockPanel Margin="0 0 20 0">
+            <!-- Delete Song Button -->
+            <Button Style="{StaticResource IconButton}"
+                    Content="D" Width="60" 
+                    ToolTip="[!] Delete the selected Song"
+                    DockPanel.Dock="Right"/>
+            <!-- Add Song Button -->
+            <Button Style="{StaticResource IconButton}"
+                    Content="S" Width="60" 
+                    Margin="20 0" ToolTip="Create a new song"
+                    DockPanel.Dock="Right"/>
+            <!-- Search Text Box -->
+            <TextBox x:Name="SongSearchTextBox"
+                     TextChanged="TextBox_TextChanged"
+                     Tag="Search" Padding="10 0 0 0"
+                     Style="{StaticResource SearchTextBox}"/>
+        </DockPanel>
+
+        <!-- =====================================
+        SONG LIST: list of songs
+        ========================================== -->
+        <ListBox ItemsSource="{Binding Songs}" Style="{StaticResource DefaultListBox}"
+                 ItemContainerStyle="{StaticResource SongListBoxItem}" 
+                 SelectedIndex="0" SelectedItem="{Binding SelectedSong}"
+                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                 Margin="0 20 20 0" Grid.Row="1" Grid.RowSpan="2" MinHeight="200" 
+                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                        <!-- Template -->
+                <DataTemplate>
+                    <StackPanel>
+                                <!-- Song Title -->
+                        <TextBlock Text="{Binding Title}" />
+                    </StackPanel>
+                </DataTemplate>
+
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <Button Style="{StaticResource DefaultButton}"
+                Content="S" Width="50" Height="50" Grid.Row="2" Grid.Column="2"
+                Margin="20 0" ToolTip="Add a Stanza or Verse" VerticalAlignment="Bottom"
+                DockPanel.Dock="Right"/>
+        
+        <!-- =====================================
+        LYRIC LIST: list of lyrics
+        ========================================== -->
+        <ListBox ItemsSource="{Binding Lyrics}"
+                 Style="{StaticResource DefaultListBox}" ItemContainerStyle="{StaticResource SongLyricsItem}"
+                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                 Margin="20 20 0 0" Grid.Row="1" MinHeight="200" 
+                 Grid.Column="2" Background="Transparent"
+                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <!-- Template -->
+                <DataTemplate>
+                    <DockPanel>
+                        <Button Style="{StaticResource DefaultButton}"
+                                Content="{Binding Line}" DockPanel.Dock="Left" Width="40"
+                                Margin="-80 0 0 0" MinHeight="100"
+                                ToolTip="Add a Stanza or Verse" VerticalAlignment="Stretch"/>
+
+                        <Button Style="{StaticResource IconButton}"
+                                Content="D" DockPanel.Dock="Right" Width="40"
+                                Margin="0 0 -80 0"
+                                ToolTip="Add a Stanza or Verse" VerticalAlignment="Stretch"/>
+                        <!-- Song Title -->
+                        <TextBlock Text="{Binding Text}" VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   HorizontalAlignment="Stretch"/>
+                    </DockPanel>
+                </DataTemplate>
+
+            </ListBox.ItemTemplate>
+        </ListBox>
         
     </Grid>
 </UserControl>

@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
+	<PublishSingleFile>true</PublishSingleFile>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Ark_Logo.ico</ApplicationIcon>
   </PropertyGroup>
@@ -19,16 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Ark_Logo.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	<PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,10 +53,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Databases\SongDatabase.mdf">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Databases\SongDatabase_log.ldf">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

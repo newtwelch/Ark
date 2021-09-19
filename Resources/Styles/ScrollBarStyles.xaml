@@ -1,0 +1,78 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!-- =====================================
+    THUMB: the draggable part
+    ========================================== -->
+    <Style x:Key="scrollBarThumb"
+           TargetType="Thumb">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="IsTabStop" Value="True" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Border Background="{StaticResource ThumbBrush}"
+                            BorderThickness="0" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =====================================
+    ORIENTATION TEMPLATES: control template for vertical/horizontal lists or scrollview
+    ========================================== -->
+    
+            <!-- Vertical -->
+    <ControlTemplate x:Key="VerticalScrollBar"
+                     TargetType="{x:Type ScrollBar}">
+        <Grid Background="{StaticResource ThumbHolderBrush}" Margin="1 -1 -1 -1">
+            <Track Name="PART_Track"
+                   IsDirectionReversed="True">
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource scrollBarThumb}" />
+                </Track.Thumb>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+    
+            <!-- Horizontal -->
+    <ControlTemplate x:Key="HorizontalScrollBar"
+                     TargetType="{x:Type ScrollBar}">
+        <Grid Background="{StaticResource ThumbHolderBrush}">
+            <Track Name="PART_Track" IsDirectionReversed=" False">
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource scrollBarThumb}" />
+                </Track.Thumb>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <!-- =====================================
+    SCROLLBAR : the entire thing
+    ========================================== -->
+    <Style x:Key="{x:Type ScrollBar}"
+           TargetType="ScrollBar">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Style.Triggers>
+            
+                    <!-- Vertical -->
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="Margin" Value="0 0 -60 0" />
+                <Setter Property="Width" Value="20" />
+                <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
+            </Trigger>
+                    <!-- Horizontal -->
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Height" Value="20" />
+                <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
+            </Trigger>
+            
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

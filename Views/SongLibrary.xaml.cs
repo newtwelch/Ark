@@ -16,15 +16,11 @@ namespace Ark.Views
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            _viewModel.Songs.Clear();
-            foreach (var song in _viewModel._database.GetSongsByTitle(Search.Text))
-            {
-                _viewModel.Songs.Add(song);
-            }
         }
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
         }
+
     }
 }

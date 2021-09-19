@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="SongLibrary_Connection" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename="C:\Users\welch\Brackets Engine\Ark\Ark\Databases\SongDatabase.mdf";Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename="|DataDirectory|\Databases\SongDatabase.mdf";Integrated Security=True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

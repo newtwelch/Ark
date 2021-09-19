@@ -27,6 +27,7 @@ namespace Ark.Views
             SourceInitialized += MainWindow_SourceInitialized;                                              // Initialize the complicated window maximize problem thingy
             InitializeComponent();                                                                          // Initialize UI Components?
             _viewModel = new MainWindowViewModel();                                                         // Initialize ViewModel    
+            SongLibraryTab.IsChecked = true;
 
             //!? ====================================================
             //!? INIT: Window Buttons
