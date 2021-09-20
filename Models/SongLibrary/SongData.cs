@@ -15,5 +15,8 @@ namespace Ark.Models.SongLibrary
         public string Sequence { get; set; }
         public string RawLyrics { get; set; }
         public List<LyricData> Lyrics { get; set; }
+
+        //This seemed to be a brilliant thing
+        public string SearchedLyric { get; set; }
     }
 }

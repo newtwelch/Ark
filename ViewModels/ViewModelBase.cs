@@ -6,12 +6,16 @@ namespace Ark.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+
+        // Null suppresion
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         //! ====================================================
         //! [+] ON PROPERTY CHANGED: an event that occurs when a property is changed
         //! ====================================================
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+
+        // Null suppresion
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -64,4 +64,23 @@
         <Setter Property="Placement" Value="Bottom"/>
     </Style>
     
+    <!-- =====================================
+    SEARCHEDLYRIC: added this here because there aren't much textblocks to style
+    ========================================== -->
+    <Style x:Key="SearchedLyric"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="20 0 0 0" />
+        <Setter Property="Foreground" Value="{StaticResource OrangeBrush}" />
+                <!-- TRIGGERS: if text is empty then collaps -->
+        <Style.Triggers>
+            <Trigger Property="Text" Value="">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

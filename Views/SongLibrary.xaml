@@ -30,18 +30,19 @@
         SEARCH & SONG BUTTONS: search, add, and remove for songs
         ========================================== -->
         <DockPanel Margin="0 0 20 0">
-            <!-- Delete Song Button -->
+                    <!-- Delete Song Button -->
             <Button Style="{StaticResource IconButton}"
-                    Content="D" Width="60" 
+                    Content="D" Width="60" BorderBrush="{StaticResource RedBrush}"
                     ToolTip="[!] Delete the selected Song"
                     DockPanel.Dock="Right"/>
-            <!-- Add Song Button -->
+                    <!-- Add Song Button -->
             <Button Style="{StaticResource IconButton}"
                     Content="S" Width="60" 
                     Margin="20 0" ToolTip="Create a new song"
                     DockPanel.Dock="Right"/>
-            <!-- Search Text Box -->
+                    <!-- Search Text Box -->
             <TextBox x:Name="SongSearchTextBox"
+                     Text="{Binding SongFilter, UpdateSourceTrigger=PropertyChanged}"
                      TextChanged="TextBox_TextChanged"
                      Tag="Search" Padding="10 0 0 0"
                      Style="{StaticResource SearchTextBox}"/>
@@ -59,19 +60,22 @@
             <ListBox.ItemTemplate>
                         <!-- Template -->
                 <DataTemplate>
-                    <StackPanel>
+                    <DockPanel>
+                                <!-- Searched Lyric -->
+                        <TextBlock Text="{Binding SearchedLyric}"
+                                   DockPanel.Dock="Bottom"
+                                   Style="{StaticResource SearchedLyric}"/>
                                 <!-- Song Title -->
-                        <TextBlock Text="{Binding Title}" />
-                    </StackPanel>
+                        <TextBlock Text="{Binding Title}"/>
+                    </DockPanel>
                 </DataTemplate>
-
             </ListBox.ItemTemplate>
+                    <!-- Preview -->
+            <d:ListBoxItem Content="Amazing Grace"/>
         </ListBox>
         
-        <Button Style="{StaticResource DefaultButton}"
-                Content="S" Width="50" Height="50" Grid.Row="2" Grid.Column="2"
-                Margin="20 0" ToolTip="Add a Stanza or Verse" VerticalAlignment="Bottom"
-                DockPanel.Dock="Right"/>
+        
+        <!-- ==============[ HALF: next are is the lyrics ]============== -->
         
         <!-- =====================================
         LYRIC LIST: list of lyrics
@@ -86,24 +90,45 @@
                 <!-- Template -->
                 <DataTemplate>
                     <DockPanel>
+                                <!-- Line: don't have any idea for this yet -->
                         <Button Style="{StaticResource DefaultButton}"
                                 Content="{Binding Line}" DockPanel.Dock="Left" Width="40"
                                 Margin="-80 0 0 0" MinHeight="100"
                                 ToolTip="Add a Stanza or Verse" VerticalAlignment="Stretch"/>
-
+                                <!-- Delete Button -->
                         <Button Style="{StaticResource IconButton}"
                                 Content="D" DockPanel.Dock="Right" Width="40"
-                                Margin="0 0 -80 0"
-                                ToolTip="Add a Stanza or Verse" VerticalAlignment="Stretch"/>
-                        <!-- Song Title -->
+                                Margin="0 0 -80 0" BorderBrush="{StaticResource RedBrush}"
+                                ToolTip="Erase this block of lyric" VerticalAlignment="Stretch"/>
+                                <!-- Song Title -->
                         <TextBlock Text="{Binding Text}" VerticalAlignment="Center"
-                                   TextAlignment="Center"
+                                   TextAlignment="Center" Padding="15"
                                    HorizontalAlignment="Stretch"/>
                     </DockPanel>
                 </DataTemplate>
-
             </ListBox.ItemTemplate>
+            <!-- Design Sample -->
+            <d:ListBoxItem>
+                <DockPanel>
+                    <Button Style="{StaticResource DefaultButton}"
+                                Content="1" DockPanel.Dock="Left" Width="40"
+                                Margin="-80 0 0 0" MinHeight="100"
+                                ToolTip="Add a Stanza or Verse" VerticalAlignment="Stretch"/>
+                    <Button Style="{StaticResource IconButton}"
+                                Content="D" DockPanel.Dock="Right" Width="40"
+                                Margin="0 0 -80 0"
+                                ToolTip="Erase this block of lyric" VerticalAlignment="Stretch"/>
+                    <TextBlock Text="This is a sample" VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   HorizontalAlignment="Stretch"/>
+                </DockPanel>
+            </d:ListBoxItem>
         </ListBox>
+        
+        <Button Style="{StaticResource DefaultButton}"
+                Content="S" Width="50" Height="50" Grid.Row="2" Grid.Column="2"
+                Margin="20 0" ToolTip="Add a Stanza or Verse" VerticalAlignment="Bottom"
+                DockPanel.Dock="Right"/>
         
     </Grid>
 </UserControl>

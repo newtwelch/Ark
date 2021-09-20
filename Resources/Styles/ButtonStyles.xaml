@@ -18,7 +18,10 @@
         <Setter Property="ToolTipService.ShowDuration" Value="10000"/>
         <Setter Property="Background" Value="{StaticResource ContainerBrush}" />
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
-        
+        <!-- NOTE: this borderbrush is being used as color for MOUSE OVER state -->
+        <!-- Defaults as THUMBBRUSH color but can be overrid by setting the borderbrush in .xaml -->
+        <Setter Property="BorderBrush" Value="{StaticResource ThumbBrush}"/>
+
         <Setter Property="Template">
             
             <Setter.Value>
@@ -37,7 +40,7 @@
                         
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Border"
-                                    Property="Background" Value="{DynamicResource ThumbBrush}" />
+                                    Property="Background" Value="{Binding Path=BorderBrush, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                             <Setter TargetName="contentPresenter" Property="TextElement.Foreground"
                                     Value="{DynamicResource FocusedBrush}" />
                         </Trigger>

@@ -85,7 +85,9 @@
         </Setter>
     </Style>
 
-
+    <!-- =====================================
+    SONG LYRICS ITEM: custom style for the lyric items
+    ========================================== -->
     <Style x:Key="SongLyricsItem"
            BasedOn="{StaticResource DefaultListBoxItem}"
            TargetType="ListBoxItem">
@@ -95,6 +97,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
+                            <!-- BORDER: contains a contentpresenter [ the actual item ] -->
                     <Border Name="Border"
                             MinHeight="70"
                             Background="{StaticResource ContainerDarkBrush}"
@@ -106,7 +109,7 @@
                     </Border>
 
                     <ControlTemplate.Triggers>
-
+                                <!-- TRIGGER: Selection and Mouse Over-->
                         <Trigger Property="IsSelected" Value="true">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryBrush}" />
                             <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
