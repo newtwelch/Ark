@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:hlpr="clr-namespace:Ark.Models.Helpers"
              xmlns:local="clr-namespace:Ark.Views"
              mc:Ignorable="d" 
              d:DesignHeight="740" 
@@ -12,7 +13,6 @@
         <!-- =====================================
         GRID DEFINITIONS: 2 Columns & 2 Rows
         ========================================== -->
-            
                 <!-- COLUMNS -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -25,7 +25,10 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="70" />
         </Grid.RowDefinitions>
-        
+
+        <Rectangle Opacity="0.5" Grid.RowSpan="3" Fill="{StaticResource BackgroundBrush}" Panel.ZIndex="5"  
+                   Visibility="{Binding EditModeVisible}"/>
+
         <!-- =====================================
         SEARCH & SONG BUTTONS: search, add, and remove for songs
         ========================================== -->
@@ -44,6 +47,7 @@
             <TextBox x:Name="SongSearchTextBox"
                      Text="{Binding SongFilter, UpdateSourceTrigger=PropertyChanged}"
                      TextChanged="TextBox_TextChanged"
+                     Foreground="{StaticResource FocusedBrush}"
                      Tag="Search" Padding="10 0 0 0"
                      Style="{StaticResource SearchTextBox}"/>
         </DockPanel>
@@ -61,12 +65,14 @@
                         <!-- Template -->
                 <DataTemplate>
                     <DockPanel>
-                                <!-- Searched Lyric -->
+                                <!-- Searched Lyric Preview -->
                         <TextBlock Text="{Binding SearchedLyric}"
                                    DockPanel.Dock="Bottom"
                                    Style="{StaticResource SearchedLyric}"/>
                                 <!-- Song Title -->
-                        <TextBlock Text="{Binding Title}"/>
+                        <hlpr:HighlightableTextBlock Text="{Binding Title}"
+                                                     HighlightPhrase="{Binding Text, ElementName=SongSearchTextBox}"
+                                                     HighlightBrush="{StaticResource OrangeBrush}"/>
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -75,35 +81,60 @@
         </ListBox>
         
         
-        <!-- ==============[ HALF: next are is the lyrics ]============== -->
+        <!-- ==============[ HALF: song detail and lyrics ]============== -->
+
+        <!-- =====================================
+        SONG INFO & EDIT: show title & author, with edit button
+        ========================================== -->
+        <DockPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Height="100" 
+                   VerticalAlignment="Top" Margin="20 0 0 0">
+                    <!-- EDIT MODE TOGGLE BUTTON -->
+            <ToggleButton Content="E" Style="{StaticResource DefaultToggleButton}"
+                          ToolTip="Edit the selected song" Width="40"
+                          IsChecked="{Binding IsEditMode, Mode=TwoWay}"/>
+                    <!-- TAGS: Uninmplemented -->
+            <Button Style="{StaticResource IconButton}" Content="T" 
+                    DockPanel.Dock="Right" Width="40" ToolTip="Edit tags of this song"/>
+                    <!-- TITLE -->
+            <TextBox Grid.Column="1" Text="{Binding SelectedSong.Title}" DockPanel.Dock="Top"
+                     Height="60" FontSize="30" Padding="0 20 0 0" Margin="20 0"
+                     Focusable="{Binding IsEditMode}"
+                     Style="{StaticResource DefaultTextBox}" TextAlignment="Center"/>
+                    <!-- AUTHOR -->
+            <TextBox Grid.Column="1" Text="{Binding SelectedSong.Author}"
+                     Padding="0 0 0 20" Margin="20 0"
+                     Focusable="{Binding IsEditMode}"
+                     Style="{StaticResource DefaultTextBox}" TextAlignment="Center"/>
+        </DockPanel>
         
         <!-- =====================================
-        LYRIC LIST: list of lyrics
+        LYRIC LIST: list of lyrics  
         ========================================== -->
         <ListBox ItemsSource="{Binding Lyrics}"
                  Style="{StaticResource DefaultListBox}" ItemContainerStyle="{StaticResource SongLyricsItem}"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                 Margin="20 20 0 0" Grid.Row="1" MinHeight="200" 
+                 Margin="20 60 0 0" Grid.Row="1" MinHeight="200" 
                  Grid.Column="2" Background="Transparent"
                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ListBox.ItemTemplate>
-                <!-- Template -->
+                <!-- Data Template -->
                 <DataTemplate>
                     <DockPanel>
                                 <!-- Line: don't have any idea for this yet -->
                         <Button Style="{StaticResource DefaultButton}"
                                 Content="{Binding Line}" DockPanel.Dock="Left" Width="40"
-                                Margin="-80 0 0 0" MinHeight="100"
-                                ToolTip="Add a Stanza or Verse" VerticalAlignment="Stretch"/>
+                                Margin="-80 0 0 0" MinHeight="100" VerticalAlignment="Stretch"/>
                                 <!-- Delete Button -->
                         <Button Style="{StaticResource IconButton}"
                                 Content="D" DockPanel.Dock="Right" Width="40"
                                 Margin="0 0 -80 0" BorderBrush="{StaticResource RedBrush}"
                                 ToolTip="Erase this block of lyric" VerticalAlignment="Stretch"/>
                                 <!-- Song Title -->
-                        <TextBlock Text="{Binding Text}" VerticalAlignment="Center"
-                                   TextAlignment="Center" Padding="15"
-                                   HorizontalAlignment="Stretch"/>
+                        <hlpr:HighlightableTextBlock Text="{Binding Text}" IgnoreDot="True"
+                                                     TextAlignment="Center" Padding="15"
+                                                     HighlightPhrase="{Binding Text, ElementName=SongSearchTextBox}"
+                                                     HighlightBrush="{StaticResource OrangeBrush}"
+                                                     HorizontalAlignment="Stretch"/>
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -118,13 +149,16 @@
                                 Content="D" DockPanel.Dock="Right" Width="40"
                                 Margin="0 0 -80 0"
                                 ToolTip="Erase this block of lyric" VerticalAlignment="Stretch"/>
-                    <TextBlock Text="This is a sample" VerticalAlignment="Center"
-                                   TextAlignment="Center"
-                                   HorizontalAlignment="Stretch"/>
+                    <TextBlock  VerticalAlignment="Center" Text="Amazing grace, how sweet the sound"
+                                TextAlignment="Center"
+                                HorizontalAlignment="Stretch"/>
                 </DockPanel>
             </d:ListBoxItem>
         </ListBox>
         
+        <!-- =====================================
+        LANGUAGE LIST: list of the song's languages  
+        ========================================== -->        
         <Button Style="{StaticResource DefaultButton}"
                 Content="S" Width="50" Height="50" Grid.Row="2" Grid.Column="2"
                 Margin="20 0" ToolTip="Add a Stanza or Verse" VerticalAlignment="Bottom"

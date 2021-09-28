@@ -1,5 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Views="clr-namespace:Ark.Views"
+                    xmlns:hlpr="clr-namespace:Ark.Models.Helpers">
     
     <!-- =====================================
     DEFAULT: base style
@@ -7,13 +9,24 @@
     <Style x:Key="DefaultTextBox" TargetType="TextBox">
         <Setter Property="FontFamily" Value="Gontserrat" />
         <Setter Property="Background" Value="{StaticResource ContainerDarkBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Views:SongLibrary}}}" Value="True" />
+                    <Condition Binding="{Binding IsMouseOver, RelativeSource={x:Static RelativeSource.Self}}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+            </MultiDataTrigger>
+        </Style.Triggers>
+        
     </Style>
-    
+
     <!-- =====================================
     SEARCH TEXT BOX: use for searching, it has watermark and all
     ========================================== -->
@@ -26,14 +39,14 @@
                 <ControlTemplate TargetType="TextBox">
 
                     <Grid Background="{StaticResource ContainerDarkBrush}">
-                                <!--  Content Host / Main Text  -->
+                        <!--  Content Host / Main Text  -->
                         <ScrollViewer x:Name="PART_ContentHost" />
-                                <!--  Watermark : Collapsed by default -->
+                        <!--  Watermark : Collapsed by default -->
                         <TextBlock x:Name="WaterMarkLabel" VerticalAlignment="Center" Text="{TemplateBinding Tag}" Cursor="IBeam" 
                                    Padding="{TemplateBinding Padding}" Foreground="{StaticResource UnfocusedBrush}" Visibility="Collapsed" />
                     </Grid>
 
-                            <!--  Trigger for making the Watermark visible  -->
+                    <!--  Trigger for making the Watermark visible  -->
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
 
@@ -51,19 +64,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <!-- =====================================
-    TOOLTIP: added this here because it's a simple thing right now
-    ========================================== -->
-    <Style TargetType="ToolTip">
-        <Setter Property="Background" Value="{StaticResource ContainerBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource UnfocusedBrush}"/>
-        <Setter Property="FontFamily" Value="Gontserrat"/>
-        <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Placement" Value="Bottom"/>
-    </Style>
-    
+
     <!-- =====================================
     SEARCHEDLYRIC: added this here because there aren't much textblocks to style
     ========================================== -->
@@ -83,4 +84,17 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    
+    <!-- =====================================
+    TOOLTIP: added this here because it's a simple thing right now
+    ========================================== -->
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="{StaticResource ContainerBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource UnfocusedBrush}"/>
+        <Setter Property="FontFamily" Value="Gontserrat"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Placement" Value="Bottom"/>
+    </Style>
+
 </ResourceDictionary>

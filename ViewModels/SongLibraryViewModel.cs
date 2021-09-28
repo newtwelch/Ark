@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Ark.ViewModels
@@ -46,8 +47,12 @@ namespace Ark.ViewModels
             get { return _selectedSong; }
             set                                                                                                     // Do stuff on selection change here
             {
+                if (value == null)
+                    value = _selectedSong;
+
                 _selectedSong = value;
                 OnPropertyChanged();
+
                 if (Lyrics != null && SelectedSong != null)                                                                                 // Change Lyrics
                 {
                     Lyrics.Clear();
@@ -59,6 +64,30 @@ namespace Ark.ViewModels
             }
         }
         private SongData _selectedSong;                                                                             // SelectedSong but private
+
+        //! View Mode & Edit Mode
+        public bool IsEditMode                                                                                      // Edit Mode
+        {
+            get { return _isEditMode; }
+            set
+            {
+                _isEditMode = value;
+                OnPropertyChanged();
+                OnPropertyChanged("EditModeVisible");
+            }
+        }
+        private bool _isEditMode;
+        //Visibility
+        public Visibility EditModeVisible
+        {
+            get
+            {
+                if (_isEditMode)
+                    return Visibility.Visible;
+                else
+                    return Visibility.Collapsed;
+            }
+        }
 
         //? =============================[METHODS & MAIN]==============================
 
@@ -101,14 +130,18 @@ namespace Ark.ViewModels
         //! ====================================================
         private bool SongFilterView(object song)
         {
+            //!? Might change this for an advanced search engine
 
-            // if "SongFilter" is empty, show all
+            (song as SongData).SearchedLyric = null;
+
+            //!? ====================================================
+            //!? NONE: if text is empty, set every object to true
+            //!? ====================================================
             if (String.IsNullOrEmpty(SongFilter))
-            {
-                (song as SongData).SearchedLyric = null;
                 return true;
-            }
-            // if it starts with a DOT (.) then match the RawLyric of songs
+            //!? ====================================================
+            //!? LYRIC SEARCH: if text starts with a DOT, match the lyrics
+            //!? ====================================================
             else if (SongFilter.StartsWith("."))
             {
                 // get the raw lyric
@@ -126,15 +159,18 @@ namespace Ark.ViewModels
                 //return the boolean lyricmatch
                 return _lyricMatch;
             }
-            // if it starts with a START (*) then check for author matches
+            //!? ====================================================
+            //!? AUTHOR SEARCH: if text starts with a STAR, match author name
+            //!? ====================================================
             else if (SongFilter.StartsWith("*"))
                 return (song as SongData).Author.
                     Contains(SongFilter.Replace("*", ""), StringComparison.OrdinalIgnoreCase);
-            // if it doesn't start with any identifiers then search for title matches
+            //!? ====================================================
+            //!? TITLE SEARCH: if no identifiers are found, match the title
+            //!? ====================================================
             else
                 return (song as SongData).Title.
                     Contains(SongFilter, StringComparison.OrdinalIgnoreCase);
-
         }
 
         //! ====================================================
@@ -177,7 +213,7 @@ namespace Ark.ViewModels
             }
 
             //!? ====================================================
-            //!? SEQUENCE THE LYRIC: default sequence, has 2 parts
+            //!? DEFAULT SEQUENCE: default sequence, has 2 parts
             //!? ====================================================
             if (SelectedSong.Sequence == "o" || SelectedSong.Sequence == null || SelectedSong.Sequence == "")
             {
@@ -224,7 +260,7 @@ namespace Ark.ViewModels
             }
 
             //!? ====================================================
-            //!? SEQUENCE THE LYRIC: if a custom Sequence exists
+            //!? CUSTOM SEQUENCE: if a custom Sequence exists
             //!? ====================================================
             else
             {

@@ -146,5 +146,63 @@
         </Setter>
         
     </Style>
+    
+    <!-- =====================================
+    DEFAULT TOGGLE BUTTON: place it here right now hehe
+    ========================================== -->
+    <Style x:Key="DefaultToggleButton"
+           TargetType="ToggleButton">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" /> 
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#icomoon" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="ToolTipService.InitialShowDelay" Value="50"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="10000"/>
+        <Setter Property="Background" Value="{StaticResource ContainerBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
+        <!-- NOTE: this borderbrush is being used as color for MOUSE OVER state -->
+        <!-- Defaults as THUMBBRUSH color but can be overrid by setting the borderbrush in .xaml -->
+        <Setter Property="BorderBrush" Value="{StaticResource ThumbBrush}"/>
 
+        <Setter Property="Template">
+            
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    
+                            <!-- BORDER: contains the content [ Content Presenter ] -->
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter x:Name="contentPresenter"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          TextElement.Foreground="{DynamicResource UnfocusedBrush}" />
+                    </Border>
+
+                            <!-- TRIGGERS=============================== -->
+                    <ControlTemplate.Triggers>
+                            <!-- MOUSEOVER Trigger -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border"
+                                    Property="Background" Value="{Binding Path=BorderBrush, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground"
+                                    Value="{DynamicResource FocusedBrush}" />
+                        </Trigger>
+                            <!-- Trigger for ISCHECKED -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Border"
+                                    Property="Background" Value="{StaticResource PrimaryBrush}" />
+                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground"
+                                    Value="{DynamicResource FocusedBrush}" />
+                        </Trigger>
+                        
+                    </ControlTemplate.Triggers>
+                            <!-- TRIGGER END============================ -->
+                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>
