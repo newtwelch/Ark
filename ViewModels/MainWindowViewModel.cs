@@ -10,7 +10,7 @@ namespace Ark.ViewModels
         public DisplayWindow DisplayWindow;
 
         //! User Controls
-        public UserControl SongLibrary, BibleLibrary;
+        public UserControl SongLibrary, BibleLibrary, History;
 
         //! ====================================================
         //! [+] MAIN WINDOW VIEW MODEL
@@ -23,6 +23,7 @@ namespace Ark.ViewModels
             DisplayWindow = new DisplayWindow();                                            // Initialize Display Window
             SongLibrary = new SongLibrary();                                                // Initialize Song Library
             BibleLibrary = new BibleLibrary();                                              // Initialize Bible Library
+            History = new History();                                              // Initialize Bible Library
         }
     }
 }

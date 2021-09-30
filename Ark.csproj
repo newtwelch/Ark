@@ -12,29 +12,25 @@
   <ItemGroup>
     <None Remove="Ark_Logo.ico" />
     <None Remove="Ark_LogoBW.ico" />
+    <None Remove="Resources\Fonts\arkicons.ttf" />
     <None Remove="Resources\Fonts\GONTSERRAT-BOLD.TTF" />
     <None Remove="Resources\Fonts\GONTSERRAT-BOLDITALIC.TTF" />
     <None Remove="Resources\Fonts\GONTSERRAT-ITALIC.TTF" />
     <None Remove="Resources\Fonts\GONTSERRAT-REGULAR.TTF" />
-    <None Remove="Resources\Fonts\Icons.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
-	<PrivateAssets>all</PrivateAssets>
-    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Ark_Logo.ico" />
     <Resource Include="Ark_LogoBW.ico" />
+    <Resource Include="Resources\Fonts\arkicons.ttf" />
     <Resource Include="Resources\Fonts\GONTSERRAT-BOLD.TTF" />
     <Resource Include="Resources\Fonts\GONTSERRAT-BOLDITALIC.TTF" />
     <Resource Include="Resources\Fonts\GONTSERRAT-ITALIC.TTF" />
     <Resource Include="Resources\Fonts\GONTSERRAT-REGULAR.TTF" />
-    <Resource Include="Resources\Fonts\Icons.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,13 +46,7 @@
 
   <ItemGroup>
     <None Update="Databases\SongDatabase.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Databases\SongDatabase.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Databases\SongDatabase_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

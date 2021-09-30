@@ -89,7 +89,7 @@
            BasedOn="{StaticResource DefaultButton}">
         <Setter Property="FontWeight" Value="Regular"/>
                 <!-- Use the Font Icon made by me hehe -->
-        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#icomoon" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#arkicons" />
     </Style>
     
     
@@ -102,11 +102,11 @@
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
                 <!-- Use the Font Icon made by me hehe -->
-        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#icomoon" />
-        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#arkicons" />
+        <Setter Property="FontSize" Value="25" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Width" Value="40" />
-        <Setter Property="Height" Value="40" />
+        <Setter Property="Width" Value="50" />
+        <Setter Property="Height" Value="50" />
         
         <Setter Property="Template">
             
@@ -154,7 +154,7 @@
            TargetType="ToggleButton">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" /> 
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#icomoon" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#arkicons" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="VerticalContentAlignment" Value="Center" />

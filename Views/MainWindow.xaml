@@ -30,7 +30,7 @@
                    Background="{StaticResource ContainerDarkBrush}">
             
                     <!--  Logo : ARK! -->
-            <Image x:Name="Logo" Height="30" Margin="5" 
+            <Image x:Name="Logo" Height="30" Margin="10 5 5 5" 
                    Source="pack://application:,,,/Ark_Logo.ico" />
 
             <!-- CLOSE : close the app -->
@@ -47,21 +47,32 @@
         <!-- =====================================
         SIDE BAR: radio buttons for tabs
         ========================================== -->
-        <StackPanel Grid.Row="1" Background="{StaticResource ContainerBrush}">
+        <DockPanel Background="{StaticResource ContainerBrush}"
+                   LastChildFill="False">
             
                     <!-- Song Library -->
             <RadioButton x:Name="SongLibraryTab"
-                         Content="S"
+                         Content="S" DockPanel.Dock="Top"
                          GroupName="Tabs" Checked="RadioTab_Checked"
                          Style="{StaticResource IconRadioButton}"
                          Margin="0 40 0 0"/>
                     <!-- Bible Library -->
             <RadioButton x:Name="BibleLibraryTab" 
-                         Content="B"
+                         Content="B" DockPanel.Dock="Top"
+                         GroupName="Tabs" Checked="RadioTab_Checked"
+                         Style="{StaticResource IconRadioButton}" />
+                    <!-- Message -->
+            <RadioButton x:Name="MessageTab" 
+                         Content="M" DockPanel.Dock="Top"
+                         GroupName="Tabs" Checked="RadioTab_Checked"
+                         Style="{StaticResource IconRadioButton}" />
+                    <!-- History -->
+            <RadioButton x:Name="HistoryTab"
+                         Content="H" DockPanel.Dock="Bottom"
                          GroupName="Tabs" Checked="RadioTab_Checked"
                          Style="{StaticResource IconRadioButton}" />
             
-        </StackPanel>
+        </DockPanel>
 
         <!-- =====================================
         CONTENT: tab contents goes here

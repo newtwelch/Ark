@@ -40,7 +40,7 @@
             <!-- Horizontal -->
     <ControlTemplate x:Key="HorizontalScrollBar"
                      TargetType="{x:Type ScrollBar}">
-        <Grid Background="{StaticResource ThumbHolderBrush}">
+        <Grid Background="{StaticResource ThumbHolderBrush}" Margin="-1 1 -1 -1">
             <Track Name="PART_Track" IsDirectionReversed=" False">
                 <Track.Thumb>
                     <Thumb Style="{StaticResource scrollBarThumb}" />
@@ -67,7 +67,7 @@
             </Trigger>
                     <!-- Horizontal -->
             <Trigger Property="Orientation" Value="Horizontal">
-                <Setter Property="Margin" Value="0" />
+                <Setter Property="Margin" Value="0 0 0 -40" />
                 <Setter Property="Height" Value="20" />
                 <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
             </Trigger>

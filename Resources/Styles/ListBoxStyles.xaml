@@ -127,5 +127,40 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    
+    <!-- =====================================
+    SONG LANGUAGE ITEM: contains title of song
+    ========================================== -->
+    <Style x:Key="SongLanguageListBoxItem" TargetType="ListBoxItem"
+           BasedOn="{StaticResource DefaultListBoxItem}" >
+        <Setter Property="Cursor" Value="Hand" />
+        
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                            <!-- Contains the text [ Content Presenter is the Text] -->
+                    <Border Name="Border"
+                            Background="{StaticResource ContainerBrush}"
+                            Padding="20 0" Height="50" Margin="0 0 20 0"
+                            BorderThickness="0">
+                        <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Stretch"/>
+                    </Border>
+                    
+                            <!-- Special hover and click triggers -->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

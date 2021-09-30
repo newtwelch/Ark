@@ -22,6 +22,7 @@ namespace Ark.ViewModels
         public ObservableCollection<SongData> SongLanguages { get; set; }                                           // List of Languages in the Song
 
         //! Song Filtering
+        private ICollectionView SongLanguagesView;                                                                  // CollectionView for the songs
         private ICollectionView SongsView;                                                                          // CollectionView for the songs
         private string _songFilter;                                                                                 // SongsView but pricate
         public string SongFilter                                                                                    // Gets the text from Song Search
@@ -50,13 +51,20 @@ namespace Ark.ViewModels
                 if (value == null)
                     value = _selectedSong;
 
+                int previous = 0;
+                if (_selectedSong != null)
+                    previous = _selectedSong.Number;                                                                // Store previous Song Number for comparing
+
                 _selectedSong = value;
                 OnPropertyChanged();
 
-                if (Lyrics != null && SelectedSong != null)                                                                                 // Change Lyrics
+                if (SongLanguagesView != null && value.Number != previous)
+                    SongLanguagesView.Filter = o => (o as SongData).Number.Equals(SelectedSong.Number);             // Filter SongLanguages
+
+                if (Lyrics != null && SelectedSong != null)                                                         // Change Lyrics
                 {
                     Lyrics.Clear();
-                    foreach (LyricData lyric in ParseLyrics())
+                    foreach (LyricData lyric in ParseLyrics(value.RawLyrics, value.Sequence))
                     {
                         Lyrics.Add(lyric);
                     }
@@ -74,6 +82,7 @@ namespace Ark.ViewModels
                 _isEditMode = value;
                 OnPropertyChanged();
                 OnPropertyChanged("EditModeVisible");
+                OnPropertyChanged("EditModeNotVisible");
             }
         }
         private bool _isEditMode;
@@ -86,6 +95,16 @@ namespace Ark.ViewModels
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
+            }
+        }
+        public Visibility EditModeNotVisible
+        {
+            get
+            {
+                if (_isEditMode)
+                    return Visibility.Collapsed;
+                else
+                    return Visibility.Visible;
             }
         }
 
@@ -101,18 +120,22 @@ namespace Ark.ViewModels
             //!? ====================================================
             _database = new SongLibraryDatabase();
             Songs = new ObservableCollection<SongData>(_database.GetSongs());
-
-            //!? ====================================================
-            //!? SONG FILTER: collection view filtering
-            //!? ====================================================
-            SongsView = CollectionViewSource.GetDefaultView(Songs);
-            //SongsView.Filter = o => String.IsNullOrEmpty(SongFilter) ? true : (o as SongData).Title.Contains(SongFilter, StringComparison.OrdinalIgnoreCase);
-            SongsView.Filter = SongFilterView;
+            SongLanguages = new ObservableCollection<SongData>(Songs);
 
             //!? ====================================================
             //!? INITIALIZE: methods and stuff here
             //!? ====================================================
             init();
+
+            //!? ====================================================
+            //!? SONG FILTER: collection view filtering
+            //!? ====================================================
+            SongsView = CollectionViewSource.GetDefaultView(Songs);
+            SongsView.Filter = SongFilterView;
+
+            //Song Language
+            SongLanguagesView = CollectionViewSource.GetDefaultView(SongLanguages);
+            SongLanguagesView.Filter = o => (o as SongData).Number.Equals(SelectedSong.Number);
         }
 
         //? ==========================[ SONG FUNCTIONS ]=============================
@@ -123,6 +146,11 @@ namespace Ark.ViewModels
         public void AddSong(SongData song)
         {
             _database.AddSong(song);
+        }
+
+        public void UpdateSong(SongData song)
+        {
+            _database.UpdateSong(song);
         }
 
         //! ====================================================
@@ -176,14 +204,14 @@ namespace Ark.ViewModels
         //! ====================================================
         //! [+] LYRICPARSING: returns a list<> of Parsed LyricData
         //! ====================================================
-        public List<LyricData> ParseLyrics()
+        public List<LyricData> ParseLyrics(string RawLyrics, string Sequence)
         {
             //!? ====================================================
             //!? VARIABLES: initialize the needed variables for lyric parsing
             //!? ====================================================
             List<LyricData> sequencedLyrics = new List<LyricData>();                                                    // List<> that will be returned; already sequenced
             List<LyricData> tempLyrics = new List<LyricData>();                                                         // A temporary list the stores un-sequenced lyrics
-            string[] paragraphs = Array.FindAll(Regex.Split(SelectedSong.RawLyrics,                                     // Parses the "RawLyrics" into paragraphs,
+            string[] paragraphs = Array.FindAll(Regex.Split(RawLyrics,                                     // Parses the "RawLyrics" into paragraphs,
                 "(\r?\n){2,}", RegexOptions.Multiline), p => !String.IsNullOrWhiteSpace(p));                            //      then to LyricData() and added to "tempLyrics"
             int stanzaNumber = 1;                                                                                       // Stanza Number for the "Line" property 
 
@@ -198,6 +226,8 @@ namespace Ark.ViewModels
                 using var reader = new StringReader(paragraph);
                 string? first = reader.ReadLine();
 
+                paragraph.TrimEnd();
+
                 // Check if the beginning contains "CHORUS" string
                 if (first.Contains("CHORUS", StringComparison.OrdinalIgnoreCase))
                     // Convert to a LyricData with Chorus Type
@@ -210,12 +240,13 @@ namespace Ark.ViewModels
                 else
                     // Convert to a LyricData with Verse Type
                     tempLyrics.Add(new LyricData() { Line = stanzaNumber++.ToString(), Text = paragraph, Type = LyricType.Stanza });
+
             }
 
             //!? ====================================================
             //!? DEFAULT SEQUENCE: default sequence, has 2 parts
             //!? ====================================================
-            if (SelectedSong.Sequence == "o" || SelectedSong.Sequence == null || SelectedSong.Sequence == "")
+            if (Sequence == "o" || Sequence == null || Sequence == "")
             {
                 foreach (LyricData lyric in tempLyrics)                                                                             // For every LyricData in "tempLyrics"                
                 {
@@ -264,7 +295,8 @@ namespace Ark.ViewModels
             //!? ====================================================
             else
             {
-                string[] sequencer = SelectedSong.Sequence.Split(",");                                                              // Split sequence string
+                string[] sequencer = Sequence.Split(new[] { ',', ' ' },
+                                StringSplitOptions.RemoveEmptyEntries);                                                              // Split sequence string
 
                 foreach (var line in sequencer)                                                                                     // For each String in sequence
                 {
@@ -288,9 +320,8 @@ namespace Ark.ViewModels
             {
                 //! Select First Song
                 SelectedSong = Songs[0];                                                                            // Automatically Select the first song
-                Lyrics = new ObservableCollection<LyricData>(ParseLyrics());                                        // Initialize the Lyrics
-                SongLanguages = new ObservableCollection<SongData>();                                               // Initialize Song Languages
-                SelectedSong.Lyrics = Lyrics.ToList();                                                              // Set the lyrics of selected song to the Lyric List    
+                Lyrics = new ObservableCollection<LyricData>(ParseLyrics(SelectedSong.RawLyrics, SelectedSong.Sequence));                                        // Initialize the Lyrics
+                SelectedSong.Lyrics = Lyrics.ToList();                                                              // Set the lyrics of selected song to the Lyric List
             }
         }
     }

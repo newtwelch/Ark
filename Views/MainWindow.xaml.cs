@@ -89,6 +89,9 @@ namespace Ark.Views
                     case "BibleLibraryTab":
                         ContentFrame.Content = _viewModel.BibleLibrary;
                         break;
+                    case "HistoryTab":
+                        ContentFrame.Content = _viewModel.History;
+                        break;
                 }
             }
         }
