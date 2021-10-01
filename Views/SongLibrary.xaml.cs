@@ -11,128 +11,183 @@ namespace Ark.Views
     public partial class SongLibrary : UserControl
     {
         private SongLibraryViewModel _viewModel;
-        SongData temp_Song;
+
+        SongData save_Song = new SongData();
+        List<LyricData> save_Lyric;
+        string save_Title, save_Author, save_Language, rlParserSequence;
+
+        //! ====================================================
+        //! [+] SONG LIBRARY: initialize stuff here
+        //! ====================================================
         public SongLibrary()
         {
             _viewModel = new SongLibraryViewModel();
             DataContext = _viewModel;
             InitializeComponent();
-            temp_Song = new SongData();
 
+            save_Song = new SongData();
+            save_Title = "";
+            save_Author = "";
+            save_Language = "";
+            rlParserSequence = "";
         }
 
+        //? =============================[EVENTS]==============================
+
+        //! ====================================================
+        //! [+] BUTTON CLICKS: this has 2 buttons connected to it
+        //!         with 2 states, therefore 4 cases.
+        //! ====================================================
         private void EditButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
-            if (e.Source is Button bt)
+            Button? bt = e.Source as Button;
+            switch (bt.Name)
             {
-                if (bt.Name == "TagDiscardButton")
-                {
-                    if (TagDiscardButton.Content == "D")
+                case "EditButton":
+                    switch (EditButton.Content)
                     {
-                        temp_Song = new SongData();
-                        _viewModel.IsEditMode = false;
-
-                        EditButton.Content = "E";
-                    }
-                }
-                else
-                {
-                    //!? ====================================================
-                    //!? UPDATE FIRST: change button icon, and set the viewmodel IsEditMode boolean to true; 
-                    //!? ====================================================
-                    if (EditButton.Content.Equals("s"))
-                    {
-                        temp_Song.ID = _viewModel.SelectedSong.ID;
-                        temp_Song.Number = _viewModel.SelectedSong.Number;
-                        temp_Song.Language = LanguageTextBox.Text;
-                        temp_Song.Title = TitleTextBox.Text;
-                        temp_Song.Author = AuthorTextBox.Text;
-                        temp_Song.RawLyrics = EditRawLyricsTextBox.Text;
-                        temp_Song.Sequence = EditSequenceTextBox.Text;
-
-                        _viewModel.SelectedSong = temp_Song;
-                        _viewModel.UpdateSong(_viewModel.SelectedSong);
+                        case "E": //! ========= EDIT SONG =========
+                            //!? ====================================================
+                            //!? SAVE: save up a copy of the songs properties [ this is incase the user wants to discard changes ]
+                            //!? ====================================================
+                            save_Song = _viewModel.SelectedSong;
+                            save_Title = save_Song.Title;
+                            save_Author = save_Song.Author;
+                            save_Language = save_Song.Language;
+                            break;
+                        case "s": //! ========= SAVE CHANGES =========
+                            //!? ====================================================
+                            //!? SAVE CHANGES: set the SelectedSong properties and save into the database
+                            //!? ====================================================
+                            _viewModel.SelectedSong.RawLyrics = EditRawLyricsTextBox.Text;
+                            _viewModel.SelectedSong.Sequence = EditSequenceTextBox.Text;
+                            _viewModel.UpdateSong(_viewModel.SelectedSong);
+                            break;
                     }
 
-                    EditButton.Content = EditButton.Content.Equals("E") ? "s" : "E";
-                    _viewModel.IsEditMode = EditButton.Content.Equals("E") ? false : true;
+                    //!? ====================================================
+                    //!? EDIT MODE SETUP [ if the edit button is clicked, always setup editmode boolean ]
+                    //!? ====================================================
+                    EditModeSetUp();
 
-                    //!? ====================================================
-                    //!? TAG & DISCARD BUTTON: update the button to work appropriately
-                    //!? ====================================================
-                    // Update the icon
-                    TagDiscardButton.Content = EditButton.Content.Equals("E") ? "T" : "D";
-                    // Change the BorderBrush ( which is the onhover color )
-                    TagDiscardButton.BorderBrush = EditButton.Content.Equals("E") ? (Brush)Application.Current.Resources["ThumbBrush"] : (Brush)Application.Current.Resources["RedBrush"];
-                    // Change the tooltip appropriately
-                    TagDiscardButton.ToolTip = EditButton.Content.Equals("E") ? "Edit Tags of this song" : "Discard changes made";
-                }
+                    break;
+                case "TagDiscardButton":
+                    switch (TagDiscardButton.Content)
+                    {
+                        case "T": //! ========= TAGS =========
+                            break;
+                        case "D": //! ========= DISCARD CHANGES =========
+                            //!? ====================================================
+                            //!? DISCARD CHANGES: revert back the properties and do nothing
+                            //!? ====================================================
+                            _viewModel.SelectedSong = null;
+                            save_Song.Title = save_Title;
+                            save_Song.Author = save_Author;
+                            save_Song.Language = save_Language;
+                            _viewModel.SelectedSong = save_Song;
+
+                            //!? EDIT MODE SETUP [ exits out of Edit Mode ]
+                            EditModeSetUp();
+
+                            break;
+                    }
+                    break;
             }
-
         }
 
-        private void RawEdit_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        //! ====================================================
+        //! [+] RAW LYRIC TEXTBOX CHANGED: parses the lyric live and
+        //!             gives preview of what the edited lyric looks like
+        //! ====================================================
+        private void EditRawLyricsTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            temp_Song.Sequence = EditSequenceTextBox.Text;
-            temp_Song.Lyrics = new List<LyricData>(_viewModel.ParseLyrics(EditRawLyricsTextBox.Text, temp_Song.Sequence));
-
-            _viewModel.Lyrics.Clear();
-            foreach (LyricData lyric in temp_Song.Lyrics)
+            if (_viewModel.IsEditMode)
             {
-                _viewModel.Lyrics.Add(lyric);
+                _viewModel.Lyrics.Clear();
+                // Parse Lyrics using text from RawLyricTextBox and SequenceTextBox
+                foreach (LyricData lyric in _viewModel.ParseLyrics(EditRawLyricsTextBox.Text, EditSequenceTextBox.Text))
+                {
+                    _viewModel.Lyrics.Add(lyric);
+                }
             }
-
-            e.Handled = true;
         }
 
+        //! ====================================================
+        //! [+] SONG LYRIC LISTBOX LOST FOCUS: update rawlyrics when lyric listbox loses focus
+        //! ====================================================
+        private void SongLyricListBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            // don't wanna comment much here,
+            // it just updates whatever changes you've made in the lyric listbox
+            // converting it to RawLyrics
+            List<LyricData> lyrics = new List<LyricData>();
+            foreach (LyricData lyric in SongLyricListBox.Items)
+            {
+                lyrics.Add(lyric);
+            }
+            EditRawLyricsTextBox.Text = ToRawLyrics(lyrics);
+        }
+
+        //? =============================[METHODS & HELPERS]==============================
+
+        //! ====================================================
+        //! [+] EDIT MODE SETUP: flip viewModel Editmode and proceed to change properties accordingly
+        //! ====================================================
+        private void EditModeSetUp()
+        {
+            //!? ====================================================
+            //!? EDIT MODE BOOLEAN: switch up the edit mode boolean
+            //!? ====================================================
+            _viewModel.IsEditMode = _viewModel.IsEditMode ? false : true;
+            bool isEditMode = _viewModel.IsEditMode;
+
+            //!? ====================================================
+            //!? EDIT BUTTON: change contents accordingle
+            //!? ====================================================
+            EditButton.Content = isEditMode ? "s" : "E";
+            EditButton.ToolTip = isEditMode ? "Save changes made to this song" : "Edit the selected song";
+
+            //!? ====================================================
+            //!? TAG DISCARD BUTTON: change contents accordingly
+            //!? ====================================================
+            TagDiscardButton.Content = isEditMode ? "D" : "T";
+            TagDiscardButton.BorderBrush = isEditMode ? (Brush)Application.Current.Resources["RedBrush"] : (Brush)Application.Current.Resources["ThumbBrush"];
+            TagDiscardButton.ToolTip = isEditMode ? "Discard changes made to this song" : "Edit Tags of this song";
+        }
+
+        //! ====================================================
+        //! [+] TO RAW LYRICS: convertion from listbox items to a string
+        //! ====================================================
         public String ToRawLyrics(List<LyricData> lyrics)
         {
-            temp_Song.RawLyrics = string.Empty;
+            string _rawLyrics = "";
 
             foreach (LyricData lyric in lyrics)
             {
-                if (lyric.Type == LyricType.Stanza)
-                {
-                    temp_Song.RawLyrics += lyric.Line.Equals("1") ? $"{ lyric.Text}\r\n" : $"\r\n{ lyric.Text}\r\n";
-                    temp_Song.Sequence += $"{lyric.Line},";
+                //!? ====================[ Logic ]==================
+                //!? if lyric is a stanza, just add to the string
+                //!? if it's a Chorus, check if there is already a chorus.
+                //!? if chorus exists don't add it, if it does, then add to the RawLyric
+                //!? if it's a bridge just add as well
+                //!? ====================[ Logic ]==================
 
-                }
+                if (lyric.Type == LyricType.Stanza)
+                    _rawLyrics += lyric.Line.Equals("1") ? $"{ lyric.Text}\r\n" : $"\r\n{ lyric.Text}\r\n";
+
                 if (lyric.Type == LyricType.Chorus)
                 {
-                    if (!temp_Song.RawLyrics.Contains("CHORUS", StringComparison.OrdinalIgnoreCase))
-                    {
-                        temp_Song.RawLyrics += $"\r\nCHORUS\r\n{lyric.Text} \r\n";
-                        temp_Song.Sequence += "C,";
-                    }
+                    if (!_rawLyrics.Contains("CHORUS", StringComparison.OrdinalIgnoreCase))
+                        _rawLyrics += $"\r\nCHORUS\r\n{lyric.Text} \r\n";
                 }
+
                 if (lyric.Type == LyricType.Bridge)
-                {
-                    temp_Song.RawLyrics += $"\r\nBRIDGE\r\n{lyric.Text} \r\n";
-                    temp_Song.Sequence += "B,";
-                }
+                    _rawLyrics += $"\r\nBRIDGE\r\n{lyric.Text} \r\n";
+
+                rlParserSequence += lyric.Line;
             }
-            return temp_Song.RawLyrics.TrimEnd();
+            // Trim the end for unwanted white lines;
+            return _rawLyrics.TrimEnd();
         }
 
-        private void SongLyricListBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (e.Source is ListBox lb)
-            {
-                if (temp_Song.Lyrics == null)
-                    temp_Song.Lyrics = new List<LyricData>();
-
-                List<LyricData> lyrics = new List<LyricData>();
-
-                temp_Song.Lyrics.Clear();
-                foreach (LyricData item in lb.Items)
-                {
-                    lyrics.Add(item);
-                    temp_Song.Lyrics.Add(item);
-                }
-
-                EditRawLyricsTextBox.Text = ToRawLyrics(lyrics);
-            }
-        }
     }
 }

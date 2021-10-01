@@ -26,29 +26,32 @@
             <RowDefinition Height="70" />
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Row="0" Grid.RowSpan="3"
-                   Panel.ZIndex="5" Margin="0 0 20 0"
+        <!-- =====================================
+        RAW LYRIC EDITING: sequence and raw lyric
+        ========================================== -->
+        <DockPanel Grid.Row="0" Grid.RowSpan="2"
+                   Panel.ZIndex="5" Margin="40 0 20 0"
                    VerticalAlignment="Stretch"
                    Visibility="{Binding EditModeVisible}">
-            <!--  Raw Lyrics  -->
+                    <!--  Sequence  -->
             <TextBox x:Name="EditSequenceTextBox"
                      Height="60" Padding="20 0"
-                     DockPanel.Dock="Top"
-                     Keyboard.LostKeyboardFocus="RawEdit_LostKeyboardFocus"
+                     DockPanel.Dock="Top" 
+                     TextChanged="EditRawLyricsTextBox_TextChanged"
                      Style="{StaticResource SongLyricsTextBox}"
                      Text="{Binding SelectedSong.Sequence, Mode=OneWay}"/>
+                    <!--  Raw Lyrics  -->
             <TextBox x:Name="EditRawLyricsTextBox"
-                     AcceptsReturn="True"
+                     AcceptsReturn="True" TextChanged="EditRawLyricsTextBox_TextChanged"
                      Style="{StaticResource SongLyricsTextBox}"
-                     Text="{Binding SelectedSong.RawLyrics}"
-                     Margin="0 20 0 0" Padding="20"
-                     Keyboard.LostKeyboardFocus="RawEdit_LostKeyboardFocus"
+                     Text="{Binding SelectedSong.RawLyrics, Mode=OneWay}"
+                     Margin="0 20 0 0" Padding="20" 
                      TextWrapping="Wrap" VerticalContentAlignment="Top"
                      VerticalScrollBarVisibility="Auto"/>
         </DockPanel>
         
         <!-- Rectangle refer ElementName for general EditMode Property -->
-        <Rectangle Opacity="0.75" Grid.RowSpan="3" Fill="{StaticResource BackgroundBrush}" 
+        <Rectangle Opacity="0.9" Grid.RowSpan="3" Fill="{StaticResource BackgroundBrush}" 
                    Panel.ZIndex="4" x:Name="EditModeRectangle"
                    Visibility="{Binding EditModeVisible}"/>
 
@@ -126,7 +129,7 @@
             <!-- AUTHOR -->
             <TextBox x:Name="AuthorTextBox"
                      Grid.Column="1" Text="{Binding SelectedSong.Author}"
-                     Padding="0 0 0 20" Margin="20 0"
+                     Padding="0 0 0 10" Margin="20 0"
                      Focusable="{Binding IsEditMode}"
                      Style="{StaticResource SongInfoTextBox}" TextAlignment="Center"/>
         </DockPanel>
@@ -137,8 +140,7 @@
         <ListBox ItemsSource="{Binding Lyrics}" x:Name="SongLyricListBox"
                  Style="{StaticResource DefaultListBox}" ItemContainerStyle="{StaticResource SongLyricsItem}"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                 Margin="20 60 0 0" Grid.Row="1" MinHeight="200"
-                 LostFocus="SongLyricListBox_LostFocus"
+                 Margin="20 60 0 0" Grid.Row="1" MinHeight="200" LostFocus="SongLyricListBox_LostFocus"
                  Grid.Column="1" Background="Transparent" Grid.ColumnSpan="2">
             <ListBox.ItemTemplate>
                 <!-- Data Template -->
@@ -226,12 +228,26 @@
             <d:ListBoxItem Content="ENGLISH"/>
             <d:ListBoxItem Content="ENGLISH"/>
         </ListBox>
-
-        <TextBox x:Name="LanguageTextBox"  Style="{StaticResource SongInfoTextBox}" Text="{Binding SelectedSong.Language}"
-                 Grid.Row="3" Grid.Column="1" Padding="20 0"
-                 Height="50" HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom" Margin="20 0 0 0"
-                 Visibility="{Binding EditModeVisible}"/>
+        
+        <!-- =====================================
+        LANGUAGE EDIT: list of the song's languages  
+        ========================================== -->
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal"
+                     Visibility="{Binding EditModeVisible}">
+                    <!-- Song Language -->
+            <TextBox x:Name="LanguageTextBox"  Style="{StaticResource SongInfoTextBox}"
+                     Text="{Binding SelectedSong.Language}"
+                     Padding="20 0" FontWeight="Bold"
+                     Height="50" HorizontalAlignment="Left"
+                     VerticalAlignment="Bottom" Margin="20 0 0 0"/>
+                    <!-- Guide hehe -->
+            <TextBox Style="{StaticResource DefaultTextBox}"
+                     Text="&lt;- Rename language" Background="Transparent"
+                     Height="50" HorizontalAlignment="Left" IsReadOnly="True"
+                     Cursor="Arrow"
+                     VerticalAlignment="Bottom" Margin="10 0 0 0"/>
+        </StackPanel>
+        
         <!-- Button Style="{StaticResource DefaultButton}"
                 Content="S" Width="50" Height="50" Grid.Row="2" Grid.Column="2"
                 Margin="20 0" ToolTip="Add a Stanza or Verse" VerticalAlignment="Bottom"

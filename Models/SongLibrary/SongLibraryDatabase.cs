@@ -63,11 +63,10 @@ namespace Ark.Models.SongLibrary
         public void AddSong(SongData song)
         {
             SQLiteConnection connection = SLD_Connection();
-            string readString = "INSERT INTO SongLibrary (Number,Language,Title,Author,RawLyrics,Sequence) VALUES (@songNumber, @Language, @Title, @Author, @Lyrics, @Sequence);";
+            string readString = "INSERT INTO SongLibrary (Number,Language,Title,Author,Lyrics,Sequence) VALUES ((select max(Number) + 1 from SongLibrary), @Language, @Title, @Author, @Lyrics, @Sequence);";
             SQLiteCommand command = new SQLiteCommand(readString, connection);
             command.CommandType = CommandType.Text;
             command.Parameters.AddWithValue("@songId", song.ID);
-            command.Parameters.AddWithValue("@songNumber", song.Number);
             command.Parameters.AddWithValue("@Language", song.Language);
             command.Parameters.AddWithValue("@Title", song.Title);
             command.Parameters.AddWithValue("@Author", song.Author);

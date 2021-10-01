@@ -24,7 +24,6 @@ namespace Ark.ViewModels
         //! Song Filtering
         private ICollectionView SongLanguagesView;                                                                  // CollectionView for the songs
         private ICollectionView SongsView;                                                                          // CollectionView for the songs
-        private string _songFilter;                                                                                 // SongsView but pricate
         public string SongFilter                                                                                    // Gets the text from Song Search
         {
             get { return _songFilter; }
@@ -38,6 +37,7 @@ namespace Ark.ViewModels
                 }
             }
         }
+        private string _songFilter;                                                                                 // SongsView but pricate
 
         //! List of Lyrics
         public ObservableCollection<LyricData> Lyrics { get; set; }
@@ -64,7 +64,7 @@ namespace Ark.ViewModels
                 if (Lyrics != null && SelectedSong != null)                                                         // Change Lyrics
                 {
                     Lyrics.Clear();
-                    foreach (LyricData lyric in ParseLyrics(value.RawLyrics, value.Sequence))
+                    foreach (LyricData lyric in ParseLyrics(SelectedSong.RawLyrics, SelectedSong.Sequence))
                     {
                         Lyrics.Add(lyric);
                     }
@@ -83,6 +83,7 @@ namespace Ark.ViewModels
                 OnPropertyChanged();
                 OnPropertyChanged("EditModeVisible");
                 OnPropertyChanged("EditModeNotVisible");
+                SongsView.Refresh();
             }
         }
         private bool _isEditMode;
@@ -148,6 +149,9 @@ namespace Ark.ViewModels
             _database.AddSong(song);
         }
 
+        //! ====================================================
+        //! [+] UPDATE SONG: rewrites the song in the database
+        //! ====================================================
         public void UpdateSong(SongData song)
         {
             _database.UpdateSong(song);
@@ -211,7 +215,7 @@ namespace Ark.ViewModels
             //!? ====================================================
             List<LyricData> sequencedLyrics = new List<LyricData>();                                                    // List<> that will be returned; already sequenced
             List<LyricData> tempLyrics = new List<LyricData>();                                                         // A temporary list the stores un-sequenced lyrics
-            string[] paragraphs = Array.FindAll(Regex.Split(RawLyrics,                                     // Parses the "RawLyrics" into paragraphs,
+            string[] paragraphs = Array.FindAll(Regex.Split(RawLyrics,                                                  // Parses the "RawLyrics" into paragraphs,
                 "(\r?\n){2,}", RegexOptions.Multiline), p => !String.IsNullOrWhiteSpace(p));                            //      then to LyricData() and added to "tempLyrics"
             int stanzaNumber = 1;                                                                                       // Stanza Number for the "Line" property 
 
@@ -225,8 +229,6 @@ namespace Ark.ViewModels
             {
                 using var reader = new StringReader(paragraph);
                 string? first = reader.ReadLine();
-
-                paragraph.TrimEnd();
 
                 // Check if the beginning contains "CHORUS" string
                 if (first.Contains("CHORUS", StringComparison.OrdinalIgnoreCase))
@@ -303,9 +305,7 @@ namespace Ark.ViewModels
                     // Null supperesion                                                                                             // Find the corresponding LyricData()
                     LyricData? lyric = tempLyrics.Find(x => x.Line.ToUpper() == line.ToUpper().Replace("S", ""));                   // with the same "Line" in "tempLyrics"
                     if (line != "" && lyric != null)
-                    {
                         sequencedLyrics.Add(lyric);                                                                                 // Make sure it is not null and add it
-                    }
                 }
             }
 
@@ -319,9 +319,8 @@ namespace Ark.ViewModels
             if (Songs.Count > 0)
             {
                 //! Select First Song
-                SelectedSong = Songs[0];                                                                            // Automatically Select the first song
-                Lyrics = new ObservableCollection<LyricData>(ParseLyrics(SelectedSong.RawLyrics, SelectedSong.Sequence));                                        // Initialize the Lyrics
-                SelectedSong.Lyrics = Lyrics.ToList();                                                              // Set the lyrics of selected song to the Lyric List
+                SelectedSong = Songs[0];                                                                                 // Automatically Select the first song
+                Lyrics = new ObservableCollection<LyricData>(ParseLyrics(_selectedSong.RawLyrics, _selectedSong.Sequence)); // Initialize the Lyrics
             }
         }
     }
