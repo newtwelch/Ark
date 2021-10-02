@@ -17,10 +17,12 @@
     <None Remove="Resources\Fonts\GONTSERRAT-BOLDITALIC.TTF" />
     <None Remove="Resources\Fonts\GONTSERRAT-ITALIC.TTF" />
     <None Remove="Resources\Fonts\GONTSERRAT-REGULAR.TTF" />
+    <None Remove="Resources\Images\SplashScreen.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
+    <PackageReference Include="WpfScreenHelper" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,10 @@
     <Resource Include="Resources\Fonts\GONTSERRAT-BOLDITALIC.TTF" />
     <Resource Include="Resources\Fonts\GONTSERRAT-ITALIC.TTF" />
     <Resource Include="Resources\Fonts\GONTSERRAT-REGULAR.TTF" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="Resources\Images\SplashScreen.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,8 +51,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Databases\BibleDatabase.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Databases\SongDatabase.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Databases\tagalog.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

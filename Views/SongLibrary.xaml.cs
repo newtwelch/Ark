@@ -112,6 +112,17 @@ namespace Ark.Views
             }
         }
 
+        private void SongLyricListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LyricData lyric = SongLyricListBox.SelectedItem as LyricData;
+
+            if (lyric == null)
+                return;
+
+            DisplayWindow.Instance.Show();
+            DisplayWindow.Instance.DisplayTextBox.Text = lyric.Text;
+        }
+
         //! ====================================================
         //! [+] SONG LYRIC LISTBOX LOST FOCUS: update rawlyrics when lyric listbox loses focus
         //! ====================================================

@@ -45,26 +45,18 @@
         <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
         <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-
-    </Style>
-    
-    <!-- =====================================
-    SONG LIST ITEM: contains title of song
-    ========================================== -->
-    <Style x:Key="SongListBoxItem" TargetType="ListBoxItem"
-           BasedOn="{StaticResource DefaultListBoxItem}" >
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
-                            <!-- Contains the text [ Content Presenter is the Text] -->
+                    <!-- Contains the text [ Content Presenter is the Text] -->
                     <Border Name="Border"
-                            Padding="20 15 0 15"
+                            Padding="20 15"
                             Background="{TemplateBinding Background}"
                             BorderThickness="0">
                         <ContentPresenter />
                     </Border>
-                    
-                            <!-- Special hover and click triggers -->
+
+                    <!-- Special hover and click triggers -->
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="true">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryBrush}" />
@@ -80,10 +72,11 @@
                             <Setter Property="Cursor" Value="Hand" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
-                    
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+
     </Style>
 
     <!-- =====================================

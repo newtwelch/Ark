@@ -3,13 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:local="clr-namespace:Ark.Views"
         mc:Ignorable="d"
         ShowActivated="False"
         Title="DisplayWindow"
-        Height="450"
-        Width="800">
+        d:Height="720"
+        d:Width="1280"
+        WindowStyle="None"
+        Background="{StaticResource BackgroundBrush}">
+    
+    <!-- =====================================
+    WINDOW CHROME: custom title bar and window stuff
+    ========================================== -->
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="40" ResizeBorderThickness="5" 
+                            GlassFrameThickness="0" NonClientFrameEdges="None" />
+    </shell:WindowChrome.WindowChrome>
+    
     <Grid>
-        
+        <Viewbox>
+            <TextBox x:Name="DisplayTextBox" Style="{StaticResource DefaultTextBox}"
+                     AcceptsReturn="True" Background="Transparent"
+                     Foreground="{StaticResource FocusedBrush}" IsReadOnly="True"
+                     TextAlignment="Center"/>
+        </Viewbox>
     </Grid>
 </Window>

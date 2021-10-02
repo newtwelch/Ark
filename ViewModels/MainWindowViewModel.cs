@@ -20,10 +20,10 @@ namespace Ark.ViewModels
             //!? ====================================================
             //!? INITIALIZE: start stuff here
             //!? ====================================================
-            DisplayWindow = new DisplayWindow();                                            // Initialize Display Window
             SongLibrary = new SongLibrary();                                                // Initialize Song Library
             BibleLibrary = new BibleLibrary();                                              // Initialize Bible Library
-            History = new History();                                              // Initialize Bible Library
+            History = new History();                                                        // Initialize Bible Library
+
         }
     }
 }

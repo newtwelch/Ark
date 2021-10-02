@@ -4,10 +4,53 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ark.Views"
+             xmlns:viewmodels="clr-namespace:Ark.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:BibleLibraryViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="780" 
              d:DesignWidth="1240">
     <Grid>
-            
+        <StackPanel Orientation="Horizontal">
+        <ListBox ItemsSource="{Binding Books}"
+                 Style="{StaticResource DefaultListBox}"
+                 MinWidth="300" Margin="10"
+                 ItemContainerStyle="{StaticResource DefaultListBoxItem}"
+                 SelectedItem="{Binding SelectedBook}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"
+                               FontFamily="Gontserrat"
+                               FontSize="20"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox ItemsSource="{Binding Chapters}"
+                 SelectedItem="{Binding SelectedChapter}"
+                 Style="{StaticResource DefaultListBox}"
+                 ItemContainerStyle="{StaticResource DefaultListBoxItem}"
+                 MinWidth="150" Margin="10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ID}"
+                               FontFamily="Gontserrat"
+                               FontSize="20"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox ItemsSource="{Binding Verses}"
+                 Style="{StaticResource DefaultListBox}"
+                 ItemContainerStyle="{StaticResource DefaultListBoxItem}"
+                 MinWidth="100" Margin="10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding ID}" 
+                                       FontFamily="Gontserrat"
+                                       FontSize="20"/>
+                            <TextBlock Text="{Binding Text}"/>
+                        </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        </StackPanel>
     </Grid>
 </UserControl>

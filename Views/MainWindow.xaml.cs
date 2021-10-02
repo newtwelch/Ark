@@ -41,7 +41,6 @@ namespace Ark.Views
             //!? INIT: Display Window
             //!? ====================================================
             displayWindow = _viewModel.DisplayWindow;                                                       // Inititialize Display Window
-            displayWindow.InitHwnd();                                                                       // Open it
 
         }
 

@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:hlpr="clr-namespace:Ark.Models.Helpers"
-             xmlns:local="clr-namespace:Ark.Views" xmlns:viewmodels="clr-namespace:Ark.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SongLibraryViewModel}"
+             xmlns:local="clr-namespace:Ark.Views" 
+             xmlns:viewmodels="clr-namespace:Ark.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SongLibraryViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="740" 
              d:DesignWidth="1190">
@@ -81,7 +82,7 @@
         SONG LIST: list of songs
         ========================================== -->
         <ListBox ItemsSource="{Binding Songs}" Style="{StaticResource DefaultListBox}"
-                 ItemContainerStyle="{StaticResource SongListBoxItem}" 
+                 ItemContainerStyle="{StaticResource DefaultListBoxItem}" 
                  SelectedIndex="0" SelectedItem="{Binding SelectedSong}"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                  Margin="0 20 20 0" Grid.Row="1" Grid.RowSpan="2" MinHeight="200">
@@ -140,6 +141,7 @@
         <ListBox ItemsSource="{Binding Lyrics}" x:Name="SongLyricListBox"
                  Style="{StaticResource DefaultListBox}" ItemContainerStyle="{StaticResource SongLyricsItem}"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                 SelectionChanged="SongLyricListBox_SelectionChanged"
                  Margin="20 60 0 0" Grid.Row="1" MinHeight="200" LostFocus="SongLyricListBox_LostFocus"
                  Grid.Column="1" Background="Transparent" Grid.ColumnSpan="2">
             <ListBox.ItemTemplate>

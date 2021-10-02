@@ -7,7 +7,6 @@ namespace Ark.Models.SongLibrary
 {
     public class SongLibraryDatabase
     {
-
         //! ====================================================
         //! [+] SQLCONNECTION: makes connection to the SQL Database
         //! ====================================================
