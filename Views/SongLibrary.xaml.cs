@@ -2,6 +2,7 @@
 using Ark.ViewModels;
 using System;
 using System.Collections.Generic;
+using Ark.Models.Helpers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,9 +13,9 @@ namespace Ark.Views
     {
         private SongLibraryViewModel _viewModel;
 
-        SongData save_Song = new SongData();
-        List<LyricData> save_Lyric;
-        string save_Title, save_Author, save_Language, rlParserSequence;
+        private SongData save_Song;
+
+        bool isAddingASong;
 
         //! ====================================================
         //! [+] SONG LIBRARY: initialize stuff here
@@ -25,11 +26,8 @@ namespace Ark.Views
             DataContext = _viewModel;
             InitializeComponent();
 
-            save_Song = new SongData();
-            save_Title = "";
-            save_Author = "";
-            save_Language = "";
-            rlParserSequence = "";
+            //_viewModel.SongAdded += EditModeSetUp;
+            SongLibraryViewModel.SongAdded += AddingASong;
         }
 
         //? =============================[EVENTS]==============================
@@ -50,10 +48,15 @@ namespace Ark.Views
                             //!? ====================================================
                             //!? SAVE: save up a copy of the songs properties [ this is incase the user wants to discard changes ]
                             //!? ====================================================
-                            save_Song = _viewModel.SelectedSong;
-                            save_Title = save_Song.Title;
-                            save_Author = save_Song.Author;
-                            save_Language = save_Song.Language;
+                            save_Song = new SongData()
+                            {
+                                Title = _viewModel.SelectedSong.Title,
+                                Author = _viewModel.SelectedSong.Author,
+                                Language = _viewModel.SelectedSong.Language,
+                                RawLyrics = _viewModel.SelectedSong.RawLyrics,
+                                Sequence = _viewModel.SelectedSong.Sequence
+
+                            };
                             break;
                         case "s": //! ========= SAVE CHANGES =========
                             //!? ====================================================
@@ -62,6 +65,7 @@ namespace Ark.Views
                             _viewModel.SelectedSong.RawLyrics = EditRawLyricsTextBox.Text;
                             _viewModel.SelectedSong.Sequence = EditSequenceTextBox.Text;
                             _viewModel.UpdateSong(_viewModel.SelectedSong);
+                            isAddingASong = false;
                             break;
                     }
 
@@ -69,6 +73,7 @@ namespace Ark.Views
                     //!? EDIT MODE SETUP [ if the edit button is clicked, always setup editmode boolean ]
                     //!? ====================================================
                     EditModeSetUp();
+                    SongListBox.ScrollIntoView(SongListBox.SelectedItem);
 
                     break;
                 case "TagDiscardButton":
@@ -77,17 +82,20 @@ namespace Ark.Views
                         case "T": //! ========= TAGS =========
                             break;
                         case "D": //! ========= DISCARD CHANGES =========
-                            //!? ====================================================
-                            //!? DISCARD CHANGES: revert back the properties and do nothing
-                            //!? ====================================================
+                                  //!? ====================================================
+                                  //!? DISCARD CHANGES: revert back the properties and do nothing
+                                  //!? ====================================================
                             _viewModel.SelectedSong = null;
-                            save_Song.Title = save_Title;
-                            save_Song.Author = save_Author;
-                            save_Song.Language = save_Language;
-                            _viewModel.SelectedSong = save_Song;
+
+                            if (isAddingASong) // if we are discarding a new song, delete it
+                                _viewModel.DeleteSong(this);
+                            else               // if we are discarding an edit, save previous data
+                                _viewModel.SelectedSong = save_Song;
 
                             //!? EDIT MODE SETUP [ exits out of Edit Mode ]
                             EditModeSetUp();
+                            SongListBox.ScrollIntoView(SongListBox.SelectedItem);
+                            isAddingASong = false;
 
                             break;
                     }
@@ -112,6 +120,9 @@ namespace Ark.Views
             }
         }
 
+        //! ====================================================
+        //! [+] SONG LYRIC SELECTION CHANGED: 
+        //! ====================================================
         private void SongLyricListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LyricData lyric = SongLyricListBox.SelectedItem as LyricData;
@@ -140,6 +151,12 @@ namespace Ark.Views
         }
 
         //? =============================[METHODS & HELPERS]==============================
+
+        private void AddingASong()
+        {
+            EditModeSetUp();
+            isAddingASong = true;
+        }
 
         //! ====================================================
         //! [+] EDIT MODE SETUP: flip viewModel Editmode and proceed to change properties accordingly
@@ -193,8 +210,6 @@ namespace Ark.Views
 
                 if (lyric.Type == LyricType.Bridge)
                     _rawLyrics += $"\r\nBRIDGE\r\n{lyric.Text} \r\n";
-
-                rlParserSequence += lyric.Line;
             }
             // Trim the end for unwanted white lines;
             return _rawLyrics.TrimEnd();

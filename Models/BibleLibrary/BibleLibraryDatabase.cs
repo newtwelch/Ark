@@ -78,7 +78,6 @@ namespace Ark.Models.BibleLibrary
                         }
                     }
                 }
-
             }
             return list;
         }

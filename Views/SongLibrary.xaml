@@ -2,10 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hlpr="clr-namespace:Ark.Models.Helpers"
-             xmlns:local="clr-namespace:Ark.Views" 
-             xmlns:viewmodels="clr-namespace:Ark.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SongLibraryViewModel}"
+             xmlns:viewmodels="clr-namespace:Ark.ViewModels"  d:DataContext="{d:DesignInstance Type=viewmodels:SongLibraryViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="740" 
              d:DesignWidth="1190">
@@ -52,7 +51,7 @@
         </DockPanel>
         
         <!-- Rectangle refer ElementName for general EditMode Property -->
-        <Rectangle Opacity="0.9" Grid.RowSpan="3" Fill="{StaticResource BackgroundBrush}" 
+        <Rectangle Opacity="0.75" Grid.RowSpan="3" Fill="{StaticResource BackgroundBrush}" 
                    Panel.ZIndex="4" x:Name="EditModeRectangle"
                    Visibility="{Binding EditModeVisible}"/>
 
@@ -63,11 +62,11 @@
             <!-- Delete Song Button -->
             <Button Style="{StaticResource IconButton}"
                     Content="D" Width="60" BorderBrush="{StaticResource RedBrush}"
-                    ToolTip="[!] Delete the selected Song"
+                    ToolTip="[!] Delete the selected Song" Command="{Binding Delete_Song}"
                     DockPanel.Dock="Right"/>
             <!-- Add Song Button -->
             <Button Style="{StaticResource IconButton}"
-                    Content="S" Width="60" 
+                    Content="S" Width="60" Command="{Binding Add_Song}"
                     Margin="20 0" ToolTip="Create a new song"
                     DockPanel.Dock="Right"/>
             <!-- Search Text Box -->
@@ -81,7 +80,7 @@
         <!-- =====================================
         SONG LIST: list of songs
         ========================================== -->
-        <ListBox ItemsSource="{Binding Songs}" Style="{StaticResource DefaultListBox}"
+        <ListBox x:Name="SongListBox" ItemsSource="{Binding Songs}" Style="{StaticResource DefaultListBox}"
                  ItemContainerStyle="{StaticResource DefaultListBoxItem}" 
                  SelectedIndex="0" SelectedItem="{Binding SelectedSong}"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
@@ -236,24 +235,19 @@
         ========================================== -->
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal"
                      Visibility="{Binding EditModeVisible}">
-                    <!-- Song Language -->
+            <!-- Song Language -->
             <TextBox x:Name="LanguageTextBox"  Style="{StaticResource SongInfoTextBox}"
                      Text="{Binding SelectedSong.Language}"
                      Padding="20 0" FontWeight="Bold"
                      Height="50" HorizontalAlignment="Left"
                      VerticalAlignment="Bottom" Margin="20 0 0 0"/>
-                    <!-- Guide hehe -->
+            <!-- Guide hehe -->
             <TextBox Style="{StaticResource DefaultTextBox}"
                      Text="&lt;- Rename language" Background="Transparent"
                      Height="50" HorizontalAlignment="Left" IsReadOnly="True"
                      Cursor="Arrow"
                      VerticalAlignment="Bottom" Margin="10 0 0 0"/>
         </StackPanel>
-        
-        <!-- Button Style="{StaticResource DefaultButton}"
-                Content="S" Width="50" Height="50" Grid.Row="2" Grid.Column="2"
-                Margin="20 0" ToolTip="Add a Stanza or Verse" VerticalAlignment="Bottom"
-                DockPanel.Dock="Right"/ -->
 
     </Grid>
 </UserControl>

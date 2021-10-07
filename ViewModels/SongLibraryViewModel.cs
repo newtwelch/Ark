@@ -1,4 +1,5 @@
-﻿using Ark.Models.SongLibrary;
+﻿using Ark.Models.Helpers;
+using Ark.Models.SongLibrary;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace Ark.ViewModels
 {
@@ -15,16 +17,19 @@ namespace Ark.ViewModels
     {
 
         //! Database access
-        private SongLibraryDatabase _database;                                                                      // Song Database class
+        private SongLibraryDatabase _database;  // Song Database class
 
         //! Song List
-        public ObservableCollection<SongData> Songs { get; set; }                                                   // List of Songs
-        public ObservableCollection<SongData> SongLanguages { get; set; }                                           // List of Languages in the Song
+        public ObservableCollection<SongData> Songs { get; set; }          // List of Songs
+        public ObservableCollection<SongData> SongLanguages { get; set; }  // List of Languages in the Song
+        
+        //! List of Lyrics
+        public ObservableCollection<LyricData> Lyrics { get; set; }
 
         //! Song Filtering
-        private ICollectionView SongLanguagesView;                                                                  // CollectionView for the songs
-        private ICollectionView SongsView;                                                                          // CollectionView for the songs
-        public string SongFilter                                                                                    // Gets the text from Song Search
+        private ICollectionView SongLanguagesView;  // CollectionView for the songs
+        private ICollectionView SongsView;          // CollectionView for the songs
+        public string SongFilter      // Gets the text from Song Search
         {
             get { return _songFilter; }
             set
@@ -37,13 +42,10 @@ namespace Ark.ViewModels
                 }
             }
         }
-        private string _songFilter;                                                                                 // SongsView but pricate
-
-        //! List of Lyrics
-        public ObservableCollection<LyricData> Lyrics { get; set; }
+        private string _songFilter;   // SongsView but pricate
 
         //! The selected Song;
-        public SongData SelectedSong                                                                                // Forgot what this is called
+        public SongData SelectedSong    // Forgot what this is called
         {
             get { return _selectedSong; }
             set                                                                                                     // Do stuff on selection change here
@@ -71,10 +73,10 @@ namespace Ark.ViewModels
                 }
             }
         }
-        private SongData _selectedSong;                                                                             // SelectedSong but private
+        private SongData _selectedSong; // SelectedSong but private
 
         //! View Mode & Edit Mode
-        public bool IsEditMode                                                                                      // Edit Mode
+        public bool IsEditMode  // Edit Mode
         {
             get { return _isEditMode; }
             set
@@ -87,7 +89,7 @@ namespace Ark.ViewModels
             }
         }
         private bool _isEditMode;
-        //Visibility
+        // Visibility
         public Visibility EditModeVisible
         {
             get
@@ -109,6 +111,11 @@ namespace Ark.ViewModels
             }
         }
 
+        //! Commands
+        public ICommand Add_Song { get; set; }
+        public static event Action SongAdded;   // Create an event
+        public ICommand Delete_Song { get; set;  }
+
         //? =============================[METHODS & MAIN]==============================
 
         //! ====================================================
@@ -117,16 +124,24 @@ namespace Ark.ViewModels
         public SongLibraryViewModel()
         {
             //!? ====================================================
-            //!? VARIABLE INITIALIZE: class property here
+            //!? VARIABLE INITIALIZE: after init, select first song and apply lyrics
             //!? ====================================================
             _database = new SongLibraryDatabase();
             Songs = new ObservableCollection<SongData>(_database.GetSongs());
             SongLanguages = new ObservableCollection<SongData>(Songs);
 
+            if (Songs.Count > 0)
+            {
+                //! Select First Song
+                SelectedSong = Songs[0];                                                                                 // Automatically Select the first song
+                Lyrics = new ObservableCollection<LyricData>(ParseLyrics(_selectedSong.RawLyrics, _selectedSong.Sequence)); // Initialize the Lyrics
+            }
+
             //!? ====================================================
-            //!? INITIALIZE: methods and stuff here
+            //!? COMMANDS
             //!? ====================================================
-            init();
+            Add_Song = new RelayCommands(o => AddSong(o));
+            Delete_Song = new RelayCommands(o => DeleteSong(o));
 
             //!? ====================================================
             //!? SONG FILTER: collection view filtering
@@ -144,9 +159,31 @@ namespace Ark.ViewModels
         //! ====================================================
         //! [+] ADD SONG: adds song to database
         //! ====================================================
-        public void AddSong(SongData song)
+        public void AddSong(Object sender)
         {
-            _database.AddSong(song);
+            SongData newSong = new SongData()
+            {
+                Title = "Title",
+                Author = "Author",
+                RawLyrics = "Filler Lyric",
+                Sequence = "o",
+                Language = "DEFAULT",
+            };
+            _database.AddSong(newSong);
+
+            Songs.Add(_database.LastSong());
+
+            SelectedSong = Songs[Songs.Count - 1];
+            SongAdded?.Invoke();
+        }
+
+        //! ====================================================
+        //! [+] DELETE SONG: deletes song to database
+        //! ====================================================
+        public void DeleteSong(Object sender)
+        {
+            _database.DeleteSong(SelectedSong);
+            Songs.Remove(SelectedSong);
         }
 
         //! ====================================================
@@ -314,14 +351,5 @@ namespace Ark.ViewModels
 
         //? ==========================[ FUNCTION END ]===============================
 
-        private void init()
-        {
-            if (Songs.Count > 0)
-            {
-                //! Select First Song
-                SelectedSong = Songs[0];                                                                                 // Automatically Select the first song
-                Lyrics = new ObservableCollection<LyricData>(ParseLyrics(_selectedSong.RawLyrics, _selectedSong.Sequence)); // Initialize the Lyrics
-            }
-        }
     }
 }

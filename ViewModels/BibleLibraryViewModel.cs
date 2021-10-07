@@ -14,6 +14,7 @@ namespace Ark.ViewModels
         public ObservableCollection<ChapterData> Chapters { get; set; }
         public ObservableCollection<VerseData> Verses { get; set; }
 
+        //! Selected Books and Chapters
         public BookData SelectedBook
         {
             get { return _selectedBook; }
@@ -71,5 +72,6 @@ namespace Ark.ViewModels
             SelectedChapter = Chapters[0];
             Verses = new ObservableCollection<VerseData>(SelectedChapter.Verses);
         }
+
     }
 }

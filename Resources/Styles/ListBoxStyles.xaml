@@ -22,6 +22,7 @@
                                   Focusable="False" Background="{TemplateBinding Background}">
                         <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </ScrollViewer>
+
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding ComputedVerticalScrollBarVisibility, ElementName=scrollviewer}" Value="Visible">
                             <Setter TargetName="scrollviewer" Property="Margin" Value="0 0 40 0" />

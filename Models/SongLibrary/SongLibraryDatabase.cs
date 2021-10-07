@@ -57,6 +57,41 @@ namespace Ark.Models.SongLibrary
         }
 
         //! ====================================================
+        //! [+] GRAB LAST SONG: gets the last song in the database
+        //!         I used this to update song list without having to refresh the list
+        //! ====================================================
+        public SongData LastSong()
+        {
+            SongData lastSong = new SongData();
+
+            using (SQLiteConnection connection = SLD_Connection())
+            {
+                string readString = "select * from SongLibrary WHERE ID=(SELECT max(ID) FROM SongLibrary)";
+                using (SQLiteCommand command = new SQLiteCommand(readString, connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            lastSong = new SongData
+                            {
+                                ID = reader.GetInt32(0),
+                                Number = reader.GetInt32(1),
+                                Language = reader.GetString(2),
+                                Title = reader.GetString(3),
+                                Author = reader.GetString(4),
+                                RawLyrics = reader.GetString(5),
+                                Sequence = reader.GetString(6),
+                                Tags = reader.GetString(7)
+                            };
+                        }
+                    }
+                }
+                return lastSong;
+            }
+        }
+
+        //! ====================================================
         //! [+] ADD SONG: writes a new song on the database
         //! ====================================================
         public void AddSong(SongData song)
@@ -65,12 +100,25 @@ namespace Ark.Models.SongLibrary
             string readString = "INSERT INTO SongLibrary (Number,Language,Title,Author,Lyrics,Sequence) VALUES ((select max(Number) + 1 from SongLibrary), @Language, @Title, @Author, @Lyrics, @Sequence);";
             SQLiteCommand command = new SQLiteCommand(readString, connection);
             command.CommandType = CommandType.Text;
-            command.Parameters.AddWithValue("@songId", song.ID);
             command.Parameters.AddWithValue("@Language", song.Language);
             command.Parameters.AddWithValue("@Title", song.Title);
             command.Parameters.AddWithValue("@Author", song.Author);
             command.Parameters.AddWithValue("@Lyrics", song.RawLyrics);
             command.Parameters.AddWithValue("@Sequence", song.Sequence);
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
+
+        //! ====================================================
+        //! [+] ADD SONG: writes a new song on the database
+        //! ====================================================
+        public void DeleteSong(SongData song)
+        {
+            SQLiteConnection connection = SLD_Connection();
+            string readString = "DELETE FROM SongLibrary WHERE ID = @songID;";
+            SQLiteCommand command = new SQLiteCommand(readString, connection);
+            command.CommandType = CommandType.Text;
+            command.Parameters.AddWithValue("@songID", song.ID);
             command.ExecuteNonQuery();
             connection.Close();
         }
