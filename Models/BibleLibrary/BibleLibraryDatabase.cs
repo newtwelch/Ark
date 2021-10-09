@@ -7,6 +7,7 @@ namespace Ark.Models.BibleLibrary
 {
     public class BibleLibraryDatabase
     {
+
         //! ====================================================
         //! [+] SQLCONNECTION: makes connection to the SQL Database
         //! ====================================================
@@ -27,7 +28,7 @@ namespace Ark.Models.BibleLibrary
         //! ====================================================
         public List<BookData> GetBooks(string Language)
         {
-            List<BookData> list = new List<BookData>();
+            List<BookData> books = new List<BookData>();    
 
             using (SQLiteConnection connection = SLD_Connection())
             {
@@ -38,7 +39,7 @@ namespace Ark.Models.BibleLibrary
                     {
                         while (reader.Read())
                         {
-                            list.Add(new BookData
+                            books.Add(new BookData
                             {
                                 ID = reader.GetInt32(0),
                                 Name = reader.GetString(1),
@@ -59,7 +60,7 @@ namespace Ark.Models.BibleLibrary
                             int verseID = reader.GetInt32(3);
                             string verseText = reader.GetString(4);
 
-                            BookData matchedBook = list.Find(x => x.ID == reader.GetInt32(1));
+                            BookData matchedBook = books.Find(x => x.ID == reader.GetInt32(1));
 
                             if (matchedBook.Chapters.Count < chapterID)
                                 matchedBook.Chapters.Add(new ChapterData()
@@ -79,7 +80,7 @@ namespace Ark.Models.BibleLibrary
                     }
                 }
             }
-            return list;
+            return books;
         }
     }
 }

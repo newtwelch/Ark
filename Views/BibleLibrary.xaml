@@ -4,53 +4,183 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ark.Views"
+             xmlns:hlpr="clr-namespace:Ark.Models.Helpers"
              xmlns:viewmodels="clr-namespace:Ark.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:BibleLibraryViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="780" 
              d:DesignWidth="1240">
     <Grid>
+        <!-- =====================================
+        GRID DEFINITIONS: 2 Columns & 3 Rows
+        ========================================== -->
+              <!-- COLUMNS -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".20*" />
+            <ColumnDefinition Width=".225*" />
+        </Grid.ColumnDefinitions>
+
+                <!-- ROWS -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="70" />
+        </Grid.RowDefinitions>
+
+
+        <!-- =====================================
+        SEARCHES:
+        ========================================== -->
         <StackPanel Orientation="Horizontal">
-        <ListBox ItemsSource="{Binding Books}"
-                 Style="{StaticResource DefaultListBox}"
-                 MinWidth="300" Margin="10"
-                 ItemContainerStyle="{StaticResource DefaultListBoxItem}"
-                 SelectedItem="{Binding SelectedBook}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}"
-                               FontFamily="Gontserrat"
-                               FontSize="20"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <ListBox ItemsSource="{Binding Chapters}"
-                 SelectedItem="{Binding SelectedChapter}"
-                 Style="{StaticResource DefaultListBox}"
-                 ItemContainerStyle="{StaticResource DefaultListBoxItem}"
-                 MinWidth="150" Margin="10">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding ID}"
-                               FontFamily="Gontserrat"
-                               FontSize="20"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <ListBox ItemsSource="{Binding Verses}"
-                 Style="{StaticResource DefaultListBox}"
-                 ItemContainerStyle="{StaticResource DefaultListBoxItem}"
-                 MinWidth="100" Margin="10">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding ID}" 
-                                       FontFamily="Gontserrat"
-                                       FontSize="20"/>
-                            <TextBlock Text="{Binding Text}"/>
-                        </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                  <!-- BOOK SEARCH -->
+            <TextBox Width="300" Margin="0 0 20 0" x:Name="BookSearchTextBox"
+                     Style="{StaticResource SearchTextBox}" Tag="Book"
+                     Text="{Binding SearchBookText}" TextChanged="TextBox_TextChanged"
+                     Padding="20 0 0 0"/>
+                    <!-- CHAPTER SEARCH -->
+            <TextBox Width="150" x:Name="ChapterSearchTextBox"
+                     Text="{Binding SearchChapterText}"
+                     Style="{StaticResource SearchTextBox}" Tag="Chapter"
+                     PreviewTextInput="TextBox_PreviewTextInput"
+                     TextChanged="TextBox_TextChanged"
+                     Padding="20 0 0 0"/>
         </StackPanel>
+        
+        <!-- ============[ VERSE SEARCH ]============== -->
+        
+        <DockPanel Grid.Column="1">
+                    <!-- VERSE SEARCH -->
+            <TextBox Width="40" Margin="0 0 20 0" x:Name="VerseSearchTextBox"
+                     PreviewTextInput="TextBox_PreviewTextInput"
+                     TextChanged="TextBox_TextChanged"
+                     Style="{StaticResource SearchTextBox}" Tag="V"
+                     TextAlignment="Center"/>
+                    <!-- WIDER VERSE SEARCH -->
+            <TextBox x:Name="WideVerseSearchTextBox" 
+                     Style="{StaticResource SearchTextBox}" Tag="Search Verse"
+                     TextChanged="TextBox_TextChanged"
+                     Padding="20"/>
+        </DockPanel>
+
+        <!-- =====================================
+                         LISTBOXES:
+        ========================================== -->
+        <StackPanel Grid.Row="1" Grid.RowSpan="2" Orientation="Horizontal">
+            
+            <!-- =====================================
+            BOOK:
+            ========================================== -->
+            <ListBox ItemsSource="{Binding Books}" x:Name="BookListBox"
+                     Style="{StaticResource DefaultListBox}"
+                     MinWidth="300" Margin="0 20 20 0"
+                     ItemContainerStyle="{StaticResource DefaultListBoxItem}"
+                     SelectedItem="{Binding SelectedBook}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <!-- BOOK NAME -->
+                        <hlpr:HighlightableTextBlock Text="{Binding Name}" IgnoreDot="True"
+                                                     HighlightPhrase="{Binding Text, ElementName=BookSearchTextBox}"
+                                                     HighlightBrush="{StaticResource OrangeBrush}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            
+            <!-- =====================================
+            CHAPTERS:
+            ========================================== -->
+            <ListBox ItemsSource="{Binding Chapters}" x:Name="ChapterListBox"
+                     SelectedItem="{Binding SelectedChapter}"
+                     Style="{StaticResource DefaultListBox}"
+                     ItemContainerStyle="{StaticResource DefaultListBoxItem}"
+                     MinWidth="150" Margin="0 20 0 0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <!-- CHAPTER NUMBER -->
+                        <hlpr:HighlightableTextBlock Text="{Binding ID}" IgnoreDot="True"
+                                                     HighlightPhrase="{Binding Text, ElementName=ChapterSearchTextBox}"
+                                                     HighlightBrush="{StaticResource OrangeBrush}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            
+        </StackPanel>
+        
+        <!-- =====================================
+        VERSES:
+        ========================================== -->
+        <ListBox ItemsSource="{Binding Verses}" x:Name="VerseListBox"
+                 Background="Transparent"
+                 Style="{StaticResource DefaultListBox}"
+                 Grid.Column="2" Grid.Row="1" Margin="0 20 0 0"
+                 ItemContainerStyle="{StaticResource BibleVerseItem}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 SelectedItem="{Binding SelectedVerse}">
+            <ListBox.ItemTemplate>
+                <!-- Data Template -->
+                <DataTemplate>
+                    <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <!-- VERSE NUMBER -->
+                        <Button Style="{StaticResource DefaultButton}"
+                                 Content="{Binding ID}" DockPanel.Dock="Left" Width="40"
+                                 Margin="-80 0 0 0" MinHeight="100" VerticalAlignment="Stretch"/>
+                        <!-- VERSE TEXT -->
+                        <hlpr:HighlightableTextBlock Text="{Binding Text}" IgnoreDot="True" TextWrapping="Wrap"
+                                                         TextAlignment="Left" Padding="15" VerticalAlignment="Center"
+                                                         HighlightPhrase="{Binding Text, ElementName=SongSearchTextBox}"
+                                                         HighlightBrush="{StaticResource OrangeBrush}"
+                                                         HorizontalAlignment="Stretch"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- =====================================
+        WIDE VERSE:
+        ========================================== -->
+        <ListBox ItemsSource="{Binding AllVerses}" x:Name="WideVerseListBox"
+                 Background="Transparent"
+                 Style="{StaticResource DefaultListBox}"
+                 Grid.Column="2" Grid.Row="1" Margin="0 20 0 0"
+                 ItemContainerStyle="{StaticResource BibleWideVerseItem}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 Visibility="Collapsed"
+                 SelectedItem="{Binding SelectedVerse}">
+            <ListBox.ItemTemplate>
+                <!-- Data Template -->
+                <DataTemplate>
+                    <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <!-- BUTTON W/ BOOK CHAPTER AND VERSE -->
+                        <Button Style="{StaticResource DefaultButton}"
+                                DockPanel.Dock="Left" Width="100"
+                                 Margin="-140 0 0 0" MinHeight="100" VerticalAlignment="Stretch">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <!-- Text block w/ multibinding
+                                    that displays 
+                                    Book Chapter:Verse -->
+                                    <TextBlock Width="100" Padding="5 0" FontSize="16"
+                                               Foreground="{StaticResource UnfocusedBrush}"
+                                               TextAlignment="Center" TextWrapping="Wrap">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} &#x0a;{1}:{2}">
+                                                <Binding Path="FromBook" />
+                                                <Binding Path="FromChapter" />
+                                                <Binding Path="ID" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                        <!-- VERSE TEXT -->
+                        <hlpr:HighlightableTextBlock Text="{Binding Text}" IgnoreDot="True" TextWrapping="Wrap" 
+                                                     Padding="15" VerticalAlignment="Center"
+                                                     HighlightPhrase="{Binding Text, ElementName=SongSearchTextBox}"
+                                                     HighlightBrush="{StaticResource OrangeBrush}"
+                                                     HorizontalAlignment="Stretch"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
     </Grid>
 </UserControl>

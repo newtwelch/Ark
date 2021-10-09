@@ -149,7 +149,7 @@ namespace Ark.ViewModels
             SongsView = CollectionViewSource.GetDefaultView(Songs);
             SongsView.Filter = SongFilterView;
 
-            //Song Language
+            // Song Language
             SongLanguagesView = CollectionViewSource.GetDefaultView(SongLanguages);
             SongLanguagesView.Filter = o => (o as SongData).Number.Equals(SelectedSong.Number);
         }

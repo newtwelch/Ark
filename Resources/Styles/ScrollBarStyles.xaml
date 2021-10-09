@@ -27,7 +27,7 @@
             <!-- Vertical -->
     <ControlTemplate x:Key="VerticalScrollBar"
                      TargetType="{x:Type ScrollBar}">
-        <Grid Background="{StaticResource ThumbHolderBrush}" Margin="1 -1 -1 -1">
+        <Grid Background="{StaticResource ThumbHolderBrush}">
             <Track Name="PART_Track"
                    IsDirectionReversed="True">
                 <Track.Thumb>
@@ -40,7 +40,7 @@
             <!-- Horizontal -->
     <ControlTemplate x:Key="HorizontalScrollBar"
                      TargetType="{x:Type ScrollBar}">
-        <Grid Background="{StaticResource ThumbHolderBrush}" Margin="-1 1 -1 -1">
+        <Grid Background="{StaticResource ThumbHolderBrush}">
             <Track Name="PART_Track" IsDirectionReversed=" False">
                 <Track.Thumb>
                     <Thumb Style="{StaticResource scrollBarThumb}" />
@@ -58,8 +58,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="BorderThickness" Value="0" />
         <Style.Triggers>
-            
-                    <!-- Vertical -->
+            <!-- Vertical -->
             <Trigger Property="Orientation" Value="Vertical">
                 <Setter Property="Margin" Value="0 0 -60 0" />
                 <Setter Property="Width" Value="20" />

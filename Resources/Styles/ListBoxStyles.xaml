@@ -158,4 +158,89 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- =====================================
+    BIBLE VERSE ITEM: custom style for the Verse Items
+    ========================================== -->
+    <Style x:Key="BibleVerseItem"
+           BasedOn="{StaticResource DefaultListBoxItem}"
+           TargetType="ListBoxItem">
+        <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <!-- BORDER: contains a contentpresenter [ the actual item ] -->
+                    <Border Name="Border"
+                            MinHeight="70"
+                            Background="{StaticResource ContainerDarkBrush}"
+                            Margin="60 0 0 20"
+                            BorderThickness="0"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter  VerticalAlignment="Center"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!-- TRIGGER: Selection and Mouse Over-->
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+                        </Trigger>
+
+
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =====================================
+    BIBLE WIDE VERSE ITEM: custom style for the Verse Items
+    ========================================== -->
+    <Style x:Key="BibleWideVerseItem"
+           BasedOn="{StaticResource DefaultListBoxItem}"
+           TargetType="ListBoxItem">
+        <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <!-- BORDER: contains a contentpresenter [ the actual item ] -->
+                    <Border Name="Border"
+                            MinHeight="70"
+                            Background="{StaticResource ContainerDarkBrush}"
+                            Margin="120 0 0 20"
+                            BorderThickness="0"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter  VerticalAlignment="Center"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!-- TRIGGER: Selection and Mouse Over-->
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource FocusedBrush}" />
+                        </Trigger>
+
+
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>

@@ -11,7 +11,7 @@
     <Grid>
 
         <!-- =====================================
-        GRID DEFINITIONS: 2 Columns & 2 Rows
+        GRID DEFINITIONS: 2 Columns & 3 Rows
         ========================================== -->
         <!-- COLUMNS -->
         <Grid.ColumnDefinitions>

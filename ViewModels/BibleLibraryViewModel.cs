@@ -1,6 +1,10 @@
 ﻿using Ark.Models.BibleLibrary;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 
 namespace Ark.ViewModels
 {
@@ -13,6 +17,7 @@ namespace Ark.ViewModels
         public ObservableCollection<BookData> Books { get; set; }
         public ObservableCollection<ChapterData> Chapters { get; set; }
         public ObservableCollection<VerseData> Verses { get; set; }
+        public ObservableCollection<VerseData> AllVerses { get; set; }
 
         //! Selected Books and Chapters
         public BookData SelectedBook
@@ -57,6 +62,21 @@ namespace Ark.ViewModels
             }
         }
         private ChapterData _selectedChapter;
+        public VerseData SelectedVerse
+        {
+            get { return _selectedVerse; }
+            set
+            {
+                _selectedVerse = value;
+                OnPropertyChanged();
+            }
+        }
+        private VerseData _selectedVerse;
+
+
+        //! Bible Searching
+        public ICollectionView BooksView;          // CollectionView for the songs
+        public string SearchBookText;                // Gets the Book from Book Search
 
         //? =============================[METHODS & MAIN]==============================
 
@@ -71,7 +91,56 @@ namespace Ark.ViewModels
             Chapters = new ObservableCollection<ChapterData>(SelectedBook.Chapters);
             SelectedChapter = Chapters[0];
             Verses = new ObservableCollection<VerseData>(SelectedChapter.Verses);
+            AllVerses = new ObservableCollection<VerseData>(GetAllVerses());
+
+            //!? ====================================================
+            //!? SEARCH FILTER: collection view filtering
+            //!? ====================================================
+            BooksView = CollectionViewSource.GetDefaultView(Books);
+            BooksView.Filter = SearchFilterView;
         }
 
+        //! ====================================================
+        //! [+] VIEW FILTER: main method for initializing stuff
+        //! ====================================================
+        public bool SearchFilterView(object o)
+        {
+            //!? Book Filter
+            if (string.IsNullOrEmpty(SearchBookText))
+                return true;
+            else
+                return (o as BookData).Name.Contains(SearchBookText, StringComparison.OrdinalIgnoreCase);
+        }
+
+        //! ====================================================
+        //! [+] GET ALL VERSES: 
+        //! ====================================================
+        public List<VerseData> GetAllVerses()
+        {
+            List<VerseData> list = new List<VerseData>();
+
+            //!? For Every Book in Books
+            foreach (BookData book in Books)
+            {
+                string fromBook = book.Name;
+
+                //!? For Every Chapter in said Book
+                foreach (ChapterData chapter in book.Chapters)
+                {
+                    int fromChapter = chapter.ID;
+
+                    //!? For Every Verse in said Chapter 
+                    foreach (VerseData verse in chapter.Verses)
+                    {
+                        verse.FromBook = fromBook;
+                        verse.FromChapter = fromChapter;
+                        //!? Add VERSE
+                        list.Add(verse);
+                    }
+                }
+            }
+
+            return list;
+        }
     }
 }

@@ -17,5 +17,7 @@ namespace Ark.Models.BibleLibrary
     {
         public int ID { get; set; }
         public string Text { get; set; }
+        public string FromBook { get; set; }
+        public int FromChapter { get; set; }
     }
 }
