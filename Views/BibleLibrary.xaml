@@ -42,7 +42,6 @@
                      Padding="20 0 0 0"/>
                     <!-- CHAPTER SEARCH -->
             <TextBox Width="150" x:Name="ChapterSearchTextBox"
-                     Text="{Binding SearchChapterText}"
                      Style="{StaticResource SearchTextBox}" Tag="Chapter"
                      PreviewTextInput="TextBox_PreviewTextInput"
                      TextChanged="TextBox_TextChanged"
@@ -59,10 +58,10 @@
                      Style="{StaticResource SearchTextBox}" Tag="V"
                      TextAlignment="Center"/>
                     <!-- WIDER VERSE SEARCH -->
-            <TextBox x:Name="WideVerseSearchTextBox" 
-                     Style="{StaticResource SearchTextBox}" Tag="Search Verse"
+            <TextBox x:Name="WideVerseSearchTextBox" Text="{Binding SearchVerseText, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource SearchTextBox}" Tag="Search for Verse" ToolTip="Add a DOT at the beginning to search the entire Bible"
                      TextChanged="TextBox_TextChanged"
-                     Padding="20"/>
+                     Padding="20 0 0 0"/>
         </DockPanel>
 
         <!-- =====================================
@@ -127,9 +126,9 @@
                                  Content="{Binding ID}" DockPanel.Dock="Left" Width="40"
                                  Margin="-80 0 0 0" MinHeight="100" VerticalAlignment="Stretch"/>
                         <!-- VERSE TEXT -->
-                        <hlpr:HighlightableTextBlock Text="{Binding Text}" IgnoreDot="True" TextWrapping="Wrap"
+                        <hlpr:HighlightableTextBlock Text="{Binding Text}" TextWrapping="Wrap"
                                                          TextAlignment="Left" Padding="15" VerticalAlignment="Center"
-                                                         HighlightPhrase="{Binding Text, ElementName=SongSearchTextBox}"
+                                                         HighlightPhrase="{Binding Text, ElementName=WideVerseSearchTextBox}"
                                                          HighlightBrush="{StaticResource OrangeBrush}"
                                                          HorizontalAlignment="Stretch"/>
                     </DockPanel>
@@ -146,8 +145,7 @@
                  Grid.Column="2" Grid.Row="1" Margin="0 20 0 0"
                  ItemContainerStyle="{StaticResource BibleWideVerseItem}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 Visibility="Collapsed"
-                 SelectedItem="{Binding SelectedVerse}">
+                 Visibility="Collapsed">
             <ListBox.ItemTemplate>
                 <!-- Data Template -->
                 <DataTemplate>
@@ -176,9 +174,9 @@
                             </Button.Content>
                         </Button>
                         <!-- VERSE TEXT -->
-                        <hlpr:HighlightableTextBlock Text="{Binding Text}" IgnoreDot="True" TextWrapping="Wrap" 
-                                                     Padding="15" VerticalAlignment="Center"
-                                                     HighlightPhrase="{Binding Text, ElementName=SongSearchTextBox}"
+                        <hlpr:HighlightableTextBlock Text="{Binding Text}" TextWrapping="Wrap" 
+                                                     Padding="15" VerticalAlignment="Center" IgnoreDot="True"
+                                                     HighlightPhrase="{Binding Text, ElementName=WideVerseSearchTextBox}"
                                                      HighlightBrush="{StaticResource OrangeBrush}"
                                                      HorizontalAlignment="Stretch"/>
                     </DockPanel>
@@ -186,5 +184,21 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
+        <!-- =====================================
+        LANGUAGE:
+        ========================================== -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="0 20 0 0">
+            <!-- English -->
+            <RadioButton x:Name="EnglishRadioTab"
+                         Width="150" Margin="0 0 20 0" Checked="English_Checked"
+                         Content="ENGLISH" FontWeight="Bold"
+                         GroupName="Language" Style="{StaticResource DefaultToggleButton}" />
+            <!-- Tagalog -->
+            <RadioButton x:Name="TagalogRadioTab"
+                         Content="TAGALOG" Width="150" Checked="English_Checked"
+                         GroupName="Language" FontWeight="Bold"
+                         Style="{StaticResource DefaultToggleButton}" />
+
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -17,12 +17,15 @@ namespace Ark.Views
         //! Display Window
         private DisplayWindow displayWindow;
 
+        //! Routed Command
         public static RoutedCommand CloseSecondDisplay = new RoutedCommand(),
                                     ToSongLibraryTab = new RoutedCommand(),
                                     ToBibleLibraryTab = new RoutedCommand();
+        //!? UserControl Commands
         public static RoutedCommand SearchFocus = new RoutedCommand(),
                                     SpecificSearchFocus = new RoutedCommand();
 
+        //! Command Events for other UserControls
         public static event Action SearchFocusEvent;
         public static event Action SpecificSearchFocusEvent;
 
@@ -56,41 +59,7 @@ namespace Ark.Views
             SearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt));
             SpecificSearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control));
 
-            //!? ====================================================
-            //!? INIT: Display Window
-            //!? ====================================================
-            displayWindow = _viewModel.DisplayWindow;                                                       // Inititialize Display Window
-
         }
-
-        #region Window Maximize Fix
-        //! ====================================================
-        //! [+] SOURCE INITIALIZE: should fix the maximizing issue
-        //! ====================================================
-        private void MainWindow_SourceInitialized(object? sender, EventArgs e)
-        {
-            //!? ====================================================
-            //!? WINDOWPROC: use this as callback method to process native stuff
-            //!? ====================================================
-            IntPtr handle = new WindowInteropHelper(this).Handle;
-            HwndSource.FromHwnd(handle)?.AddHook(WindowProc);
-        }
-        //! ====================================================
-        //! [+] INTPTR WINDOWPROC: I have no idea :(
-        //! ====================================================
-        private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            switch (msg)
-            {
-                case 0x0024:
-                    WindowMaximizeHelper.WmGetMinMaxInfo(hwnd, lParam, (int)MinWidth, (int)MinHeight);
-                    handled = true;
-                    break;
-            }
-
-            return (IntPtr)0;
-        }
-        #endregion
 
         //! ====================================================
         //! [+] RADIO BUTTON TABS: switching tabs 
@@ -123,6 +92,37 @@ namespace Ark.Views
                 e.NavigationMode == NavigationMode.Back)
                 e.Cancel = true;
         }
+
+        #region Window Maximize Fix
+        //! ====================================================
+        //! [+] SOURCE INITIALIZE: should fix the maximizing issue
+        //! ====================================================
+        private void MainWindow_SourceInitialized(object? sender, EventArgs e)
+        {
+            //!? ====================================================
+            //!? WINDOWPROC: use this as callback method to process native stuff
+            //!? ====================================================
+            IntPtr handle = new WindowInteropHelper(this).Handle;
+            HwndSource.FromHwnd(handle)?.AddHook(WindowProc);
+        }
+        //! ====================================================
+        //! [+] INTPTR WINDOWPROC: I have no idea :(
+        //! ====================================================
+        private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            switch (msg)
+            {
+                case 0x0024:
+                    WindowMaximizeHelper.WmGetMinMaxInfo(hwnd, lParam, (int)MinWidth, (int)MinHeight);
+                    handled = true;
+                    break;
+            }
+
+            return (IntPtr)0;
+        }
+        #endregion
+
+        //? =============================[COMMAND METHODS]==============================
 
         private void CloseSecondDisplayMethod(object sender, ExecutedRoutedEventArgs e) => DisplayWindow.Instance.Close();
         private void ToSongLibraryTabMethod(object sender, ExecutedRoutedEventArgs e) => SongLibraryTab.IsChecked = true;

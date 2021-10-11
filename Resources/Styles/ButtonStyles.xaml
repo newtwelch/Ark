@@ -154,7 +154,7 @@
            TargetType="ToggleButton">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" /> 
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#arkicons" />
+        <Setter Property="FontFamily" Value="Gontserrat" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="VerticalContentAlignment" Value="Center" />

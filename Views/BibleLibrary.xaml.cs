@@ -19,6 +19,9 @@ namespace Ark.Views
             DataContext = _viewModel;
             InitializeComponent();
 
+            EnglishRadioTab.IsChecked = true;
+
+            //!? Delay Event for the search
             chapterAssistant = new TypeAssistant();
             chapterAssistant.Idled += chapterTextBoxIdled;
 
@@ -45,7 +48,9 @@ namespace Ark.Views
                     //!? Reset the other searches
                     ChapterSearchTextBox.Text = "";
                     VerseSearchTextBox.Text = "";
-                    WideVerseSearchTextBox.Text = "";
+
+                    if (tb.IsFocused)
+                        WideVerseSearchTextBox.Text = "";
 
                     //!? If only one is remaining select and focus on next search
                     if (BookListBox.Items.Count == 1)
@@ -61,7 +66,8 @@ namespace Ark.Views
 
                     //!? Reset the other searches
                     VerseSearchTextBox.Text = "";
-                    WideVerseSearchTextBox.Text = "";
+                    if (tb.IsFocused)
+                        WideVerseSearchTextBox.Text = "";
 
                     //!? If only one is remaining select and focus on next search
                     if (ChapterListBox.Items.Count == 1)
@@ -78,9 +84,36 @@ namespace Ark.Views
                 //!? ____________________________________________
                 case "VerseSearchTextBox":
 
-                    //!? Reset the other searches
-                    WideVerseSearchTextBox.Text = "";
+                    if (tb.IsFocused)
+                        WideVerseSearchTextBox.Text = "";
                     verseAssistant.TextChanged();
+
+                    break;
+
+                //!? WIDE VERSE SEARCH
+                //!? ____________________________________________
+                case "WideVerseSearchTextBox":
+
+                    //!? If the textbox is not null
+                    if (!String.IsNullOrWhiteSpace(WideVerseSearchTextBox.Text))
+                    {
+                        //!? Show whether text starts with a dot or not
+                        bool startsWithDot = WideVerseSearchTextBox.Text.StartsWith(".");
+                        WideVerseListBox.Visibility = startsWithDot ? Visibility.Visible : Visibility.Collapsed;
+                        VerseListBox.Visibility = startsWithDot ? Visibility.Collapsed : Visibility.Visible;
+
+                        //!? Reset the other searches
+                        BookSearchTextBox.Text = "";
+                        ChapterSearchTextBox.Text = "";
+                        VerseSearchTextBox.Text = "";
+                    }
+                    else //!? If it Is Null
+                    {
+                        //!? then Show the default Verses
+                        WideVerseListBox.Visibility = Visibility.Collapsed;
+                        VerseListBox.Visibility = Visibility.Visible;
+                    }
+
                     break;
             }
         }
@@ -94,9 +127,11 @@ namespace Ark.Views
             {
                 //!? Select the chapter number provided in the search then move on to Verse Search
                 if (!String.IsNullOrWhiteSpace(ChapterSearchTextBox.Text))
+                {
                     ChapterListBox.SelectedIndex = Int32.Parse(ChapterSearchTextBox.Text) - 1;
-                ChapterListBox.ScrollIntoView(ChapterListBox.SelectedItem);
-                VerseSearchTextBox.Focus();
+                    ChapterListBox.ScrollIntoView(ChapterListBox.SelectedItem);
+                    VerseSearchTextBox.Focus();
+                }
             });
         }
 
@@ -124,17 +159,23 @@ namespace Ark.Views
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void English_Checked(object sender, RoutedEventArgs e)
         {
-            MainWindow.SearchFocusEvent += SearchFocusMethod;
-            MainWindow.SpecificSearchFocusEvent += SpecificSearchFocusMethod;
+            if (e.Source is RadioButton rb)
+            {
+                switch (rb.Name)
+                {
+                    case "EnglishRadioTab":
+                        _viewModel.Language = "English";
+                        break;
+                    case "TagalogRadioTab":
+                        _viewModel.Language = "Tagalog";
+                        break;
+                }
+            }
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-            MainWindow.SearchFocusEvent -= SearchFocusMethod;
-            MainWindow.SpecificSearchFocusEvent -= SpecificSearchFocusMethod;
-        }
+        //? =============================[METHODS]==============================
 
         //! ====================================================
         //! [+] SEARCH FOCUS METHOD: hotkey stuff
@@ -144,6 +185,7 @@ namespace Ark.Views
             BookSearchTextBox.Text = "";
             ChapterSearchTextBox.Text = "";
             VerseSearchTextBox.Text = "";
+            WideVerseSearchTextBox.Text = "";
             BookSearchTextBox.Focus();
         }
 
@@ -154,6 +196,20 @@ namespace Ark.Views
         {
             SearchFocusMethod();
             WideVerseSearchTextBox.Focus();
+        }
+
+        //? =============================[LOADED & UNLOADED]==============================
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainWindow.SearchFocusEvent += SearchFocusMethod;
+            MainWindow.SpecificSearchFocusEvent += SpecificSearchFocusMethod;
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            MainWindow.SearchFocusEvent -= SearchFocusMethod;
+            MainWindow.SpecificSearchFocusEvent -= SpecificSearchFocusMethod;
         }
     }
 }

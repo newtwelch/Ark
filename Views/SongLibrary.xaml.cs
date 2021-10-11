@@ -93,6 +93,7 @@ namespace Ark.Views
 
                             //!? EDIT MODE SETUP [ exits out of Edit Mode ]
                             EditModeSetUp();
+                            _viewModel.SelectedSong = _viewModel.Songs[0];
                             SongListBox.ScrollIntoView(SongListBox.SelectedItem);
                             isAddingASong = false;
 
@@ -212,6 +213,8 @@ namespace Ark.Views
             SongSearchTextBox.Text = "";
             SongSearchTextBox.Focus();
         }
+
+        //? =============================[LOADED & UNLOADED]==============================
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {

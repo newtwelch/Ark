@@ -122,5 +122,14 @@ namespace Ark.Views
             wnd.Left = x;
             wnd.Top = y;
         }
+
+        //! ====================================================
+        //! [+] WINDOW CLOSING: cancel the closing and set visibility to collapsed
+        //! ====================================================
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.Visibility = Visibility.Collapsed;
+            e.Cancel = true;
+        }
     }
 }

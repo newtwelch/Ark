@@ -38,8 +38,10 @@
                    Background="{StaticResource ContainerDarkBrush}">
             
                     <!--  Logo : ARK! -->
-            <Image x:Name="Logo" Height="30" Margin="10 5 5 5" 
+            <Image x:Name="Logo" Height="30" Margin="10 5 5 5"
                    Source="pack://application:,,,/Ark_Logo.ico" />
+            <TextBlock Text="Ark" FontFamily="Gontserrat" Foreground="{StaticResource UnfocusedBrush}"
+                       FontSize="16" VerticalAlignment="Center" Margin="10 0 0 0"/>
 
             <!-- CLOSE : close the app -->
             <Button x:Name="CloseButton" Style="{StaticResource WindowButton}"
@@ -57,8 +59,7 @@
         ========================================== -->
         <DockPanel Background="{StaticResource ContainerBrush}"
                    LastChildFill="False">
-            
-                    <!-- Song Library -->
+            <!-- Song Library -->
             <RadioButton x:Name="SongLibraryTab"
                          Content="S" DockPanel.Dock="Top"
                          GroupName="Tabs" Checked="RadioTab_Checked"
@@ -73,9 +74,14 @@
             <RadioButton x:Name="MessageTab" 
                          Content="M" DockPanel.Dock="Top"
                          GroupName="Tabs" Checked="RadioTab_Checked"
+                         Visibility="Hidden"
                          Style="{StaticResource IconRadioButton}" />
+
+            <TextBlock Text="NMW&#x0a;1.0" FontFamily="Gontserrat" Foreground="{StaticResource UnfocusedBrush}"
+                       FontSize="14" DockPanel.Dock="Bottom" HorizontalAlignment="Center" TextAlignment="Center" Margin="0 0 0 20"/>
+            
                     <!-- History -->
-            <RadioButton x:Name="HistoryTab"
+            <RadioButton x:Name="HistoryTab" Visibility="Hidden"
                          Content="H" DockPanel.Dock="Bottom"
                          GroupName="Tabs" Checked="RadioTab_Checked"
                          Style="{StaticResource IconRadioButton}" />
@@ -87,7 +93,7 @@
         ========================================== -->
         <Frame x:Name="ContentFrame" Grid.Column="1" Grid.Row="1" Margin="40" 
                Navigating="ContentFrame_Navigating" NavigationUIVisibility="Hidden"/>
-
+        
     </DockPanel>
     
 </Window>

@@ -6,6 +6,7 @@
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:local="clr-namespace:Ark.Views"
         mc:Ignorable="d"
+        Closing="Window_Closing"
         ShowActivated="False"
         Title="DisplayWindow"
         d:Height="720"
@@ -20,9 +21,12 @@
         <shell:WindowChrome CaptionHeight="40" ResizeBorderThickness="5" 
                             GlassFrameThickness="0" NonClientFrameEdges="None" />
     </shell:WindowChrome.WindowChrome>
-    
+
     <Grid>
-        <Viewbox Stretch="Uniform" Margin="20">
+        <!-- =====================================
+        VIEW BOX: easy resizing of content
+        ========================================== -->
+        <Viewbox Stretch="Uniform" Margin="40 20">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" x:Name="BibleDataTextBox" Background="Transparent" 
                            TextWrapping="Wrap" Margin="0 0 0 20"

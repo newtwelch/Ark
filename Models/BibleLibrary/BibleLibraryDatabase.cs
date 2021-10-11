@@ -28,7 +28,7 @@ namespace Ark.Models.BibleLibrary
         //! ====================================================
         public List<BookData> GetBooks(string Language)
         {
-            List<BookData> books = new List<BookData>();    
+            List<BookData> books = new List<BookData>();
 
             using (SQLiteConnection connection = SLD_Connection())
             {

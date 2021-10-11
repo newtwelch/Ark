@@ -14,6 +14,8 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="ToolTipService.InitialShowDelay" Value="50"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="10000"/>
         
     </Style>
     
