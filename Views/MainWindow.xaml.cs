@@ -3,6 +3,7 @@ using Ark.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Navigation;
 
@@ -15,6 +16,15 @@ namespace Ark.Views
 
         //! Display Window
         private DisplayWindow displayWindow;
+
+        public static RoutedCommand CloseSecondDisplay = new RoutedCommand(),
+                                    ToSongLibraryTab = new RoutedCommand(),
+                                    ToBibleLibraryTab = new RoutedCommand();
+        public static RoutedCommand SearchFocus = new RoutedCommand(),
+                                    SpecificSearchFocus = new RoutedCommand();
+
+        public static event Action SearchFocusEvent;
+        public static event Action SpecificSearchFocusEvent;
 
         //! ====================================================
         //! [+] MAIN WINDOW: everything starts here
@@ -36,6 +46,15 @@ namespace Ark.Views
             MinMaxButton.Click += (s, e) => WindowState = WindowState ==                                    // EVENT: Minimize if Max.
                             WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;             // Maximize if Min.
             CloseButton.Click += (s, e) => Close();                                                         // EVENT: Close App
+
+            //!? ====================================================
+            //!? COMMANDS: startup code goes here
+            //!? ====================================================
+            CloseSecondDisplay.InputGestures.Add(new KeyGesture(Key.Escape));
+            ToSongLibraryTab.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Alt));
+            ToBibleLibraryTab.InputGestures.Add(new KeyGesture(Key.X, ModifierKeys.Alt));
+            SearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt));
+            SpecificSearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control));
 
             //!? ====================================================
             //!? INIT: Display Window
@@ -104,5 +123,11 @@ namespace Ark.Views
                 e.NavigationMode == NavigationMode.Back)
                 e.Cancel = true;
         }
+
+        private void CloseSecondDisplayMethod(object sender, ExecutedRoutedEventArgs e) => DisplayWindow.Instance.Close();
+        private void ToSongLibraryTabMethod(object sender, ExecutedRoutedEventArgs e) => SongLibraryTab.IsChecked = true;
+        private void ToBibleLibraryTabMethod(object sender, ExecutedRoutedEventArgs e) => BibleLibraryTab.IsChecked = true;
+        private void SearchFocusMethod(object sender, ExecutedRoutedEventArgs e) => SearchFocusEvent?.Invoke();
+        private void SpecificSearchFocusMethod(object sender, ExecutedRoutedEventArgs e) => SpecificSearchFocusEvent?.Invoke();
     }
 }

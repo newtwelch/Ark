@@ -1,4 +1,5 @@
 ﻿using Ark.Models.BibleLibrary;
+using Ark.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -69,10 +70,13 @@ namespace Ark.ViewModels
             {
                 _selectedVerse = value;
                 OnPropertyChanged();
+
+                DisplayWindow.Instance.Show();
+                OnSelectedVerseChanged?.Invoke(_selectedVerse);
             }
         }
         private VerseData _selectedVerse;
-
+        public static event Action<VerseData> OnSelectedVerseChanged;
 
         //! Bible Searching
         public ICollectionView BooksView;          // CollectionView for the songs

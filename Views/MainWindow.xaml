@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
-        xmlns:local="clr-namespace:Ark"
+        xmlns:local="clr-namespace:Ark.Views"
         mc:Ignorable="d"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
@@ -20,7 +20,15 @@
         <shell:WindowChrome CaptionHeight="40" ResizeBorderThickness="5" 
                             GlassFrameThickness="0" NonClientFrameEdges="None" />
     </shell:WindowChrome.WindowChrome>
-
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:MainWindow.CloseSecondDisplay}" Executed="CloseSecondDisplayMethod"/>
+        <CommandBinding Command="{x:Static local:MainWindow.ToSongLibraryTab}" Executed="ToSongLibraryTabMethod"/>
+        <CommandBinding Command="{x:Static local:MainWindow.ToBibleLibraryTab}" Executed="ToBibleLibraryTabMethod"/>
+        <CommandBinding Command="{x:Static local:MainWindow.SearchFocus}" Executed="SearchFocusMethod"/>
+        <CommandBinding Command="{x:Static local:MainWindow.SpecificSearchFocus}" Executed="SpecificSearchFocusMethod"/>
+    </Window.CommandBindings>
+    
     <DockPanel>
 
         <!-- =====================================

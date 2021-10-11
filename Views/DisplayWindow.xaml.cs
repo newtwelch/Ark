@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Ark.Models.BibleLibrary;
+using Ark.Models.SongLibrary;
+using Ark.ViewModels;
+using System.Collections.Generic;
 using System.Windows;
 using WpfScreenHelper;
 using WpfScreenHelper.Enum;
@@ -23,11 +26,14 @@ namespace Ark.Views
             //!? INITIALIZE: start stuff here
             //!? ====================================================
             InitializeComponent();
-            _screensList = new List<Screen>();
+
+            SongLibraryViewModel.OnSelectedLyricChanged += ChangeText;
+            BibleLibraryViewModel.OnSelectedVerseChanged += ChangeText;
 
             //!? ====================================================
             //!? COUNT SCREENS: make a count of the screen displays
             //!? ====================================================
+            _screensList = new List<Screen>();
             foreach (Screen? screen in Screen.AllScreens)
             {
                 _screensList.Add(screen);
@@ -44,6 +50,25 @@ namespace Ark.Views
             Width = hasManyScreens ? _screensList[1].Bounds.Width : Screen.PrimaryScreen.Bounds.Width;
             Height = hasManyScreens ? _screensList[1].Bounds.Height : Screen.PrimaryScreen.Bounds.Height;
 
+        }
+
+        //! ====================================================
+        //! [+] CHANGE TEXT: change the display text
+        //! ====================================================
+        void ChangeText(object o)
+        {
+            if (o is LyricData)
+            {
+                BibleDataTextBox.Visibility = Visibility.Collapsed;
+                DisplayTextBox.Text = (o as LyricData).Text;
+            }
+            else if (o is VerseData)
+            {
+                VerseData verse = o as VerseData;
+                DisplayTextBox.Text = verse.Text;
+                BibleDataTextBox.Visibility = Visibility.Visible;
+                BibleDataTextBox.Text = $"{verse.FromBook} {verse.FromChapter}:{verse.ID}";
+            }
         }
 
         //! ====================================================

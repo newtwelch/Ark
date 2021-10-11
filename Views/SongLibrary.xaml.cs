@@ -2,7 +2,6 @@
 using Ark.ViewModels;
 using System;
 using System.Collections.Generic;
-using Ark.Models.Helpers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -121,20 +120,6 @@ namespace Ark.Views
         }
 
         //! ====================================================
-        //! [+] SONG LYRIC SELECTION CHANGED: 
-        //! ====================================================
-        private void SongLyricListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            LyricData lyric = SongLyricListBox.SelectedItem as LyricData;
-
-            if (lyric == null)
-                return;
-
-            DisplayWindow.Instance.Show();
-            DisplayWindow.Instance.DisplayTextBox.Text = lyric.Text;
-        }
-
-        //! ====================================================
         //! [+] SONG LYRIC LISTBOX LOST FOCUS: update rawlyrics when lyric listbox loses focus
         //! ====================================================
         private void SongLyricListBox_LostFocus(object sender, RoutedEventArgs e)
@@ -150,8 +135,12 @@ namespace Ark.Views
             EditRawLyricsTextBox.Text = ToRawLyrics(lyrics);
         }
 
+
         //? =============================[METHODS & HELPERS]==============================
 
+        //! ====================================================
+        //! [+] ADDING A SONG: event for adding a song
+        //! ====================================================
         private void AddingASong()
         {
             EditModeSetUp();
@@ -215,5 +204,23 @@ namespace Ark.Views
             return _rawLyrics.TrimEnd();
         }
 
+        //! ====================================================
+        //! [+] SEARCH FOCUS METHOD: hotkey stuff
+        //! ====================================================
+        public void SearchFocusMethod()
+        {
+            SongSearchTextBox.Text = "";
+            SongSearchTextBox.Focus();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainWindow.SearchFocusEvent += SearchFocusMethod;
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            MainWindow.SearchFocusEvent -= SearchFocusMethod;
+        }
     }
 }

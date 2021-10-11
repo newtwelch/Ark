@@ -1,5 +1,6 @@
 ﻿using Ark.Models.Helpers;
 using Ark.Models.SongLibrary;
+using Ark.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,7 +23,7 @@ namespace Ark.ViewModels
         //! Song List
         public ObservableCollection<SongData> Songs { get; set; }          // List of Songs
         public ObservableCollection<SongData> SongLanguages { get; set; }  // List of Languages in the Song
-        
+
         //! List of Lyrics
         public ObservableCollection<LyricData> Lyrics { get; set; }
 
@@ -75,6 +76,21 @@ namespace Ark.ViewModels
         }
         private SongData _selectedSong; // SelectedSong but private
 
+        //! Selcted Lyric
+        public LyricData SelectedLyric
+        {
+            get { return _selectedLyric; }
+            set
+            {
+                _selectedLyric = value;
+                OnPropertyChanged();
+                DisplayWindow.Instance.Show();
+                OnSelectedLyricChanged?.Invoke(_selectedLyric);
+            }
+        }
+        private LyricData _selectedLyric;
+        public static event Action<LyricData> OnSelectedLyricChanged;
+
         //! View Mode & Edit Mode
         public bool IsEditMode  // Edit Mode
         {
@@ -114,7 +130,7 @@ namespace Ark.ViewModels
         //! Commands
         public ICommand Add_Song { get; set; }
         public static event Action SongAdded;   // Create an event
-        public ICommand Delete_Song { get; set;  }
+        public ICommand Delete_Song { get; set; }
 
         //? =============================[METHODS & MAIN]==============================
 

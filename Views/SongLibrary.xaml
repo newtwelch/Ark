@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hlpr="clr-namespace:Ark.Models.Helpers"
-             xmlns:viewmodels="clr-namespace:Ark.ViewModels"  d:DataContext="{d:DesignInstance Type=viewmodels:SongLibraryViewModel}"
+             xmlns:viewmodels="clr-namespace:Ark.ViewModels" 
+             xmlns:local="clr-namespace:Ark.Views" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:SongLibraryViewModel}"
+             Loaded="UserControl_Loaded"
+             Unloaded="UserControl_Unloaded"
              mc:Ignorable="d" 
              d:DesignHeight="740" 
              d:DesignWidth="1190">
@@ -139,8 +143,8 @@
         ========================================== -->
         <ListBox ItemsSource="{Binding Lyrics}" x:Name="SongLyricListBox"
                  Style="{StaticResource DefaultListBox}" ItemContainerStyle="{StaticResource SongLyricsItem}"
+                 SelectedItem="{Binding SelectedLyric, UpdateSourceTrigger=PropertyChanged}"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                 SelectionChanged="SongLyricListBox_SelectionChanged"
                  Margin="20 60 0 0" Grid.Row="1" MinHeight="200" LostFocus="SongLyricListBox_LostFocus"
                  Grid.Column="1" Background="Transparent" Grid.ColumnSpan="2">
             <ListBox.ItemTemplate>

@@ -5,10 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ark.Views"
              xmlns:hlpr="clr-namespace:Ark.Models.Helpers"
-             xmlns:viewmodels="clr-namespace:Ark.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:BibleLibraryViewModel}"
+             xmlns:viewmodels="clr-namespace:Ark.ViewModels" 
+             Loaded="UserControl_Loaded"
+             Unloaded="UserControl_Unloaded"
+             d:DataContext="{d:DesignInstance Type=viewmodels:BibleLibraryViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="780" 
              d:DesignWidth="1240">
+    
     <Grid>
         <!-- =====================================
         GRID DEFINITIONS: 2 Columns & 3 Rows
@@ -113,7 +117,7 @@
                  Grid.Column="2" Grid.Row="1" Margin="0 20 0 0"
                  ItemContainerStyle="{StaticResource BibleVerseItem}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 SelectedItem="{Binding SelectedVerse}">
+                 SelectedItem="{Binding SelectedVerse, UpdateSourceTrigger=PropertyChanged}">
             <ListBox.ItemTemplate>
                 <!-- Data Template -->
                 <DataTemplate>

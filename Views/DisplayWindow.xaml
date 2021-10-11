@@ -22,11 +22,16 @@
     </shell:WindowChrome.WindowChrome>
     
     <Grid>
-        <Viewbox>
-            <TextBox x:Name="DisplayTextBox" Style="{StaticResource DefaultTextBox}"
-                     AcceptsReturn="True" Background="Transparent"
-                     Foreground="{StaticResource FocusedBrush}" IsReadOnly="True"
-                     TextAlignment="Center"/>
+        <Viewbox Stretch="Uniform" Margin="20">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" x:Name="BibleDataTextBox" Background="Transparent" 
+                           TextWrapping="Wrap" Margin="0 0 0 20"
+                           Foreground="{StaticResource FocusedBrush}" Width="1920"
+                           FontWeight="Bold" FontSize="120" TextAlignment="Center"/>
+                <TextBlock x:Name="DisplayTextBox" Background="Transparent" TextWrapping="Wrap"
+                           Foreground="{StaticResource FocusedBrush}" Width="1920" 
+                           FontSize="100" TextAlignment="Center"/>
+            </DockPanel>
         </Viewbox>
     </Grid>
 </Window>

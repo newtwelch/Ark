@@ -2,6 +2,7 @@
 using Ark.ViewModels;
 using System;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Ark.Views
@@ -121,6 +122,38 @@ namespace Ark.Views
         {
             Regex regex = new Regex("[^[0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainWindow.SearchFocusEvent += SearchFocusMethod;
+            MainWindow.SpecificSearchFocusEvent += SpecificSearchFocusMethod;
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            MainWindow.SearchFocusEvent -= SearchFocusMethod;
+            MainWindow.SpecificSearchFocusEvent -= SpecificSearchFocusMethod;
+        }
+
+        //! ====================================================
+        //! [+] SEARCH FOCUS METHOD: hotkey stuff
+        //! ====================================================
+        public void SearchFocusMethod()
+        {
+            BookSearchTextBox.Text = "";
+            ChapterSearchTextBox.Text = "";
+            VerseSearchTextBox.Text = "";
+            BookSearchTextBox.Focus();
+        }
+
+        //! ====================================================
+        //! [+] SPECIFIC SEARCH FOCUS METHOD: hotkey stuff
+        //! ====================================================
+        public void SpecificSearchFocusMethod()
+        {
+            SearchFocusMethod();
+            WideVerseSearchTextBox.Focus();
         }
     }
 }
