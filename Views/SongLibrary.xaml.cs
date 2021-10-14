@@ -2,8 +2,10 @@
 using Ark.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Ark.Views
@@ -109,15 +111,20 @@ namespace Ark.Views
         //! ====================================================
         private void EditRawLyricsTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (_viewModel.IsEditMode)
+            //!? If we are not in edit mode, don't continue
+            if (!_viewModel.IsEditMode)
+                return;
+
+            //!? ====================================================
+            //!? Auto parse lyrics when editing raw lyrics
+            //!? ====================================================
+            _viewModel.Lyrics.Clear();
+            // Parse Lyrics using text from RawLyricTextBox and SequenceTextBox
+            foreach (LyricData lyric in _viewModel.ParseLyrics(EditRawLyricsTextBox.Text, EditSequenceTextBox.Text))
             {
-                _viewModel.Lyrics.Clear();
-                // Parse Lyrics using text from RawLyricTextBox and SequenceTextBox
-                foreach (LyricData lyric in _viewModel.ParseLyrics(EditRawLyricsTextBox.Text, EditSequenceTextBox.Text))
-                {
-                    _viewModel.Lyrics.Add(lyric);
-                }
+                _viewModel.Lyrics.Add(lyric);
             }
+
         }
 
         //! ====================================================
@@ -125,9 +132,13 @@ namespace Ark.Views
         //! ====================================================
         private void SongLyricListBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            // don't wanna comment much here,
-            // it just updates whatever changes you've made in the lyric listbox
-            // converting it to RawLyrics
+            //!? If we are not in edit mode, don't save anything
+            if (!_viewModel.IsEditMode)
+                return;
+
+            //!? don't wanna comment much here,
+            //!? it just updates whatever changes you've made in the lyric listbox
+            //!? converting it to RawLyrics
             List<LyricData> lyrics = new List<LyricData>();
             foreach (LyricData lyric in SongLyricListBox.Items)
             {
@@ -136,6 +147,84 @@ namespace Ark.Views
             EditRawLyricsTextBox.Text = ToRawLyrics(lyrics);
         }
 
+        //! ====================================================
+        //! [+] LIST BOX KEY DOWN: hotkeys for listbox item navigation
+        //! ====================================================
+        private void ListBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (_viewModel.IsEditMode)
+                return;
+
+            ListBox? lb = sender as ListBox;
+            switch (lb.Name)
+            {
+                //!? ====================================================
+                //!? Song Lyrics
+                //!? ====================================================
+                case "SongLyricListBox":
+
+                    //!? ====================================================
+                    //!? Selected the Stanza Number according to the Number pressed down
+                    //!? ====================================================
+                    if (e.Key > Key.D0 && e.Key <= Key.D9 ||
+                        e.Key > Key.NumPad0 && e.Key <= Key.NumPad9)
+                    {
+                        int lindex = lb.Items.Cast<LyricData>().ToList().FindIndex(x => x.Line == e.Key.ToString().Replace("D", "").Replace("NumPad", ""));
+                        lb.SelectedIndex = lindex;
+                        lb.ScrollIntoView(lb.SelectedItem);
+                    }
+                    //!? If 0 is pressed, then get the chorus
+                    else if (e.Key == Key.D0 || e.Key == Key.NumPad0 && _viewModel.Lyrics.Any(x => x.Line == "C"))
+                    {
+                        while (true)
+                        {
+                            lb.SelectedIndex++;
+
+                            LyricData selectedLyric = lb?.SelectedItem as LyricData;
+                            if (selectedLyric?.Line == "C")
+                                break;
+                        }
+
+                        lb?.ScrollIntoView(lb.SelectedItem);
+                    }
+
+                    //!? Focus on the Item so we can still use arrow navigation
+                    if (lb.SelectedItem != null)
+                    {
+                        ListBoxItem? lbi = lb?.ItemContainerGenerator.ContainerFromIndex(lb.SelectedIndex) as ListBoxItem;
+                        lbi?.Focus();
+                    }
+
+                    e.Handled = true;
+                    break;
+
+                case "SongListBox":
+                    if (e.Key == Key.Enter)
+                    {
+                        SongLyricListBox.SelectedIndex = 0;
+                        ListBoxItem? lbi = SongLyricListBox.ItemContainerGenerator.ContainerFromIndex(SongLyricListBox.SelectedIndex) as ListBoxItem;
+                        lbi?.Focus();
+                    }
+                    break;
+            }
+        }
+
+        //! ====================================================
+        //! [+] TEXT BOX KEY DOWN: hotkey for confirmation
+        //! ====================================================
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            TextBox? tb = sender as TextBox;
+            if (tb.Name == "SongSearchTextBox")
+            {
+                if (e.Key == Key.Enter)
+                {
+                    SongListBox.SelectedIndex = 0;
+                    ListBoxItem? lbi = SongListBox.ItemContainerGenerator.ContainerFromIndex(SongListBox.SelectedIndex) as ListBoxItem;
+                    lbi?.Focus();
+                }
+            }
+        }
 
         //? =============================[METHODS & HELPERS]==============================
 
@@ -225,5 +314,6 @@ namespace Ark.Views
         {
             MainWindow.SearchFocusEvent -= SearchFocusMethod;
         }
+
     }
 }

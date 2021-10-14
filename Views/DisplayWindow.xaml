@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
-        xmlns:local="clr-namespace:Ark.Views"
+        xmlns:hlpr="clr-namespace:Ark.Models.Helpers"
         mc:Ignorable="d"
         Closing="Window_Closing"
         ShowActivated="False"
@@ -32,9 +32,9 @@
                            TextWrapping="Wrap" Margin="0 0 0 20"
                            Foreground="{StaticResource FocusedBrush}" Width="1920"
                            FontWeight="Bold" FontSize="120" TextAlignment="Center"/>
-                <TextBlock x:Name="DisplayTextBox" Background="Transparent" TextWrapping="Wrap"
-                           Foreground="{StaticResource FocusedBrush}" Width="1920" 
-                           FontSize="100" TextAlignment="Center"/>
+                <hlpr:HighlightableTextBlock x:Name="DisplayTextBox" Background="Transparent" TextWrapping="Wrap"
+                                             Foreground="{StaticResource FocusedBrush}" Width="1920" 
+                                             FontSize="100" TextAlignment="Center"/>
             </DockPanel>
         </Viewbox>
     </Grid>

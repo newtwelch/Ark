@@ -77,7 +77,7 @@
             <TextBox x:Name="SongSearchTextBox"
                      Text="{Binding SongFilter, UpdateSourceTrigger=PropertyChanged}"
                      Foreground="{StaticResource FocusedBrush}"
-                     Tag="Search" Padding="10 0 0 0"
+                     Tag="Search" Padding="10 0 0 0" KeyDown="TextBox_KeyDown"
                      Style="{StaticResource SearchTextBox}"/>
         </DockPanel>
 
@@ -86,7 +86,7 @@
         ========================================== -->
         <ListBox x:Name="SongListBox" ItemsSource="{Binding Songs}" Style="{StaticResource DefaultListBox}"
                  ItemContainerStyle="{StaticResource DefaultListBoxItem}" 
-                 SelectedIndex="0" SelectedItem="{Binding SelectedSong}"
+                 SelectedIndex="0" SelectedItem="{Binding SelectedSong}" KeyDown="ListBox_KeyDown"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                  Margin="0 20 20 0" Grid.Row="1" Grid.RowSpan="2" MinHeight="200">
             <ListBox.ItemTemplate>
@@ -141,12 +141,14 @@
         <!-- =====================================
         LYRIC LIST: list of lyrics  
         ========================================== -->
-        <ListBox ItemsSource="{Binding Lyrics}" x:Name="SongLyricListBox"
-                 Style="{StaticResource DefaultListBox}" ItemContainerStyle="{StaticResource SongLyricsItem}"
+        <ListBox x:Name="SongLyricListBox" ItemsSource="{Binding Lyrics}" 
+                 Style="{StaticResource DefaultListBox}" 
+                 ItemContainerStyle="{StaticResource SongLyricsItem}"
                  SelectedItem="{Binding SelectedLyric, UpdateSourceTrigger=PropertyChanged}"
+                 KeyDown="ListBox_KeyDown" KeyboardNavigation.DirectionalNavigation="Cycle"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                 Margin="20 60 0 0" Grid.Row="1" MinHeight="200" LostFocus="SongLyricListBox_LostFocus"
-                 Grid.Column="1" Background="Transparent" Grid.ColumnSpan="2">
+                 Margin="20 60 0 0" MinHeight="200" LostFocus="SongLyricListBox_LostFocus"
+                 Grid.Column="1" Grid.Row="1" Background="Transparent" Grid.ColumnSpan="2">
             <ListBox.ItemTemplate>
                 <!-- Data Template -->
                 <DataTemplate>

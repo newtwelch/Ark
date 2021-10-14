@@ -4,6 +4,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Ark.Views
 {
@@ -34,13 +35,19 @@ namespace Ark.Views
         //! ====================================================
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            TextBox tb = e.Source as TextBox;
+            TextBox? tb = e.Source as TextBox;
 
             switch (tb.Name)
             {
                 //!? BOOK SEARCH
                 //!? ____________________________________________
                 case "BookSearchTextBox":
+
+                    //!? This deals with the books with first and second parts
+                    string result = Regex.Replace(tb.Text, @"(?<=\d)(?=[^\d\s])", " ");
+                    tb.Text = result;
+                    tb.CaretIndex = tb.Text.Length;
+
                     //!? Refresh ViewModel Collection
                     _viewModel.SearchBookText = tb.Text;
                     _viewModel.BooksView.Refresh();
@@ -112,6 +119,12 @@ namespace Ark.Views
                         //!? then Show the default Verses
                         WideVerseListBox.Visibility = Visibility.Collapsed;
                         VerseListBox.Visibility = Visibility.Visible;
+                        if (VerseListBox.SelectedItem != null)
+                        {
+                            VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
+                            ListBoxItem? lbi = VerseListBox.ItemContainerGenerator.ContainerFromIndex(VerseListBox.SelectedIndex) as ListBoxItem;
+                            lbi?.Focus();
+                        }
                     }
 
                     break;
@@ -147,6 +160,8 @@ namespace Ark.Views
                     VerseListBox.SelectedIndex = Int32.Parse(VerseSearchTextBox.Text) - 1;
 
                 VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
+                ListBoxItem? lbi = VerseListBox.ItemContainerGenerator.ContainerFromIndex(VerseListBox.SelectedIndex) as ListBoxItem;
+                lbi?.Focus();
             });
         }
 
@@ -159,7 +174,88 @@ namespace Ark.Views
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void English_Checked(object sender, RoutedEventArgs e)
+        //! ====================================================
+        //! [+] TEXT BOX KEY DOWN: hotkeys for searches
+        //! ====================================================
+        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            TextBox? tb = sender as TextBox;
+
+            //!? If enter is pressed then do the following
+            if (e.Key != Key.Enter)
+                return;
+
+            switch (tb.Name)
+            {
+                //!? BOOK SEARCH
+                case "BookSearchTextBox":
+                    BookListBox.SelectedIndex = 0;
+                    ChapterSearchTextBox.Focus();
+
+                    break;
+
+                //!? CHAPTER SEARCH
+                case "ChapterSearchTextBox":
+                    ChapterListBox.SelectedIndex = Int32.Parse(tb.Text) - 1;
+                    VerseSearchTextBox.Focus();
+
+                    break;
+
+                //!? VERSE SEARCH
+                case "VerseSearchTextBox":
+                    VerseListBox.SelectedIndex = Int32.Parse(tb.Text) - 1;
+                    VerseSearchTextBox.Focus();
+
+                    break;
+            }
+        }
+
+        //! ====================================================
+        //! [+] LIST BOX KEY DOWN: language switching
+        //! ====================================================
+        private void ListBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            ListBox? lb = sender as ListBox;
+            switch (lb.Name)
+            {
+                case "VerseListBox":
+                    //!? If Pressing up on first Portion, Go Previous Verse
+                    if (e.Key == Key.Up && lb.SelectedIndex == 0)
+                        ChapterListBox.SelectedIndex--;
+
+                    //!? If Pressing down on last Portion, Go Next Verse
+                    if (e.Key == Key.Down && lb.SelectedIndex == lb.Items.Count - 1)
+                        ChapterListBox.SelectedIndex++;
+
+                    //!? Pressing enter focuses on Verse Portions
+                    if (e.Key == Key.Enter)
+                    {
+                        VersePortionsListBox.SelectedIndex = 0;
+                        VersePortionsListBox.Focus();
+                        ListBoxItem? lbi = VersePortionsListBox.ItemContainerGenerator.ContainerFromIndex(VersePortionsListBox.SelectedIndex) as ListBoxItem;
+                        lbi?.Focus();
+                    }
+
+                    ChapterListBox.ScrollIntoView(ChapterListBox.SelectedItem);
+                    break;
+
+                case "VersePortionsListBox":
+                    //!? If Pressing up on first Portion, Go Previous Verse
+                    if (e.Key == Key.Up && lb.SelectedIndex == 0)
+                        VerseListBox.SelectedIndex--;
+                    //!? If Pressing down on last Portion, Go Next Verse
+                    if (e.Key == Key.Down && lb.SelectedIndex == lb.Items.Count - 1)
+                        VerseListBox.SelectedIndex++;
+
+                    VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
+                    break;
+            }
+        }
+
+        //! ====================================================
+        //! [+] RADIO BUTTON CHECKED: language switching
+        //! ====================================================
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             if (e.Source is RadioButton rb)
             {
@@ -174,6 +270,7 @@ namespace Ark.Views
                 }
             }
         }
+
 
         //? =============================[METHODS]==============================
 

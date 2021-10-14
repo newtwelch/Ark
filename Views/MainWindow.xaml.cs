@@ -14,9 +14,6 @@ namespace Ark.Views
         //! View Model
         private MainWindowViewModel _viewModel;
 
-        //! Display Window
-        private DisplayWindow displayWindow;
-
         //! Routed Command
         public static RoutedCommand CloseSecondDisplay = new RoutedCommand(),
                                     ToSongLibraryTab = new RoutedCommand(),
@@ -58,7 +55,6 @@ namespace Ark.Views
             ToBibleLibraryTab.InputGestures.Add(new KeyGesture(Key.X, ModifierKeys.Alt));
             SearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt));
             SpecificSearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control));
-
         }
 
         //! ====================================================

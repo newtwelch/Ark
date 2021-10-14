@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Data;
 
 namespace Ark.ViewModels
@@ -23,6 +24,19 @@ namespace Ark.ViewModels
         public RangeObservableCollection<VerseData> Verses { get; set; }
         public RangeObservableCollection<VerseData> AllVerses { get; set; }
 
+        //! Verse Bits
+        public ObservableDictionary<int, string> VersePortions { get; set; }
+        public string VerseHighlight
+        {
+            get { return _VerseHighlight; }
+            set
+            {
+                _VerseHighlight = value;
+                OnPropertyChanged();
+                DisplayWindow.Instance.DisplayTextBox.HighlightPhrase = value;
+            }
+        }
+        private string _VerseHighlight;
 
         //! Selected Books and Chapters
         public BookData SelectedBook
@@ -67,13 +81,61 @@ namespace Ark.ViewModels
             set
             {
                 _selectedVerse = value;
+                //!? Clear the Portions
+                VersePortions.Clear();
+
                 OnPropertyChanged();
 
+                if (!Initialized || value == null) return;
+
+                //!? CONTINUE ON
+                //!? Clear the TextSearch
+                if (!String.IsNullOrWhiteSpace(_searchVerseText))
+                    SearchVerseText = "";
+
+                //!? Cut the verse into Portions
+                string[] verseBits = Regex.Split(value.Text, @"(?<=[\.,;:!\?])\s+");
+                int Key = 1;
+                //!? Clear the Portions AGAIN
+                VersePortions.Clear();
+                foreach (string verseBit in verseBits)
+                {
+                    VersePortions.Add(Key++, verseBit);
+                }
+
+
+                //!? Show the VERSE
                 DisplayWindow.Instance.Show();
                 OnSelectedVerseChanged?.Invoke(_selectedVerse);
             }
         }
         private VerseData _selectedVerse;
+
+        public VerseData SelectedWideVerse
+        {
+            get { return _selectedWideVerse; }
+            set
+            {
+                _selectedWideVerse = value;
+                OnPropertyChanged();
+
+                //!? Clear the Portions
+                VersePortions.Clear();
+
+                if (!Initialized || value == null) return;
+
+                SelectedBook = (BookData)Books.ToList().Find(x => x.Name == value.FromBook);
+                SelectedChapter = (ChapterData)Chapters.ToList().Find(x => x.ID == value.FromChapter);
+                SelectedVerse = (VerseData)Verses.ToList().Find(x => x.ID == value.ID);
+
+                //!? CONTINUE ON
+                //!? Clear the TextSearch
+                if (!String.IsNullOrWhiteSpace(_searchVerseText))
+                    SearchVerseText = "";
+            }
+        }
+        private VerseData _selectedWideVerse;
+
         //!? Event for Verse Change
         public static event Action<VerseData> OnSelectedVerseChanged;
 
@@ -90,12 +152,18 @@ namespace Ark.ViewModels
             set
             {
                 _searchVerseText = value;
-                OnPropertyChanged();
+
+                VersePortions.Clear();
+                VerseHighlight = value;
 
                 if (value.StartsWith("."))
                     AllVerseView.Refresh();
                 else
                     VerseView.Refresh();
+
+                OnPropertyChanged();
+
+
             }
         }
         private string _searchVerseText;
@@ -173,6 +241,9 @@ namespace Ark.ViewModels
             AllVerses = new RangeObservableCollection<VerseData>();
             AllVerses.AddRange(GetAllVerses());
 
+            VersePortions = new ObservableDictionary<int, string>();
+            VersePortions.Add(1, "tsest");
+
             Initialized = true;
 
             //!? ====================================================
@@ -198,7 +269,9 @@ namespace Ark.ViewModels
                 if (string.IsNullOrEmpty(SearchBookText))
                     return true;
                 else
+                {
                     return (o as BookData).Name.Contains(SearchBookText, StringComparison.OrdinalIgnoreCase);
+                }
             }
             else if (o is VerseData)
             {

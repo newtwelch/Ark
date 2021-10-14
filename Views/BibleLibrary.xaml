@@ -29,7 +29,9 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="70" />
         </Grid.RowDefinitions>
-
+        
+        <!-- CHEAT -->
+        <Rectangle Tag="{Binding VerseHighlight}" x:Name="VerseHighlightRectangle"/>
 
         <!-- =====================================
         SEARCHES:
@@ -39,10 +41,12 @@
             <TextBox Width="300" Margin="0 0 20 0" x:Name="BookSearchTextBox"
                      Style="{StaticResource SearchTextBox}" Tag="Book"
                      Text="{Binding SearchBookText}" TextChanged="TextBox_TextChanged"
+                     KeyDown="TextBox_KeyDown"
                      Padding="20 0 0 0"/>
                     <!-- CHAPTER SEARCH -->
             <TextBox Width="150" x:Name="ChapterSearchTextBox"
                      Style="{StaticResource SearchTextBox}" Tag="Chapter"
+                     KeyDown="TextBox_KeyDown"
                      PreviewTextInput="TextBox_PreviewTextInput"
                      TextChanged="TextBox_TextChanged"
                      Padding="20 0 0 0"/>
@@ -54,6 +58,7 @@
                     <!-- VERSE SEARCH -->
             <TextBox Width="40" Margin="0 0 20 0" x:Name="VerseSearchTextBox"
                      PreviewTextInput="TextBox_PreviewTextInput"
+                     KeyDown="TextBox_KeyDown"
                      TextChanged="TextBox_TextChanged"
                      Style="{StaticResource SearchTextBox}" Tag="V"
                      TextAlignment="Center"/>
@@ -108,34 +113,61 @@
         </StackPanel>
         
         <!-- =====================================
-        VERSES:
+        VERSE PORTIONS:
         ========================================== -->
-        <ListBox ItemsSource="{Binding Verses}" x:Name="VerseListBox"
-                 Background="Transparent"
+        <ListBox x:Name="VersePortionsListBox" ItemsSource="{Binding VersePortions}" 
                  Style="{StaticResource DefaultListBox}"
-                 Grid.Column="2" Grid.Row="1" Margin="0 20 0 0"
-                 ItemContainerStyle="{StaticResource BibleVerseItem}"
+                 ItemContainerStyle="{StaticResource BibleVersePortionItems}"
+                 SelectedValuePath="Value" SelectedValue="{Binding VerseHighlight}"
+                 Background="Transparent" Width="40"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 SelectedItem="{Binding SelectedVerse, UpdateSourceTrigger=PropertyChanged}">
+                 Grid.IsSharedSizeScope="True" Grid.Row="1" HorizontalAlignment="Right"
+                 KeyDown="ListBox_KeyDown"
+                 Margin="0 20 20 0">
             <ListBox.ItemTemplate>
-                <!-- Data Template -->
                 <DataTemplate>
-                    <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <!-- VERSE NUMBER -->
-                        <Button Style="{StaticResource DefaultButton}"
-                                 Content="{Binding ID}" DockPanel.Dock="Left" Width="40"
-                                 Margin="-80 0 0 0" MinHeight="100" VerticalAlignment="Stretch"/>
-                        <!-- VERSE TEXT -->
-                        <hlpr:HighlightableTextBlock Text="{Binding Text}" TextWrapping="Wrap"
-                                                         TextAlignment="Left" Padding="15" VerticalAlignment="Center"
-                                                         HighlightPhrase="{Binding Text, ElementName=WideVerseSearchTextBox}"
-                                                         HighlightBrush="{StaticResource OrangeBrush}"
-                                                         HorizontalAlignment="Stretch"/>
-                    </DockPanel>
+                    <TextBox IsReadOnly="True"
+                             Focusable="False"
+                             Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
+                             Cursor="{Binding Cursor, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
+                             Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
+                             Style="{StaticResource DefaultTextBox}"
+                             FontWeight="Bold"
+                             Text="{Binding Key}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
+        <!-- =====================================
+        VERSES:
+        ========================================== -->
+        <ListBox ItemsSource="{Binding Verses}" x:Name="VerseListBox"
+             Background="Transparent" Grid.Row="1" Grid.Column="1"
+             Style="{StaticResource DefaultListBox}" Margin="0 20 0 0"
+             ItemContainerStyle="{StaticResource BibleVerseItem}"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             KeyDown="ListBox_KeyDown"
+             SelectedItem="{Binding SelectedVerse, UpdateSourceTrigger=PropertyChanged}">
+        <ListBox.ItemTemplate>
+            <!-- Data Template -->
+            <DataTemplate>
+                <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <!-- VERSE NUMBER -->
+                    <Button Style="{StaticResource DefaultButton}"
+                             Content="{Binding ID}" DockPanel.Dock="Left" Width="40"
+                             Margin="-80 0 0 0" MinHeight="100" VerticalAlignment="Stretch"/>
+                    <!-- VERSE TEXT -->
+                    <hlpr:HighlightableTextBlock Text="{Binding Text}" TextWrapping="Wrap"
+                                                 TextAlignment="Left" Padding="15" VerticalAlignment="Center"
+                                                 HighlightPhrase="{Binding Tag, ElementName=VerseHighlightRectangle}"
+                                                 HighlightBrush="{StaticResource OrangeBrush}"
+                                                 HorizontalAlignment="Stretch"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        
         <!-- =====================================
         WIDE VERSE:
         ========================================== -->
@@ -144,6 +176,7 @@
                  Style="{StaticResource DefaultListBox}"
                  Grid.Column="2" Grid.Row="1" Margin="0 20 0 0"
                  ItemContainerStyle="{StaticResource BibleWideVerseItem}"
+                 SelectedItem="{Binding SelectedWideVerse, UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  Visibility="Collapsed">
             <ListBox.ItemTemplate>
@@ -190,12 +223,12 @@
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="0 20 0 0">
             <!-- English -->
             <RadioButton x:Name="EnglishRadioTab"
-                         Width="150" Margin="0 0 20 0" Checked="English_Checked"
+                         Width="150" Margin="0 0 20 0" Checked="RadioButton_Checked"
                          Content="ENGLISH" FontWeight="Bold"
                          GroupName="Language" Style="{StaticResource DefaultToggleButton}" />
             <!-- Tagalog -->
             <RadioButton x:Name="TagalogRadioTab"
-                         Content="TAGALOG" Width="150" Checked="English_Checked"
+                         Content="TAGALOG" Width="150" Checked="RadioButton_Checked"
                          GroupName="Language" FontWeight="Bold"
                          Style="{StaticResource DefaultToggleButton}" />
 
