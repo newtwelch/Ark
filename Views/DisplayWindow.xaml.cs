@@ -131,5 +131,6 @@ namespace Ark.Views
             this.Visibility = Visibility.Collapsed;
             e.Cancel = true;
         }
+
     }
 }

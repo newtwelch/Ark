@@ -84,8 +84,8 @@ namespace Ark.ViewModels
             {
                 _selectedLyric = value;
                 OnPropertyChanged();
-                DisplayWindow.Instance.Show();
                 OnSelectedLyricChanged?.Invoke(_selectedLyric);
+                DisplayWindow.Instance.Show();
             }
         }
         private LyricData _selectedLyric;

@@ -105,8 +105,8 @@ namespace Ark.ViewModels
 
 
                 //!? Show the VERSE
-                DisplayWindow.Instance.Show();
                 OnSelectedVerseChanged?.Invoke(_selectedVerse);
+                DisplayWindow.Instance.Show();
             }
         }
         private VerseData _selectedVerse;

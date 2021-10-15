@@ -55,6 +55,8 @@ namespace Ark.Views
             ToBibleLibraryTab.InputGestures.Add(new KeyGesture(Key.X, ModifierKeys.Alt));
             SearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt));
             SpecificSearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control));
+
+            this.Deactivated += (s, e) => this.Activate();
         }
 
         //! ====================================================
@@ -125,5 +127,6 @@ namespace Ark.Views
         private void ToBibleLibraryTabMethod(object sender, ExecutedRoutedEventArgs e) => BibleLibraryTab.IsChecked = true;
         private void SearchFocusMethod(object sender, ExecutedRoutedEventArgs e) => SearchFocusEvent?.Invoke();
         private void SpecificSearchFocusMethod(object sender, ExecutedRoutedEventArgs e) => SpecificSearchFocusEvent?.Invoke();
+
     }
 }

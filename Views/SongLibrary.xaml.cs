@@ -172,6 +172,7 @@ namespace Ark.Views
                         int lindex = lb.Items.Cast<LyricData>().ToList().FindIndex(x => x.Line == e.Key.ToString().Replace("D", "").Replace("NumPad", ""));
                         lb.SelectedIndex = lindex;
                         lb.ScrollIntoView(lb.SelectedItem);
+                        e.Handled = true;
                     }
                     //!? If 0 is pressed, then get the chorus
                     else if (e.Key == Key.D0 || e.Key == Key.NumPad0 && _viewModel.Lyrics.Any(x => x.Line == "C"))
@@ -186,6 +187,7 @@ namespace Ark.Views
                         }
 
                         lb?.ScrollIntoView(lb.SelectedItem);
+                        e.Handled = true;
                     }
 
                     //!? Focus on the Item so we can still use arrow navigation
@@ -195,7 +197,6 @@ namespace Ark.Views
                         lbi?.Focus();
                     }
 
-                    e.Handled = true;
                     break;
 
                 case "SongListBox":
