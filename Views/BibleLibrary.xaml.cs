@@ -14,6 +14,8 @@ namespace Ark.Views
 
         TypeAssistant chapterAssistant, verseAssistant;
 
+        int storeVerse;
+
         public BibleLibrary()
         {
             _viewModel = new BibleLibraryViewModel();
@@ -122,8 +124,7 @@ namespace Ark.Views
                         if (VerseListBox.SelectedItem != null)
                         {
                             VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
-                            ListBoxItem? lbi = VerseListBox.ItemContainerGenerator.ContainerFromIndex(VerseListBox.SelectedIndex) as ListBoxItem;
-                            lbi?.Focus();
+                            FocusListBoxItem(VerseListBox);
                         }
                     }
 
@@ -160,8 +161,7 @@ namespace Ark.Views
                     VerseListBox.SelectedIndex = Int32.Parse(VerseSearchTextBox.Text) - 1;
 
                 VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
-                ListBoxItem? lbi = VerseListBox.ItemContainerGenerator.ContainerFromIndex(VerseListBox.SelectedIndex) as ListBoxItem;
-                lbi?.Focus();
+                FocusListBoxItem(VerseListBox);
             });
         }
 
@@ -189,21 +189,27 @@ namespace Ark.Views
             {
                 //!? BOOK SEARCH
                 case "BookSearchTextBox":
-                    BookListBox.SelectedIndex = 0;
+                    if (!String.IsNullOrEmpty(tb.Text))
+                        BookListBox.SelectedIndex = 0;
+
                     ChapterSearchTextBox.Focus();
 
                     break;
 
                 //!? CHAPTER SEARCH
                 case "ChapterSearchTextBox":
-                    ChapterListBox.SelectedIndex = Int32.Parse(tb.Text) - 1;
+                    if (!String.IsNullOrEmpty(tb.Text))
+                        ChapterListBox.SelectedIndex = Int32.Parse(tb.Text) - 1;
+
                     VerseSearchTextBox.Focus();
 
                     break;
 
                 //!? VERSE SEARCH
                 case "VerseSearchTextBox":
-                    VerseListBox.SelectedIndex = Int32.Parse(tb.Text) - 1;
+                    if (!String.IsNullOrEmpty(tb.Text))
+                        VerseListBox.SelectedIndex = Int32.Parse(tb.Text) - 1;
+
                     VerseSearchTextBox.Focus();
 
                     break;
@@ -230,10 +236,18 @@ namespace Ark.Views
                     //!? Pressing enter focuses on Verse Portions
                     if (e.Key == Key.Enter)
                     {
-                        VersePortionsListBox.SelectedIndex = 0;
-                        VersePortionsListBox.Focus();
-                        ListBoxItem? lbi = VersePortionsListBox.ItemContainerGenerator.ContainerFromIndex(VersePortionsListBox.SelectedIndex) as ListBoxItem;
-                        lbi?.Focus();
+
+                        if (lb.SelectedItem == null)
+                        {
+                            lb.SelectedIndex = storeVerse;
+                            FocusListBoxItem(lb);
+                        }
+                        else
+                        {
+                            VersePortionsListBox.SelectedIndex = 0;
+                            VersePortionsListBox.Focus();
+                            FocusListBoxItem(VersePortionsListBox);
+                        }
                     }
 
                     ChapterListBox.ScrollIntoView(ChapterListBox.SelectedItem);
@@ -295,18 +309,41 @@ namespace Ark.Views
             WideVerseSearchTextBox.Focus();
         }
 
+        //! ====================================================
+        //! [+] CLOSE DISPLAY
+        //! ====================================================
+        public void CloseDisplayMethod()
+        {
+            storeVerse = VerseListBox.SelectedIndex;
+            _viewModel.SelectedVerse = null;
+            _viewModel.VerseHighlight = "";
+            VerseListBox.Focus();
+        }
+
+        //! ====================================================
+        //! [+] FOCUS LIST BOX ITEM
+        //! ====================================================
+        void FocusListBoxItem(ListBox lb)
+        {
+            ListBoxItem? lbi = lb.ItemContainerGenerator.ContainerFromIndex(lb.SelectedIndex) as ListBoxItem;
+            lbi?.Focus();
+        }
+
         //? =============================[LOADED & UNLOADED]==============================
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            SearchFocusMethod();
             MainWindow.SearchFocusEvent += SearchFocusMethod;
             MainWindow.SpecificSearchFocusEvent += SpecificSearchFocusMethod;
+            MainWindow.CloseDisplayEvent += CloseDisplayMethod;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             MainWindow.SearchFocusEvent -= SearchFocusMethod;
             MainWindow.SpecificSearchFocusEvent -= SpecificSearchFocusMethod;
+            MainWindow.CloseDisplayEvent -= CloseDisplayMethod;
         }
     }
 }

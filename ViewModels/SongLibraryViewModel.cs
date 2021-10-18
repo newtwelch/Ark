@@ -49,22 +49,22 @@ namespace Ark.ViewModels
         public SongData SelectedSong    // Forgot what this is called
         {
             get { return _selectedSong; }
-            set                                                                                                     // Do stuff on selection change here
+            set
             {
                 if (value == null)
                     value = _selectedSong;
 
                 int previous = 0;
                 if (_selectedSong != null)
-                    previous = _selectedSong.Number;                                                                // Store previous Song Number for comparing
+                    previous = _selectedSong.Number;  // Store previous Song Number for comparing
 
                 _selectedSong = value;
                 OnPropertyChanged();
 
                 if (SongLanguagesView != null && value.Number != previous)
-                    SongLanguagesView.Filter = o => (o as SongData).Number.Equals(SelectedSong.Number);             // Filter SongLanguages
+                    SongLanguagesView.Filter = o => (o as SongData).Number.Equals(SelectedSong.Number);  // Filter SongLanguages
 
-                if (Lyrics != null && SelectedSong != null)                                                         // Change Lyrics
+                if (Lyrics != null && SelectedSong != null)                                              // Change Lyrics
                 {
                     Lyrics.Clear();
                     foreach (LyricData lyric in ParseLyrics(SelectedSong.RawLyrics, SelectedSong.Sequence))
@@ -84,6 +84,10 @@ namespace Ark.ViewModels
             {
                 _selectedLyric = value;
                 OnPropertyChanged();
+
+                if (value == null)
+                    return;
+
                 OnSelectedLyricChanged?.Invoke(_selectedLyric);
                 DisplayWindow.Instance.Show();
             }

@@ -17,6 +17,7 @@ namespace Ark.Views
         private SongData save_Song;
 
         bool isAddingASong;
+        int storeSong;
 
         //! ====================================================
         //! [+] SONG LIBRARY: initialize stuff here
@@ -190,11 +191,12 @@ namespace Ark.Views
                         e.Handled = true;
                     }
 
-                    //!? Focus on the Item so we can still use arrow navigation
                     if (lb.SelectedItem != null)
+                        FocusListBoxItem(lb);
+                    else if (e.Key == Key.Enter)
                     {
-                        ListBoxItem? lbi = lb?.ItemContainerGenerator.ContainerFromIndex(lb.SelectedIndex) as ListBoxItem;
-                        lbi?.Focus();
+                        lb.SelectedIndex = storeSong;
+                        FocusListBoxItem(lb);
                     }
 
                     break;
@@ -203,8 +205,7 @@ namespace Ark.Views
                     if (e.Key == Key.Enter)
                     {
                         SongLyricListBox.SelectedIndex = 0;
-                        ListBoxItem? lbi = SongLyricListBox.ItemContainerGenerator.ContainerFromIndex(SongLyricListBox.SelectedIndex) as ListBoxItem;
-                        lbi?.Focus();
+                        FocusListBoxItem(SongLyricListBox);
                     }
                     break;
             }
@@ -221,13 +222,21 @@ namespace Ark.Views
                 if (e.Key == Key.Enter)
                 {
                     SongListBox.SelectedIndex = 0;
-                    ListBoxItem? lbi = SongListBox.ItemContainerGenerator.ContainerFromIndex(SongListBox.SelectedIndex) as ListBoxItem;
-                    lbi?.Focus();
+                    FocusListBoxItem(SongListBox);
                 }
             }
         }
 
         //? =============================[METHODS & HELPERS]==============================
+
+        //! ====================================================
+        //! [+] FOCUS LIST BOX ITEM
+        //! ====================================================
+        void FocusListBoxItem(ListBox lb)
+        {
+            ListBoxItem? lbi = lb.ItemContainerGenerator.ContainerFromIndex(lb.SelectedIndex) as ListBoxItem;
+            lbi?.Focus();
+        }
 
         //! ====================================================
         //! [+] ADDING A SONG: event for adding a song
@@ -304,16 +313,29 @@ namespace Ark.Views
             SongSearchTextBox.Focus();
         }
 
+        //! ====================================================
+        //! [+] CLOSE DISPLAY
+        //! ====================================================
+        public void CloseDisplayMethod()
+        {
+            storeSong = SongLyricListBox.SelectedIndex;
+            _viewModel.SelectedLyric = null;
+            SongLyricListBox.Focus();
+        }
+
         //? =============================[LOADED & UNLOADED]==============================
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            SongSearchTextBox.Focus();
             MainWindow.SearchFocusEvent += SearchFocusMethod;
+            MainWindow.CloseDisplayEvent += CloseDisplayMethod;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             MainWindow.SearchFocusEvent -= SearchFocusMethod;
+            MainWindow.CloseDisplayEvent -= CloseDisplayMethod;
         }
 
     }

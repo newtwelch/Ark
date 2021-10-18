@@ -1,6 +1,7 @@
 ﻿using Ark.Models.Helpers;
 using Ark.ViewModels;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,6 +24,7 @@ namespace Ark.Views
                                     SpecificSearchFocus = new RoutedCommand();
 
         //! Command Events for other UserControls
+        public static event Action CloseDisplayEvent;
         public static event Action SearchFocusEvent;
         public static event Action SpecificSearchFocusEvent;
 
@@ -55,8 +57,6 @@ namespace Ark.Views
             ToBibleLibraryTab.InputGestures.Add(new KeyGesture(Key.X, ModifierKeys.Alt));
             SearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt));
             SpecificSearchFocus.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control));
-
-            this.Deactivated += (s, e) => this.Activate();
         }
 
         //! ====================================================
@@ -120,9 +120,29 @@ namespace Ark.Views
         }
         #endregion
 
+        #region Window Alt
+        //!? DLL Stuff
+        private const int GWL_STYLE = -16; //WPF's Message code for Title Bar's Style 
+        private const int WS_SYSMENU = 0x80000; //WPF's Message code for System Menu
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        #endregion
+
+        //! ====================================================
+        //! [+] WINDOW LOADED
+        //! ====================================================
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //!? Window Alt Key Context Menu Fix
+            var hwnd = new WindowInteropHelper(this).Handle;
+            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
+        }
+
         //? =============================[COMMAND METHODS]==============================
 
-        private void CloseSecondDisplayMethod(object sender, ExecutedRoutedEventArgs e) => DisplayWindow.Instance.Close();
+        private void CloseSecondDisplayMethod(object sender, ExecutedRoutedEventArgs e) => CloseDisplayEvent?.Invoke();
         private void ToSongLibraryTabMethod(object sender, ExecutedRoutedEventArgs e) => SongLibraryTab.IsChecked = true;
         private void ToBibleLibraryTabMethod(object sender, ExecutedRoutedEventArgs e) => BibleLibraryTab.IsChecked = true;
         private void SearchFocusMethod(object sender, ExecutedRoutedEventArgs e) => SearchFocusEvent?.Invoke();

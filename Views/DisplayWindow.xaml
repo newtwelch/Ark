@@ -7,6 +7,9 @@
         xmlns:hlpr="clr-namespace:Ark.Models.Helpers"
         mc:Ignorable="d"
         Closing="Window_Closing"
+        IsVisibleChanged="Window_IsVisibleChanged"
+        Loaded="Window_Loaded"
+        Unloaded="Window_Unloaded"
         ShowActivated="False"
         Title="DisplayWindow"
         d:Height="720"
@@ -26,7 +29,7 @@
         <!-- =====================================
         VIEW BOX: easy resizing of content
         ========================================== -->
-        <Viewbox Stretch="Uniform" Margin="40 20">
+        <Viewbox Stretch="Uniform" Margin="20">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" x:Name="BibleDataTextBox" Background="Transparent" 
                            TextWrapping="Wrap" Margin="0 0 0 20"
@@ -34,7 +37,7 @@
                            FontWeight="Bold" FontSize="120" TextAlignment="Center"/>
                 <hlpr:HighlightableTextBlock x:Name="DisplayTextBox" Background="Transparent" TextWrapping="Wrap"
                                              Foreground="{StaticResource FocusedBrush}" Width="1920" 
-                                             FontSize="100" TextAlignment="Center"/>
+                                             FontSize="114" TextAlignment="Center"/>
             </DockPanel>
         </Viewbox>
     </Grid>

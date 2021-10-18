@@ -17,6 +17,7 @@ namespace Ark.Views
         //! List of Screens
         private List<Screen> _screensList;
 
+
         //! ====================================================
         //! [+] DISPLAY WINDOW: everything starts here
         //! ====================================================
@@ -132,5 +133,31 @@ namespace Ark.Views
             e.Cancel = true;
         }
 
+        //! ====================================================
+        //! [+] CLOSE DISPLAY
+        //! ====================================================
+        public void CloseDisplayMethod()
+        {
+            DisplayTextBox.HighlightPhrase = "";
+            Close();
+        }
+
+        //? =============================[LOADED & UNLOADED]==============================
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainWindow.CloseDisplayEvent += CloseDisplayMethod;
+        }
+
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            MainWindow.CloseDisplayEvent -= CloseDisplayMethod;
+        }
+
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            bool hasManyScreens = _screensList.Count >= 2;
+            SetWindowPosition(this, WindowPositions.TopLeft, hasManyScreens ? _screensList[1].Bounds : _screensList[0].Bounds);
+        }
     }
 }

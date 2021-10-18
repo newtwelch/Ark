@@ -7,7 +7,7 @@
     DEFAULT: base style
     ========================================== -->
     <Style x:Key="DefaultTextBox" TargetType="TextBox">
-        <Setter Property="FontFamily" Value="Gontserrat" />
+        <Setter Property="FontFamily" Value="#Gontserrat" />
         <Setter Property="Background" Value="{StaticResource ContainerDarkBrush}" />
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
         <Setter Property="FontSize" Value="20" />
@@ -135,7 +135,7 @@
         <Setter Property="Background" Value="{StaticResource ContainerBrush}"/>
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource UnfocusedBrush}"/>
-        <Setter Property="FontFamily" Value="Gontserrat"/>
+        <Setter Property="FontFamily" Value="#Gontserrat"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="Placement" Value="Bottom"/>
     </Style>

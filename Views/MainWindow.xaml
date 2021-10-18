@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:Ark.Views"
         mc:Ignorable="d"
         WindowStyle="None"
+        Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
         Title="Ark"
         Background="{StaticResource BackgroundBrush}"
@@ -41,7 +42,7 @@
             <Image x:Name="Logo" Height="30" Margin="10 5 5 5"
                    Source="pack://application:,,,/Ark_Logo.ico" />
             <TextBlock Text="Ark" FontFamily="Gontserrat" Foreground="{StaticResource UnfocusedBrush}"
-                       FontSize="16" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                       FontSize="20" VerticalAlignment="Center" Margin="15 0 0 0"/>
 
             <!-- CLOSE : close the app -->
             <Button x:Name="CloseButton" Style="{StaticResource WindowButton}"
@@ -77,8 +78,8 @@
                          Visibility="Hidden"
                          Style="{StaticResource IconRadioButton}" />
 
-            <TextBlock Text="NMW&#x0a;1.1" FontFamily="Gontserrat" Foreground="{StaticResource UnfocusedBrush}"
-                       FontSize="14" DockPanel.Dock="Bottom" HorizontalAlignment="Center" TextAlignment="Center" Margin="0 0 0 20"/>
+            <TextBlock Text="1.2" FontFamily="Gontserrat" Foreground="{StaticResource UnfocusedBrush}"
+                       FontSize="20" DockPanel.Dock="Bottom" HorizontalAlignment="Center" TextAlignment="Center" Margin="0 0 0 20"/>
             
                     <!-- History -->
             <RadioButton x:Name="HistoryTab" Visibility="Hidden"

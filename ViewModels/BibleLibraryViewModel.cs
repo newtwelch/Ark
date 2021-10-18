@@ -96,6 +96,7 @@ namespace Ark.ViewModels
                 //!? Cut the verse into Portions
                 string[] verseBits = Regex.Split(value.Text, @"(?<=[\.,;:!\?])\s+");
                 int Key = 1;
+
                 //!? Clear the Portions AGAIN
                 VersePortions.Clear();
                 foreach (string verseBit in verseBits)
