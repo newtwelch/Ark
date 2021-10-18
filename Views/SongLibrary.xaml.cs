@@ -234,6 +234,9 @@ namespace Ark.Views
         //! ====================================================
         void FocusListBoxItem(ListBox lb)
         {
+            if (lb.SelectedItem == null)
+                return;
+
             ListBoxItem? lbi = lb.ItemContainerGenerator.ContainerFromIndex(lb.SelectedIndex) as ListBoxItem;
             lbi?.Focus();
         }
