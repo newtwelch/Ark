@@ -158,10 +158,12 @@ namespace Ark.Views
             {
                 //!? Select the Searched Verse
                 if (!String.IsNullOrWhiteSpace(VerseSearchTextBox.Text))
+                {
                     VerseListBox.SelectedIndex = Int32.Parse(VerseSearchTextBox.Text) - 1;
 
-                VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
-                FocusListBoxItem(VerseListBox);
+                    VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
+                    FocusListBoxItem(VerseListBox);
+                }
             });
         }
 
