@@ -17,7 +17,6 @@ namespace Ark.Views
         //! List of Screens
         private List<Screen> _screensList;
 
-
         //! ====================================================
         //! [+] DISPLAY WINDOW: everything starts here
         //! ====================================================
@@ -32,24 +31,9 @@ namespace Ark.Views
             BibleLibraryViewModel.OnSelectedVerseChanged += ChangeText;
 
             //!? ====================================================
-            //!? COUNT SCREENS: make a count of the screen displays
-            //!? ====================================================
-            _screensList = new List<Screen>();
-            foreach (Screen? screen in Screen.AllScreens)
-            {
-                _screensList.Add(screen);
-            }
-
-            //!? ====================================================
             //!? SETUP WINDOW: set window position, width and height
             //!? ====================================================
-            // check if the list has 2 or more screens
-            bool hasManyScreens = _screensList.Count >= 2;
-
-            // Set the window position depending on screenlist size, set the width adn height as well
-            SetWindowPosition(this, WindowPositions.TopLeft, hasManyScreens ? _screensList[1].Bounds : _screensList[0].Bounds);
-            Width = hasManyScreens ? _screensList[1].Bounds.Width : Screen.PrimaryScreen.Bounds.Width;
-            Height = hasManyScreens ? _screensList[1].Bounds.Height : Screen.PrimaryScreen.Bounds.Height;
+            SetWindow();
 
         }
 
@@ -142,6 +126,34 @@ namespace Ark.Views
             Close();
         }
 
+        //! ====================================================
+        //! [+] VISIBLE CHANGED
+        //! ====================================================
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e) => SetWindow();
+
+        private void SetWindow()
+        {
+            //!? ====================================================
+            //!? COUNT SCREENS: make a count of the screen displays
+            //!? ====================================================
+            _screensList = new List<Screen>();
+            foreach (Screen? screen in Screen.AllScreens)
+            {
+                _screensList.Add(screen);
+            }
+
+            //!? ====================================================
+            //!? SET WHICH SCREEN TO USE
+            //!? ====================================================
+            // check if the list has 2 or more screens
+            bool hasManyScreens = _screensList.Count >= 2;
+
+            // Set the window position depending on screenlist size, set the width adn height as well
+            SetWindowPosition(this, WindowPositions.TopLeft, hasManyScreens ? _screensList[1].Bounds : _screensList[0].Bounds);
+            Width = hasManyScreens ? _screensList[1].Bounds.Width : Screen.PrimaryScreen.Bounds.Width;
+            Height = hasManyScreens ? _screensList[1].Bounds.Height : Screen.PrimaryScreen.Bounds.Height;
+        }
+
         //? =============================[LOADED & UNLOADED]==============================
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -152,12 +164,6 @@ namespace Ark.Views
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
             MainWindow.CloseDisplayEvent -= CloseDisplayMethod;
-        }
-
-        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            bool hasManyScreens = _screensList.Count >= 2;
-            SetWindowPosition(this, WindowPositions.TopLeft, hasManyScreens ? _screensList[1].Bounds : _screensList[0].Bounds);
         }
     }
 }
