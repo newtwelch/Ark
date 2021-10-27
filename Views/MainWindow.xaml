@@ -72,17 +72,18 @@
                          GroupName="Tabs" Checked="RadioTab_Checked"
                          Style="{StaticResource IconRadioButton}" />
                     <!-- Message -->
-            <RadioButton x:Name="MessageTab" 
+            <RadioButton x:Name="MessageTab"
                          Content="M" DockPanel.Dock="Top"
                          GroupName="Tabs" Checked="RadioTab_Checked"
                          Visibility="Hidden"
                          Style="{StaticResource IconRadioButton}" />
-
+                    <!-- Version -->
             <TextBlock Text="1.2.1" FontFamily="Gontserrat" Foreground="{StaticResource UnfocusedBrush}"
-                       FontSize="20" DockPanel.Dock="Bottom" HorizontalAlignment="Center" TextAlignment="Center" Margin="0 0 0 20"/>
+                       FontSize="20" DockPanel.Dock="Bottom" HorizontalAlignment="Center" TextAlignment="Center" 
+                       Margin="0 20 0 20"/>
             
                     <!-- History -->
-            <RadioButton x:Name="HistoryTab" Visibility="Hidden"
+            <RadioButton x:Name="HistoryTab"
                          Content="H" DockPanel.Dock="Bottom"
                          GroupName="Tabs" Checked="RadioTab_Checked"
                          Style="{StaticResource IconRadioButton}" />

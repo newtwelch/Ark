@@ -1,6 +1,8 @@
-﻿using Ark.Models.Helpers;
+﻿using Ark.Models.BibleLibrary;
+using Ark.Models.Helpers;
 using Ark.ViewModels;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +25,11 @@ namespace Ark.Views
             InitializeComponent();
 
             EnglishRadioTab.IsChecked = true;
+
+            //!? ====================================================
+            //!? EVENTS
+            //!? ====================================================
+            HistoryViewModel.HistoryObjectSelected += HistoryObjectSelectedMethod;
 
             //!? Delay Event for the search
             chapterAssistant = new TypeAssistant();
@@ -289,6 +296,19 @@ namespace Ark.Views
 
 
         //? =============================[METHODS]==============================
+
+
+        private void HistoryObjectSelectedMethod(Object o)
+        {
+            if (o is not VerseData)
+                return;
+
+            VerseData verse = (VerseData)o;
+
+            _viewModel.SelectedBook = _viewModel.Books.ToList().Find(x => x.Name == verse.FromBook);
+            _viewModel.SelectedChapter = _viewModel.Chapters.ToList().Find(x => x.ID == verse.FromChapter);
+            _viewModel.SelectedVerse = _viewModel.Verses.ToList().Find(x => x.ID == verse.ID);
+        }
 
         //! ====================================================
         //! [+] SEARCH FOCUS METHOD: hotkey stuff

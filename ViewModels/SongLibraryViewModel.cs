@@ -82,6 +82,7 @@ namespace Ark.ViewModels
             get { return _selectedLyric; }
             set
             {
+
                 _selectedLyric = value;
                 OnPropertyChanged();
 
@@ -89,6 +90,7 @@ namespace Ark.ViewModels
                     return;
 
                 OnSelectedLyricChanged?.Invoke(_selectedLyric);
+                HistoryViewModel.EventInvoking(_selectedSong);
                 DisplayWindow.Instance.Show();
             }
         }
@@ -169,7 +171,7 @@ namespace Ark.ViewModels
             SongsView = CollectionViewSource.GetDefaultView(Songs);
             SongsView.Filter = SongFilterView;
 
-            // Song Language
+            //!? Song Language
             SongLanguagesView = CollectionViewSource.GetDefaultView(SongLanguages);
             SongLanguagesView.Filter = o => (o as SongData).Number.Equals(SelectedSong.Number);
         }

@@ -18,6 +18,7 @@ namespace Ark.ViewModels
         //! List of Books
         public List<BookData> TagalogBooks { get; set; }
         public List<BookData> EnglishBooks { get; set; }
+
         //! RangedObservableCollection of Bible Data
         public RangeObservableCollection<BookData> Books { get; set; }
         public RangeObservableCollection<ChapterData> Chapters { get; set; }
@@ -82,11 +83,12 @@ namespace Ark.ViewModels
             {
                 _selectedVerse = value;
                 //!? Clear the Portions
-                VersePortions.Clear();
+                VersePortions?.Clear();
 
                 OnPropertyChanged();
 
                 if (!Initialized || value == null) return;
+
 
                 //!? CONTINUE ON
                 //!? Clear the TextSearch
@@ -104,6 +106,7 @@ namespace Ark.ViewModels
                     VersePortions.Add(Key++, verseBit);
                 }
 
+                HistoryViewModel.EventInvoking(value);
 
                 //!? Show the VERSE
                 OnSelectedVerseChanged?.Invoke(_selectedVerse);

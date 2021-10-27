@@ -28,7 +28,10 @@ namespace Ark.Views
             DataContext = _viewModel;
             InitializeComponent();
 
-            //_viewModel.SongAdded += EditModeSetUp;
+            //!? ====================================================
+            //!? EVENTS
+            //!? ====================================================
+            HistoryViewModel.HistoryObjectSelected += HistoryObjectSelectedMethod;
             SongLibraryViewModel.SongAdded += AddingASong;
         }
 
@@ -314,6 +317,18 @@ namespace Ark.Views
         {
             SongSearchTextBox.Text = "";
             SongSearchTextBox.Focus();
+        }
+
+        //! ====================================================
+        //! [+] ADD SONG: adds song to database
+        //! ====================================================
+        private void HistoryObjectSelectedMethod(object o)
+        {
+            if (o is not SongData)
+                return;
+
+            _viewModel.SelectedSong = _viewModel.Songs.ToList().Find(x => x.ID == (o as SongData).ID);
+            FocusListBoxItem(SongListBox);
         }
 
         //! ====================================================
