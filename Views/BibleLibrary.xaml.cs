@@ -137,7 +137,6 @@ namespace Ark.Views
                         VerseListBox.Visibility = Visibility.Visible;
                         if (VerseListBox.SelectedItem != null)
                         {
-                            VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
                             FocusListBoxItem(VerseListBox);
                         }
                     }
@@ -157,7 +156,6 @@ namespace Ark.Views
                 if (!String.IsNullOrWhiteSpace(ChapterSearchTextBox.Text))
                 {
                     ChapterListBox.SelectedIndex = Int32.Parse(ChapterSearchTextBox.Text) - 1;
-                    ChapterListBox.ScrollIntoView(ChapterListBox.SelectedItem);
                     VerseSearchTextBox.Focus();
                 }
             });
@@ -175,7 +173,6 @@ namespace Ark.Views
                 {
                     VerseListBox.SelectedIndex = Int32.Parse(VerseSearchTextBox.Text) - 1;
 
-                    VerseListBox.ScrollIntoView(VerseListBox.SelectedItem);
                     FocusListBoxItem(VerseListBox);
                 }
             });
@@ -344,6 +341,9 @@ namespace Ark.Views
             if (lb.SelectedItem == null)
                 return;
 
+            lb.UpdateLayout();
+            lb.ScrollIntoView(lb.SelectedItem);
+
             ListBoxItem? lbi = lb.ItemContainerGenerator.ContainerFromIndex(lb.SelectedIndex) as ListBoxItem;
             lbi?.Focus();
         }
@@ -366,7 +366,7 @@ namespace Ark.Views
             _viewModel.SelectedBook = _viewModel.Books.ToList().Find(x => x.Name == verse.FromBook);
             ChapterListBox.SelectedIndex = verse.FromChapter - 1;
             VerseListBox.SelectedIndex = verse.ID - 1;
-            Keyboard.Focus(VerseListBox);
+
             fromHistory = true;
         }
 
@@ -377,10 +377,9 @@ namespace Ark.Views
             if (!fromHistory)
                 SearchFocusMethod();
             else
-            {
-                fromHistory = false;
                 FocusListBoxItem(VerseListBox);
-            }
+
+            fromHistory = false;
 
             MainWindow.SearchFocusEvent += SearchFocusMethod;
             MainWindow.SpecificSearchFocusEvent += SpecificSearchFocusMethod;

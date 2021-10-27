@@ -28,6 +28,7 @@ namespace Ark.Views
         //! ====================================================
         private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            HistoryListBox.SelectedItem = null;
         }
     }
 }

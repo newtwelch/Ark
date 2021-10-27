@@ -23,10 +23,10 @@ namespace Ark.ViewModels
             {
                 _selectedObject = value;
 
-                if (value != null)
-                    HistoryObjectSelected.Invoke(value.Item2);
-
                 OnPropertyChanged();
+
+                if (value != null)
+                    HistoryObjectSelected.Invoke(_selectedObject.Item2);
             }
         }
         private Tuple<int, Object> _selectedObject;
@@ -46,39 +46,45 @@ namespace Ark.ViewModels
         //! ====================================================
         //! [+] HISTORY VIEW MODEL
         //! ====================================================
-        public static void EventInvoking(Object o)
-        {
-            AddObjectToHistory?.Invoke(o);
-        }
+        public static void EventInvoking(Object o) => AddObjectToHistory?.Invoke(o);
+
 
         //! ====================================================
         //! [+] HISTORY VIEW MODEL
         //! ====================================================
         private void AddObjectToHistoryMethod(Object o)
         {
-            if (HistoryObjects.Keys.Any(x => x.Item2 == o))
+            //!? Check for instance of object in the list
+            bool matchingDataValue = HistoryObjects.Values.Any(x => x == $"† - {(o as VerseData)?.FromBook} {(o as VerseData)?.FromChapter}:{(o as VerseData)?.ID}") ||
+                                     HistoryObjects.Values.Any(x => x == $"♪ - { (o as SongData)?.Title }");
+
+            //!? If Object already exists, move the existing one up
+            if (matchingDataValue)
             {
-                Tuple<int, Object> tupleMatch = HistoryObjects.Keys.ToList().Find(x => x.Item2 == o);
-                int index = HistoryObjects.Keys.ToList().IndexOf(tupleMatch);
-                HistoryObjects.Move(index, 0);
-                return;
+                string? stringMatch = o is SongData ? HistoryObjects.Values.ToList().Find(x => x == $"♪ - { (o as SongData)?.Title }") :
+                                                      HistoryObjects.Values.ToList().Find(x => x == $"† - {(o as VerseData)?.FromBook} {(o as VerseData)?.FromChapter}:{(o as VerseData)?.ID}");
+                int index = HistoryObjects.Values.ToList().IndexOf(stringMatch);
+                HistoryObjects.RemoveAt(index);
             }
 
+            //!? If object is a song data
             if (o is SongData)
             {
-                SongData objectAsSong = (SongData)o;
+                SongData song = (SongData)o;
 
-                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, objectAsSong), objectAsSong.Title);
+                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, song), $"♪ - { song.Title }");
             }
 
+            //!? If object is a verse data
             else if (o is VerseData)
             {
-                VerseData objectAsVerse = (VerseData)o;
+                VerseData verse = (VerseData)o;
 
-                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, objectAsVerse),
-                            $"{objectAsVerse.FromBook} {objectAsVerse.FromChapter}:{objectAsVerse.ID}");
+                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, verse),
+                            $"† - {verse.FromBook} {verse.FromChapter}:{verse.ID}");
             }
 
+            //!? Move Object up top - Always
             if (o != null)
                 HistoryObjects.Move(HistoryObjects.Count - 1, 0);
         }

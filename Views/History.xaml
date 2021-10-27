@@ -20,18 +20,11 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <DockPanel>
-                        <TextBlock x:Name="SongTitleInList"
+                        <TextBlock x:Name="SongTitleInList" FontSize="25"
                                    Text="{Binding Value}" />
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-
-            <d:ListBoxItem>
-                <DockPanel Margin="0">
-                    <TextBlock x:Name="SongTitleInList"
-                                   Text="Testing" />
-                </DockPanel>
-            </d:ListBoxItem>
         </ListBox>
 
     </Grid>

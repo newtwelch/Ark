@@ -241,6 +241,9 @@ namespace Ark.Views
             if (lb.SelectedItem == null)
                 return;
 
+            lb.UpdateLayout();
+            lb.ScrollIntoView(lb.SelectedItem);
+
             ListBoxItem? lbi = lb.ItemContainerGenerator.ContainerFromItem(lb.SelectedItem) as ListBoxItem;
             lbi?.Focus();
         }

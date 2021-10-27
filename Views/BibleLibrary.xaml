@@ -120,8 +120,7 @@
                  ItemContainerStyle="{StaticResource BibleVersePortionItems}"
                  SelectedValuePath="Value" SelectedValue="{Binding VerseHighlight}"
                  Background="Transparent" Width="40"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 Grid.IsSharedSizeScope="True" Grid.Row="1" HorizontalAlignment="Right"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="1" HorizontalAlignment="Right"
                  KeyDown="ListBox_KeyDown"
                  Margin="0 20 20 0">
             <ListBox.ItemTemplate>

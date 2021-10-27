@@ -51,12 +51,12 @@ namespace Ark.ViewModels
                 if (Chapters == null || SelectedBook == null)
                     return;
 
-                int save = SelectedChapter != null ? SelectedChapter.ID : 1;
+                int saveChapter = SelectedChapter != null ? SelectedChapter.ID : 1;
 
                 Chapters.Clear();
                 Chapters.AddRange(_selectedBook.Chapters);
 
-                SelectedChapter = Chapters.ToList().Find(x => x.ID == save);
+                SelectedChapter = Chapters.ToList().Find(x => x.ID == saveChapter);
             }
         }
         private BookData _selectedBook;
@@ -109,8 +109,8 @@ namespace Ark.ViewModels
                 HistoryViewModel.EventInvoking(value);
 
                 //!? Show the VERSE
-                //OnSelectedVerseChanged?.Invoke(_selectedVerse);
-                //DisplayWindow.Instance.Show();
+                OnSelectedVerseChanged?.Invoke(_selectedVerse);
+                DisplayWindow.Instance.Show();
             }
         }
         private VerseData _selectedVerse;
@@ -211,8 +211,6 @@ namespace Ark.ViewModels
                 Verses.Clear();
                 Verses.AddRange(SelectedChapter.Verses);
                 SelectedVerse = SaveVerse.Equals(0) ? null : Verses.ToList().Find(x => x.ID == SaveVerse);
-
-
             }
         }
         private string _language;
