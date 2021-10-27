@@ -46,6 +46,7 @@
         <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
         <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
@@ -87,7 +88,6 @@
            BasedOn="{StaticResource DefaultListBoxItem}"
            TargetType="ListBoxItem">
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
-        <Setter Property="Cursor" Value="Hand" />
 
         <Setter Property="Template">
             <Setter.Value>
@@ -128,8 +128,7 @@
     ========================================== -->
     <Style x:Key="SongLanguageListBoxItem" TargetType="ListBoxItem"
            BasedOn="{StaticResource DefaultListBoxItem}" >
-        <Setter Property="Cursor" Value="Hand" />
-        
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
@@ -166,7 +165,6 @@
            BasedOn="{StaticResource DefaultListBoxItem}"
            TargetType="ListBoxItem">
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
-        <Setter Property="Cursor" Value="Hand" />
 
         <Setter Property="Template">
             <Setter.Value>
@@ -208,7 +206,6 @@
            BasedOn="{StaticResource DefaultListBoxItem}"
            TargetType="ListBoxItem">
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
-        <Setter Property="Cursor" Value="Hand" />
 
         <Setter Property="Template">
             <Setter.Value>

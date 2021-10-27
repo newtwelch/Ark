@@ -147,7 +147,7 @@
              ItemContainerStyle="{StaticResource BibleVerseItem}"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
              KeyDown="ListBox_KeyDown"
-             SelectedItem="{Binding SelectedVerse, UpdateSourceTrigger=PropertyChanged}">
+             SelectedItem="{Binding SelectedVerse}">
         <ListBox.ItemTemplate>
             <!-- Data Template -->
             <DataTemplate>

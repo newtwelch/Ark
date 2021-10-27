@@ -16,6 +16,7 @@ namespace Ark.Views
 
         private SongData save_Song;
 
+        bool fromHistory;
         bool isAddingASong;
         int storeSong;
 
@@ -240,7 +241,7 @@ namespace Ark.Views
             if (lb.SelectedItem == null)
                 return;
 
-            ListBoxItem? lbi = lb.ItemContainerGenerator.ContainerFromIndex(lb.SelectedIndex) as ListBoxItem;
+            ListBoxItem? lbi = lb.ItemContainerGenerator.ContainerFromItem(lb.SelectedItem) as ListBoxItem;
             lbi?.Focus();
         }
 
@@ -328,7 +329,9 @@ namespace Ark.Views
                 return;
 
             _viewModel.SelectedSong = _viewModel.Songs.ToList().Find(x => x.ID == (o as SongData).ID);
+
             FocusListBoxItem(SongListBox);
+            fromHistory = true;
         }
 
         //! ====================================================
@@ -345,7 +348,9 @@ namespace Ark.Views
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            SongSearchTextBox.Focus();
+            if (!fromHistory)
+                SongSearchTextBox.Focus();
+
             MainWindow.SearchFocusEvent += SearchFocusMethod;
             MainWindow.CloseDisplayEvent += CloseDisplayMethod;
         }

@@ -8,8 +8,12 @@ namespace Ark.Views
     /// </summary>
     public partial class History : UserControl
     {
+        //! ViewModel
         private HistoryViewModel _viewModel;
 
+        //! ====================================================
+        //! [+] HISTORY
+        //! ====================================================
         public History()
         {
             _viewModel = new HistoryViewModel();
@@ -17,6 +21,13 @@ namespace Ark.Views
 
             InitializeComponent();
 
+        }
+
+        //! ====================================================
+        //! [+] USER CONTROL UNLOADED
+        //! ====================================================
+        private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
         }
     }
 }

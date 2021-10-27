@@ -18,6 +18,8 @@ namespace Ark.Views
 
         int storeVerse;
 
+        bool fromHistory;
+
         public BibleLibrary()
         {
             _viewModel = new BibleLibraryViewModel();
@@ -29,6 +31,8 @@ namespace Ark.Views
             //!? ====================================================
             //!? EVENTS
             //!? ====================================================
+
+            //!? Event for HistoryObject Selection Changed
             HistoryViewModel.HistoryObjectSelected += HistoryObjectSelectedMethod;
 
             //!? Delay Event for the search
@@ -44,6 +48,9 @@ namespace Ark.Views
         //! ====================================================
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (fromHistory)
+                return;
+
             TextBox? tb = e.Source as TextBox;
 
             switch (tb.Name)
@@ -297,19 +304,6 @@ namespace Ark.Views
 
         //? =============================[METHODS]==============================
 
-
-        private void HistoryObjectSelectedMethod(Object o)
-        {
-            if (o is not VerseData)
-                return;
-
-            VerseData verse = (VerseData)o;
-
-            _viewModel.SelectedBook = _viewModel.Books.ToList().Find(x => x.Name == verse.FromBook);
-            _viewModel.SelectedChapter = _viewModel.Chapters.ToList().Find(x => x.ID == verse.FromChapter);
-            _viewModel.SelectedVerse = _viewModel.Verses.ToList().Find(x => x.ID == verse.ID);
-        }
-
         //! ====================================================
         //! [+] SEARCH FOCUS METHOD: hotkey stuff
         //! ====================================================
@@ -354,14 +348,44 @@ namespace Ark.Views
             lbi?.Focus();
         }
 
+        //! ====================================================
+        //! [+] HISTORY OBJECT SELECTED METHOD
+        //! ====================================================
+        private void HistoryObjectSelectedMethod(Object o)
+        {
+            if (o is not VerseData)
+                return;
+
+            VerseData verse = (VerseData)o;
+
+            BookSearchTextBox.Clear();
+            ChapterSearchTextBox.Clear();
+            VerseSearchTextBox.Clear();
+            WideVerseSearchTextBox.Clear();
+
+            _viewModel.SelectedBook = _viewModel.Books.ToList().Find(x => x.Name == verse.FromBook);
+            ChapterListBox.SelectedIndex = verse.FromChapter - 1;
+            VerseListBox.SelectedIndex = verse.ID - 1;
+            Keyboard.Focus(VerseListBox);
+            fromHistory = true;
+        }
+
         //? =============================[LOADED & UNLOADED]==============================
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            SearchFocusMethod();
+            if (!fromHistory)
+                SearchFocusMethod();
+            else
+            {
+                fromHistory = false;
+                FocusListBoxItem(VerseListBox);
+            }
+
             MainWindow.SearchFocusEvent += SearchFocusMethod;
             MainWindow.SpecificSearchFocusEvent += SpecificSearchFocusMethod;
             MainWindow.CloseDisplayEvent += CloseDisplayMethod;
+
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

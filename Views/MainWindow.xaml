@@ -26,6 +26,7 @@
         <CommandBinding Command="{x:Static local:MainWindow.CloseSecondDisplay}" Executed="CloseSecondDisplayMethod"/>
         <CommandBinding Command="{x:Static local:MainWindow.ToSongLibraryTab}" Executed="ToSongLibraryTabMethod"/>
         <CommandBinding Command="{x:Static local:MainWindow.ToBibleLibraryTab}" Executed="ToBibleLibraryTabMethod"/>
+        <CommandBinding Command="{x:Static local:MainWindow.ToHistoryTab}" Executed="ToHistoryTabMethod"/>
         <CommandBinding Command="{x:Static local:MainWindow.SearchFocus}" Executed="SearchFocusMethod"/>
         <CommandBinding Command="{x:Static local:MainWindow.SpecificSearchFocus}" Executed="SpecificSearchFocusMethod"/>
     </Window.CommandBindings>

@@ -109,8 +109,8 @@ namespace Ark.ViewModels
                 HistoryViewModel.EventInvoking(value);
 
                 //!? Show the VERSE
-                OnSelectedVerseChanged?.Invoke(_selectedVerse);
-                DisplayWindow.Instance.Show();
+                //OnSelectedVerseChanged?.Invoke(_selectedVerse);
+                //DisplayWindow.Instance.Show();
             }
         }
         private VerseData _selectedVerse;

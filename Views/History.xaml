@@ -5,12 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ark.Views"
              xmlns:viewmodels="clr-namespace:Ark.ViewModels"
+             Unloaded="UserControl_Unloaded"
              d:DataContext="{d:DesignInstance Type=viewmodels:HistoryViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="780" 
              d:DesignWidth="1240">
     <Grid>
-        <ListBox x:Name="HistoryList"
+        <ListBox x:Name="HistoryListBox"
                  ItemContainerStyle="{StaticResource DefaultListBoxItem}"
                  ItemsSource="{Binding HistoryObjects}"
                  SelectedValue="{Binding SelectedObject}"
