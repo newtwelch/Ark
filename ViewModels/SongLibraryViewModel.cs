@@ -18,77 +18,71 @@ namespace Ark.ViewModels
     {
 
         //! Database access
-        private SongLibraryDatabase _database;  // Song Database class
+        private SongLibraryDatabase _database;
 
-        //! Song List
-        public ObservableCollection<SongData> Songs { get; set; }          // List of Songs
-        public ObservableCollection<SongData> SongLanguages { get; set; }  // List of Languages in the Song
-
-        //! List of Lyrics
+        //! LISTS:
+        public ObservableCollection<SongData> Songs { get; set; }
+        public ObservableCollection<SongData> SongLanguages { get; set; }
         public ObservableCollection<LyricData> Lyrics { get; set; }
 
         //! Song Filtering
-        private ICollectionView SongLanguagesView;  // CollectionView for the songs
-        private ICollectionView SongsView;          // CollectionView for the songs
-        public string SongFilter      // Gets the text from Song Search
+        private ICollectionView SongLanguagesView;
+        private ICollectionView SongsView;
+        public string SongFilter
         {
-            get { return _songFilter; }
+            get => _songFilter;
             set
             {
-                if (value != _songFilter)
-                {
-                    _songFilter = value;
-                    SongsView.Refresh();
-                    OnPropertyChanged();
-                }
+                _songFilter = value;
+                SongsView.Refresh();
+                OnPropertyChanged();
             }
         }
-        private string _songFilter;   // SongsView but pricate
+        private string _songFilter;
 
-        //! The selected Song;
-        public SongData SelectedSong    // Forgot what this is called
+        //! Selected Song
+        public SongData SelectedSong
         {
-            get { return _selectedSong; }
+            get => _selectedSong;
             set
             {
-                if (value == null)
-                    value = _selectedSong;
+                //!? If the new song is null, stick with current _selectedSong
+                value ??= _selectedSong;
 
-                int previous = 0;
-                if (_selectedSong != null)
-                    previous = _selectedSong.Number;  // Store previous Song Number for comparing
+                //!? Save and check if Previous Song language matches
+                int previous = _selectedSong is null ? 0 : _selectedSong.Number;
 
+                //!? ================ [Property Changed] ================
                 _selectedSong = value;
                 OnPropertyChanged();
 
+                //!? Set the LanguageView Filter
                 if (SongLanguagesView != null && value.Number != previous)
-                    SongLanguagesView.Filter = o => (o as SongData).Number.Equals(SelectedSong.Number);  // Filter SongLanguages
+                    SongLanguagesView.Filter = o => ((SongData)o).Number.Equals(SelectedSong.Number);  // Filter SongLanguages
 
-                if (Lyrics != null && SelectedSong != null)                                              // Change Lyrics
-                {
-                    Lyrics.Clear();
-                    foreach (LyricData lyric in ParseLyrics(SelectedSong.RawLyrics, SelectedSong.Sequence))
-                    {
-                        Lyrics.Add(lyric);
-                    }
-                }
+                //!? Parse the Lyrics and Add them
+                Lyrics?.Clear();
+                ParseLyrics(value.RawLyrics, value.Sequence).ForEach(x => Lyrics?.Add(x));
+
             }
         }
-        private SongData _selectedSong; // SelectedSong but private
+        private SongData _selectedSong;
 
-        //! Selcted Lyric
+        //! Selected Lyric
         public LyricData SelectedLyric
         {
-            get { return _selectedLyric; }
+            get => _selectedLyric;
             set
             {
-
+                //!? ================ [Property Changed] ================
                 _selectedLyric = value;
                 OnPropertyChanged();
 
+                //!? If null don't continue
                 if (value == null)
                     return;
 
+                //!? Setup second display, Invoking events
                 OnSelectedLyricChanged?.Invoke(_selectedLyric);
                 HistoryViewModel.EventInvoking(_selectedSong);
                 DisplayWindow.Instance.Show();
@@ -97,10 +91,10 @@ namespace Ark.ViewModels
         private LyricData _selectedLyric;
         public static event Action<LyricData> OnSelectedLyricChanged;
 
-        //! View Mode & Edit Mode
+        //! EDIT MODE & VISIBILITIES
         public bool IsEditMode  // Edit Mode
         {
-            get { return _isEditMode; }
+            get => _isEditMode;
             set
             {
                 _isEditMode = value;
@@ -111,27 +105,10 @@ namespace Ark.ViewModels
             }
         }
         private bool _isEditMode;
-        // Visibility
-        public Visibility EditModeVisible
-        {
-            get
-            {
-                if (_isEditMode)
-                    return Visibility.Visible;
-                else
-                    return Visibility.Collapsed;
-            }
-        }
-        public Visibility EditModeNotVisible
-        {
-            get
-            {
-                if (_isEditMode)
-                    return Visibility.Collapsed;
-                else
-                    return Visibility.Visible;
-            }
-        }
+
+        //!? Visibility
+        public Visibility EditModeVisible => _isEditMode ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility EditModeNotVisible => _isEditMode ? Visibility.Collapsed : Visibility.Visible;
 
         //! Commands
         public ICommand Add_Song { get; set; }
@@ -152,28 +129,26 @@ namespace Ark.ViewModels
             Songs = new ObservableCollection<SongData>(_database.GetSongs());
             SongLanguages = new ObservableCollection<SongData>(Songs);
 
-            if (Songs.Count > 0)
-            {
-                //! Select First Song
-                SelectedSong = Songs[0];                                                                                 // Automatically Select the first song
-                Lyrics = new ObservableCollection<LyricData>(ParseLyrics(_selectedSong.RawLyrics, _selectedSong.Sequence)); // Initialize the Lyrics
-            }
-
             //!? ====================================================
-            //!? COMMANDS
+            //!? INIT SELECTED SONG: if there are no songs return
             //!? ====================================================
-            Add_Song = new RelayCommands(o => AddSong(o));
-            Delete_Song = new RelayCommands(o => DeleteSong(o));
+            SelectedSong = Songs[0];
+            Lyrics = new ObservableCollection<LyricData>(ParseLyrics(SelectedSong.RawLyrics, SelectedSong.Sequence));
 
             //!? ====================================================
             //!? SONG FILTER: collection view filtering
             //!? ====================================================
             SongsView = CollectionViewSource.GetDefaultView(Songs);
             SongsView.Filter = SongFilterView;
-
             //!? Song Language
             SongLanguagesView = CollectionViewSource.GetDefaultView(SongLanguages);
-            SongLanguagesView.Filter = o => (o as SongData).Number.Equals(SelectedSong.Number);
+            SongLanguagesView.Filter = o => ((SongData)o).Number.Equals(SelectedSong.Number);
+
+            //!? ====================================================
+            //!? COMMANDS
+            //!? ====================================================
+            Add_Song = new RelayCommands(o => AddSong(o));
+            Delete_Song = new RelayCommands(o => DeleteSong(o));
         }
 
         //? ==========================[ SONG FUNCTIONS ]=============================
@@ -191,11 +166,13 @@ namespace Ark.ViewModels
                 Sequence = "o",
                 Language = "DEFAULT",
             };
+
+            //!? Add song to the database & local list then select
             _database.AddSong(newSong);
-
             Songs.Add(_database.LastSong());
-
             SelectedSong = Songs[Songs.Count - 1];
+
+            //!? The Code-Behind listens to this
             SongAdded?.Invoke();
         }
 
@@ -204,26 +181,23 @@ namespace Ark.ViewModels
         //! ====================================================
         public void DeleteSong(Object sender)
         {
+            int storeIndex = Songs.IndexOf(SelectedSong);
             _database.DeleteSong(SelectedSong);
             Songs.Remove(SelectedSong);
+            SelectedSong = Songs[storeIndex != 0 ? storeIndex - 1 : storeIndex];
         }
 
         //! ====================================================
         //! [+] UPDATE SONG: rewrites the song in the database
         //! ====================================================
-        public void UpdateSong(SongData song)
-        {
-            _database.UpdateSong(song);
-        }
+        public void UpdateSong(SongData song) => _database.UpdateSong(song);
 
         //! ====================================================
         //! [+] FILTER SONG LIST: search based on title, author or lyrics
         //! ====================================================
         private bool SongFilterView(object song)
         {
-            //!? Might change this for an advanced search engine
-
-            (song as SongData).SearchedLyric = null;
+            ((SongData)song).SearchedLyric = "";
 
             //!? ====================================================
             //!? NONE: if text is empty, set every object to true
@@ -235,33 +209,27 @@ namespace Ark.ViewModels
             //!? ====================================================
             else if (SongFilter.StartsWith("."))
             {
-                // get the raw lyric
-                string lyric = (song as SongData).RawLyrics;
-                // set the match lyric as boolean
-                bool _lyricMatch = (song as SongData).RawLyrics.
-                    Contains(SongFilter.Replace(".", ""), StringComparison.OrdinalIgnoreCase);
+                string rawLyric = ((SongData)song).RawLyrics;
+                string songFilter = SongFilter.Replace(".", "");
+                bool _lyricMatch = rawLyric.Contains(songFilter, StringComparison.OrdinalIgnoreCase);
 
-                //if boolean is true / if it is a match
-                if (_lyricMatch)
-                    lyric = lyric.Substring(lyric.IndexOf(SongFilter.Replace(".", ""), StringComparison.OrdinalIgnoreCase)).Replace("\n", " ").Replace("\r", " ");
-                // set the "SearchedLyric" to display a preview of the searched lyric
-                (song as SongData).SearchedLyric = lyric.Substring(0, Math.Min(lyric.Length, 35)) + "...";
+                //!? Get the first 35 letter of matched raw lyric and set it as Searched Lyric
+                rawLyric = _lyricMatch ? rawLyric.Substring(rawLyric.IndexOf(songFilter, StringComparison.OrdinalIgnoreCase))
+                                                 .Replace("\n", " ").Replace("\r", " ") : "";
+                ((SongData)song).SearchedLyric = rawLyric.Substring(0, Math.Min(rawLyric.Length, 35)) + "...";
 
-                //return the boolean lyricmatch
                 return _lyricMatch;
             }
             //!? ====================================================
             //!? AUTHOR SEARCH: if text starts with a STAR, match author name
             //!? ====================================================
             else if (SongFilter.StartsWith("*"))
-                return (song as SongData).Author.
-                    Contains(SongFilter.Replace("*", ""), StringComparison.OrdinalIgnoreCase);
+                return ((SongData)song).Author.Contains(SongFilter.Replace("*", ""), StringComparison.OrdinalIgnoreCase);
             //!? ====================================================
             //!? TITLE SEARCH: if no identifiers are found, match the title
             //!? ====================================================
             else
-                return (song as SongData).Title.
-                    Contains(SongFilter, StringComparison.OrdinalIgnoreCase);
+                return ((SongData)song).Title.Contains(SongFilter, StringComparison.OrdinalIgnoreCase);
         }
 
         //! ====================================================
@@ -289,19 +257,13 @@ namespace Ark.ViewModels
                 using var reader = new StringReader(paragraph);
                 string? first = reader.ReadLine();
 
-                // Check if the beginning contains "CHORUS" string
+                //!? Determine the type of lyric
                 if (first.Contains("CHORUS", StringComparison.OrdinalIgnoreCase))
-                    // Convert to a LyricData with Chorus Type
                     tempLyrics.Add(new LyricData() { Line = "C", Text = Regex.Replace(paragraph, "^(.*\n){1}", ""), Type = LyricType.Chorus });
-                // Check if the beginning contains "BRIDGE" string
                 else if (first.Contains("BRIDGE", StringComparison.OrdinalIgnoreCase))
-                    // Convert to a LyricData with Bridge Type
                     tempLyrics.Add(new LyricData() { Line = "B", Text = Regex.Replace(paragraph, "^(.*\n){1}", ""), Type = LyricType.Bridge });
-                // If no identifiers then it is a verse
                 else
-                    // Convert to a LyricData with Verse Type
                     tempLyrics.Add(new LyricData() { Line = stanzaNumber++.ToString(), Text = paragraph, Type = LyricType.Stanza });
-
             }
 
             //!? ====================================================
@@ -309,43 +271,40 @@ namespace Ark.ViewModels
             //!? ====================================================
             if (Sequence == "o" || Sequence == null || Sequence == "")
             {
-                foreach (LyricData lyric in tempLyrics)                                                                             // For every LyricData in "tempLyrics"                
+                foreach (LyricData lyric in tempLyrics)   // For every LyricData in "tempLyrics"                
                 {
                     //!? ====================================================
                     //!? PART I: if there is no chorus in the sequenced lyric YET
                     //!? ====================================================
                     if (!sequencedLyrics.Any(x => x.Type == LyricType.Chorus))
                     {
-                        if (lyric.Type == LyricType.Stanza)                                                                         // If Lyric is a STANZA
-                        {
-                            sequencedLyrics.Add(lyric);                                                                             // Add to the "sequencedLyric" List<>
-                            verseBeforeChorus++;                                                                                    // Increment the "VerseBeforeChorus"
-                        }
-                        if (lyric.Type == LyricType.Chorus)                                                                         // If Chorus is found
-                            sequencedLyrics.Add(lyric);                                                                             // Add it. Proceed to next part
+                        if (lyric.Type == LyricType.Stanza) // If it is still a stanza,
+                            verseBeforeChorus++;            // Increment number of verses before Chorus
+
+                        sequencedLyrics.Add(lyric);         // Add it
                     }
                     //!? ====================================================
                     //!? PART II: when the chorus is found proceed here
                     //!? ====================================================
                     else
                     {
-                        if (verseBeforeChorus == 0)                                                                                 // If there are no verses before chorus
-                            verseBeforeChorus = 1;                                                                                  // Set it to 1 as default
+                        //!? Deafult to 1 if versebeforechorus is 0
+                        if (verseBeforeChorus.Equals(0)) verseBeforeChorus = 1;
 
-                        if (lyric.Type == LyricType.Stanza)                                                                         // If Lyric is a STANZA
+                        //!? If Type is Stanza, Insert Chorus every (verseBeforeChorus amount)
+                        if (lyric.Type == LyricType.Stanza)
                         {
-                            sequencedLyrics.Add(lyric);                                                                             // Add to the "sequencedLyric" List<>
-                            verseBeforeChorusCounter++;                                                                             // Increment the Verse Counter
-                            if (verseBeforeChorusCounter == verseBeforeChorus)                                                      // If Verse Counter = "VerseBeforeChorus"
+                            sequencedLyrics.Add(lyric);
+                            verseBeforeChorusCounter++;
+
+                            if (verseBeforeChorusCounter == verseBeforeChorus)
                             {
-                                // Null suppresion
-                                LyricData? chorus = sequencedLyrics.Find(x => x.Type == LyricType.Chorus);                          // Find the Chorus and insert it
+                                LyricData? chorus = sequencedLyrics.Find(x => x.Type == LyricType.Chorus);
                                 sequencedLyrics.Add(chorus);
                                 verseBeforeChorusCounter = 0;
                             }
                         }
-
-                        if (lyric.Type == LyricType.Bridge)                                                                             // If it's a bridge, just add 
+                        else if (lyric.Type == LyricType.Bridge)
                             sequencedLyrics.Add(lyric);
                     }
                 }
@@ -356,15 +315,14 @@ namespace Ark.ViewModels
             //!? ====================================================
             else
             {
-                string[] sequencer = Sequence.Split(new[] { ',', ' ' },
-                                StringSplitOptions.RemoveEmptyEntries);                                                              // Split sequence string
+                //!? Split the sequencer
+                string[] sequencer = Sequence.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (var line in sequencer)                                                                                     // For each String in sequence
-                {
-                    // Null supperesion                                                                                             // Find the corresponding LyricData()
-                    LyricData? lyric = tempLyrics.Find(x => x.Line.ToUpper() == line.ToUpper().Replace("S", ""));                   // with the same "Line" in "tempLyrics"
+                foreach (var line in sequencer)                                                                     // For each String in sequence
+                {   //!? Find the corresponding LyricData()
+                    LyricData? lyric = tempLyrics.Find(x => x.Line.ToUpper() == line.ToUpper().Replace("S", ""));   // with the same "Line" in "tempLyrics"
                     if (line != "" && lyric != null)
-                        sequencedLyrics.Add(lyric);                                                                                 // Make sure it is not null and add it
+                        sequencedLyrics.Add(lyric);                                                                 // Make sure it is not null and add it
                 }
             }
 

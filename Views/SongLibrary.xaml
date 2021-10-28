@@ -29,7 +29,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="70" />
         </Grid.RowDefinitions>
-
+        
         <!-- =====================================
         RAW LYRIC EDITING: sequence and raw lyric
         ========================================== -->

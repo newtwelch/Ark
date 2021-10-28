@@ -215,7 +215,7 @@ namespace Ark.ViewModels
         }
         private string _language;
 
-        //? =============================[METHODS & MAIN]=====================s=========
+        //? =============================[METHODS & MAIN]==============================
 
         //! ====================================================
         //! [+] BIBLE LIBRARY VIEW MODEL: main method for initializing stuff

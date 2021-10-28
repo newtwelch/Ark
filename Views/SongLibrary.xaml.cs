@@ -12,13 +12,16 @@ namespace Ark.Views
 {
     public partial class SongLibrary : UserControl
     {
+        //! ViewModel
         private SongLibraryViewModel _viewModel;
 
+        //! Store Song [ for editing ]
         private SongData save_Song;
 
+        //! Variables
         bool fromHistory;
         bool isAddingASong;
-        int storeSong;
+        int storeSongIndex;
 
         //! ====================================================
         //! [+] SONG LIBRARY: initialize stuff here
@@ -29,9 +32,7 @@ namespace Ark.Views
             DataContext = _viewModel;
             InitializeComponent();
 
-            //!? ====================================================
             //!? EVENTS
-            //!? ====================================================
             HistoryViewModel.HistoryObjectSelected += HistoryObjectSelectedMethod;
             SongLibraryViewModel.SongAdded += AddingASong;
         }
@@ -51,9 +52,7 @@ namespace Ark.Views
                     switch (EditButton.Content)
                     {
                         case "E": //! ========= EDIT SONG =========
-                            //!? ====================================================
-                            //!? SAVE: save up a copy of the songs properties [ this is incase the user wants to discard changes ]
-                            //!? ====================================================
+                            //!? Save a copy of the song for discarding changes
                             save_Song = new SongData()
                             {
                                 Title = _viewModel.SelectedSong.Title,
@@ -61,13 +60,10 @@ namespace Ark.Views
                                 Language = _viewModel.SelectedSong.Language,
                                 RawLyrics = _viewModel.SelectedSong.RawLyrics,
                                 Sequence = _viewModel.SelectedSong.Sequence
-
                             };
                             break;
                         case "s": //! ========= SAVE CHANGES =========
-                            //!? ====================================================
-                            //!? SAVE CHANGES: set the SelectedSong properties and save into the database
-                            //!? ====================================================
+                            //!? Save the changes to the song
                             _viewModel.SelectedSong.RawLyrics = EditRawLyricsTextBox.Text;
                             _viewModel.SelectedSong.Sequence = EditSequenceTextBox.Text;
                             _viewModel.UpdateSong(_viewModel.SelectedSong);
@@ -75,9 +71,7 @@ namespace Ark.Views
                             break;
                     }
 
-                    //!? ====================================================
-                    //!? EDIT MODE SETUP [ if the edit button is clicked, always setup editmode boolean ]
-                    //!? ====================================================
+                    //!? Call the Edit Mode Setup
                     EditModeSetUp();
                     SongListBox.ScrollIntoView(SongListBox.SelectedItem);
 
@@ -100,7 +94,6 @@ namespace Ark.Views
 
                             //!? EDIT MODE SETUP [ exits out of Edit Mode ]
                             EditModeSetUp();
-                            _viewModel.SelectedSong = _viewModel.Songs[0];
                             SongListBox.ScrollIntoView(SongListBox.SelectedItem);
                             isAddingASong = false;
 
@@ -116,20 +109,12 @@ namespace Ark.Views
         //! ====================================================
         private void EditRawLyricsTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //!? If we are not in edit mode, don't continue
             if (!_viewModel.IsEditMode)
                 return;
 
-            //!? ====================================================
-            //!? Auto parse lyrics when editing raw lyrics
-            //!? ====================================================
+            //!? Refresh, Parse Lyrics using text from RawLyricTextBox and SequenceTextBox
             _viewModel.Lyrics.Clear();
-            // Parse Lyrics using text from RawLyricTextBox and SequenceTextBox
-            foreach (LyricData lyric in _viewModel.ParseLyrics(EditRawLyricsTextBox.Text, EditSequenceTextBox.Text))
-            {
-                _viewModel.Lyrics.Add(lyric);
-            }
-
+            _viewModel.ParseLyrics(EditRawLyricsTextBox.Text, EditSequenceTextBox.Text).ForEach(x => _viewModel.Lyrics.Add(x));
         }
 
         //! ====================================================
@@ -137,13 +122,10 @@ namespace Ark.Views
         //! ====================================================
         private void SongLyricListBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            //!? If we are not in edit mode, don't save anything
             if (!_viewModel.IsEditMode)
                 return;
 
-            //!? don't wanna comment much here,
-            //!? it just updates whatever changes you've made in the lyric listbox
-            //!? converting it to RawLyrics
+            //!? Update the RawLyrics when LostFocus 
             List<LyricData> lyrics = new List<LyricData>();
             foreach (LyricData lyric in SongLyricListBox.Items)
             {
@@ -163,20 +145,16 @@ namespace Ark.Views
             ListBox? lb = sender as ListBox;
             switch (lb.Name)
             {
-                //!? ====================================================
-                //!? Song Lyrics
-                //!? ====================================================
+                //!? ====================[ SONG LYRICS ]==================
                 case "SongLyricListBox":
 
                     //!? ====================================================
                     //!? Selected the Stanza Number according to the Number pressed down
                     //!? ====================================================
-                    if (e.Key > Key.D0 && e.Key <= Key.D9 ||
-                        e.Key > Key.NumPad0 && e.Key <= Key.NumPad9)
+                    if (e.Key > Key.D0 && e.Key <= Key.D9 || e.Key > Key.NumPad0 && e.Key <= Key.NumPad9)
                     {
                         int lindex = lb.Items.Cast<LyricData>().ToList().FindIndex(x => x.Line == e.Key.ToString().Replace("D", "").Replace("NumPad", ""));
                         lb.SelectedIndex = lindex;
-                        lb.ScrollIntoView(lb.SelectedItem);
                         e.Handled = true;
                     }
                     //!? If 0 is pressed, then get the chorus
@@ -186,25 +164,21 @@ namespace Ark.Views
                         {
                             lb.SelectedIndex++;
 
-                            LyricData selectedLyric = lb?.SelectedItem as LyricData;
+                            LyricData selectedLyric = (LyricData)lb.SelectedItem;
                             if (selectedLyric?.Line == "C")
                                 break;
                         }
 
-                        lb?.ScrollIntoView(lb.SelectedItem);
                         e.Handled = true;
                     }
 
-                    if (lb.SelectedItem != null)
-                        FocusListBoxItem(lb);
-                    else if (e.Key == Key.Enter)
-                    {
-                        lb.SelectedIndex = storeSong;
-                        FocusListBoxItem(lb);
-                    }
+                    if (lb.SelectedItem == null && e.Key == Key.Enter)
+                        lb.SelectedIndex = storeSongIndex;
 
+                    FocusListBoxItem(lb);
                     break;
 
+                //!? ====================[ SONG LIST ]==================
                 case "SongListBox":
                     if (e.Key == Key.Enter)
                     {
@@ -220,14 +194,11 @@ namespace Ark.Views
         //! ====================================================
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            TextBox? tb = sender as TextBox;
-            if (tb.Name == "SongSearchTextBox")
+            TextBox tb = (TextBox)sender;
+            if (tb.Name == "SongSearchTextBox" && e.Key == Key.Enter)
             {
-                if (e.Key == Key.Enter)
-                {
-                    SongListBox.SelectedIndex = 0;
-                    FocusListBoxItem(SongListBox);
-                }
+                SongListBox.SelectedIndex = 0;
+                FocusListBoxItem(SongListBox);
             }
         }
 
@@ -262,21 +233,15 @@ namespace Ark.Views
         //! ====================================================
         private void EditModeSetUp()
         {
-            //!? ====================================================
-            //!? EDIT MODE BOOLEAN: switch up the edit mode boolean
-            //!? ====================================================
+            //!? ====================[ EDIT MODE ]==================
             _viewModel.IsEditMode = _viewModel.IsEditMode ? false : true;
             bool isEditMode = _viewModel.IsEditMode;
 
-            //!? ====================================================
-            //!? EDIT BUTTON: change contents accordingle
-            //!? ====================================================
+            //!? ====================[ EDIT BUTTON ]==================
             EditButton.Content = isEditMode ? "s" : "E";
             EditButton.ToolTip = isEditMode ? "Save changes made to this song" : "Edit the selected song";
 
-            //!? ====================================================
-            //!? TAG DISCARD BUTTON: change contents accordingly
-            //!? ====================================================
+            //!? ====================[ TAG BUTTON ]==================
             TagDiscardButton.Content = isEditMode ? "D" : "T";
             TagDiscardButton.BorderBrush = isEditMode ? (Brush)Application.Current.Resources["RedBrush"] : (Brush)Application.Current.Resources["ThumbBrush"];
             TagDiscardButton.ToolTip = isEditMode ? "Discard changes made to this song" : "Edit Tags of this song";
@@ -292,25 +257,18 @@ namespace Ark.Views
             foreach (LyricData lyric in lyrics)
             {
                 //!? ====================[ Logic ]==================
-                //!? if lyric is a stanza, just add to the string
-                //!? if it's a Chorus, check if there is already a chorus.
-                //!? if chorus exists don't add it, if it does, then add to the RawLyric
-                //!? if it's a bridge just add as well
-                //!? ====================[ Logic ]==================
+                //!? Add string according to type
+                //!? If it's a Chorus, Add if it isn't there yet
 
                 if (lyric.Type == LyricType.Stanza)
+                    //!? If first staza, don't add white line at the start
                     _rawLyrics += lyric.Line.Equals("1") ? $"{ lyric.Text}\r\n" : $"\r\n{ lyric.Text}\r\n";
-
-                if (lyric.Type == LyricType.Chorus)
-                {
-                    if (!_rawLyrics.Contains("CHORUS", StringComparison.OrdinalIgnoreCase))
-                        _rawLyrics += $"\r\nCHORUS\r\n{lyric.Text} \r\n";
-                }
-
-                if (lyric.Type == LyricType.Bridge)
+                else if (lyric.Type == LyricType.Chorus && !_rawLyrics.Contains("CHORUS", StringComparison.OrdinalIgnoreCase))
+                    _rawLyrics += $"\r\nCHORUS\r\n{lyric.Text} \r\n";
+                else if (lyric.Type == LyricType.Bridge)
                     _rawLyrics += $"\r\nBRIDGE\r\n{lyric.Text} \r\n";
             }
-            // Trim the end for unwanted white lines;
+            //!? Trim the end for unwanted white lines;
             return _rawLyrics.TrimEnd();
         }
 
@@ -319,7 +277,7 @@ namespace Ark.Views
         //! ====================================================
         public void SearchFocusMethod()
         {
-            SongSearchTextBox.Text = "";
+            SongSearchTextBox.Clear();
             SongSearchTextBox.Focus();
         }
 
@@ -331,7 +289,7 @@ namespace Ark.Views
             if (o is not SongData)
                 return;
 
-            _viewModel.SelectedSong = _viewModel.Songs.ToList().Find(x => x.ID == (o as SongData).ID);
+            _viewModel.SelectedSong = _viewModel.Songs.ToList().Find(x => x.ID == ((SongData)o).ID);
 
             FocusListBoxItem(SongListBox);
             fromHistory = true;
@@ -342,7 +300,7 @@ namespace Ark.Views
         //! ====================================================
         public void CloseDisplayMethod()
         {
-            storeSong = SongLyricListBox.SelectedIndex;
+            storeSongIndex = SongLyricListBox.SelectedIndex;
             _viewModel.SelectedLyric = null;
             SongLyricListBox.Focus();
         }
