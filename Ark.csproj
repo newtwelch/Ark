@@ -14,16 +14,7 @@
     <ApplicationIcon>Ark_Logo.ico</ApplicationIcon>
   
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Ark_Logo.ico" />
-    <None Remove="Ark_LogoBW.ico" />
-    <None Remove="Resources\Fonts\arkicons.ttf" />
-    <None Remove="Resources\Fonts\GONTSERRAT-BOLD.TTF" />
-    <None Remove="Resources\Fonts\GONTSERRAT-REGULAR.TTF" />
-    <None Remove="Resources\Images\SplashScreen.gif" />
-  </ItemGroup>
-
+	
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
     <PackageReference Include="WpfScreenHelper" Version="1.1.0" />
@@ -44,12 +35,11 @@
   <ItemGroup>
     <None Update="Databases\BibleDatabase.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
     <None Update="Databases\SongDatabase.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Databases\tagalog.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
 

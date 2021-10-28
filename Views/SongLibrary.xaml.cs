@@ -291,6 +291,7 @@ namespace Ark.Views
 
             _viewModel.SelectedSong = _viewModel.Songs.ToList().Find(x => x.ID == ((SongData)o).ID);
 
+            SongSearchTextBox.Clear();
             FocusListBoxItem(SongListBox);
             fromHistory = true;
         }
@@ -314,6 +315,8 @@ namespace Ark.Views
 
             MainWindow.SearchFocusEvent += SearchFocusMethod;
             MainWindow.CloseDisplayEvent += CloseDisplayMethod;
+
+            fromHistory = false;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
