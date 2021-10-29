@@ -22,6 +22,9 @@ namespace Ark.Views
         int storeVerse;
         bool fromHistory;
 
+        //! ====================================================
+        //! [+] BIBLE LIBRARY:
+        //! ====================================================
         public BibleLibrary()
         {
             _viewModel = new BibleLibraryViewModel();
@@ -30,9 +33,7 @@ namespace Ark.Views
 
             EnglishRadioTab.IsChecked = true;
 
-            //!? ====================================================
-            //!? EVENTS
-            //!? ====================================================
+            //!? =========================================
             //!? Event for HistoryObject Selection Changed
             HistoryViewModel.HistoryObjectSelected += HistoryObjectSelectedMethod;
 
@@ -292,7 +293,6 @@ namespace Ark.Views
             }
         }
 
-
         //? =============================[METHODS]==============================
 
         //! ====================================================
@@ -300,10 +300,10 @@ namespace Ark.Views
         //! ====================================================
         public void SearchFocusMethod()
         {
-            BookSearchTextBox.Text = "";
-            ChapterSearchTextBox.Text = "";
-            VerseSearchTextBox.Text = "";
-            WideVerseSearchTextBox.Text = "";
+            BookSearchTextBox.Clear();
+            ChapterSearchTextBox.Clear();
+            VerseSearchTextBox.Clear();
+            WideVerseSearchTextBox.Clear();
             BookSearchTextBox.Focus();
         }
 
@@ -378,7 +378,6 @@ namespace Ark.Views
             MainWindow.SearchFocusEvent += SearchFocusMethod;
             MainWindow.SpecificSearchFocusEvent += SpecificSearchFocusMethod;
             MainWindow.CloseDisplayEvent += CloseDisplayMethod;
-
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

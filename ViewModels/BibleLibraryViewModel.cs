@@ -137,7 +137,7 @@ namespace Ark.ViewModels
         public ICollectionView BooksView;
         public ICollectionView AllVerseView;
         public ICollectionView VerseView;
-        public string SearchBookText;
+        public string SearchBookText { get; set; }
         public string SearchVerseText
         {
             get => _searchVerseText;

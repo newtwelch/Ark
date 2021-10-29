@@ -16,20 +16,19 @@ namespace Ark.ViewModels
         //! History Object List
         public ObservableDictionary<Tuple<int, Object>, string> HistoryObjects { get; set; }
 
+        private Tuple<int, Object> _selectedObject;
         public Tuple<int, Object> SelectedObject
         {
-            get { return _selectedObject; }
+            get => _selectedObject;
             set
             {
                 _selectedObject = value;
-
                 OnPropertyChanged();
 
                 if (value != null)
-                    HistoryObjectSelected.Invoke(_selectedObject.Item2);
+                    HistoryObjectSelected?.Invoke(_selectedObject.Item2);
             }
         }
-        private Tuple<int, Object> _selectedObject;
 
         //! Variables
         int uniqueKey = 0;
@@ -55,8 +54,8 @@ namespace Ark.ViewModels
         private void AddObjectToHistoryMethod(Object o)
         {
             //!? Check for instance of object in the list
-            bool matchingDataValue = HistoryObjects.Values.Any(x => x == $"† - {(o as VerseData)?.FromBook} {(o as VerseData)?.FromChapter}:{(o as VerseData)?.ID}") ||
-                                     HistoryObjects.Values.Any(x => x == $"♪ - { (o as SongData)?.Title }");
+            bool matchingDataValue = HistoryObjects.Values.Any(x => x == $"† - {(o as VerseData)?.FromBook} {(o as VerseData)?.FromChapter}:{(o as VerseData)?.ID}")
+                                  || HistoryObjects.Values.Any(x => x == $"♪ - { (o as SongData)?.Title }");
 
             //!? If Object already exists, move the existing one up
             if (matchingDataValue)

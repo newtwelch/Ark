@@ -29,7 +29,7 @@
         <!-- =====================================
         VIEW BOX: easy resizing of content
         ========================================== -->
-        <Viewbox Stretch="Uniform" Margin="20">
+        <Viewbox Stretch="Uniform" Margin="30">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" x:Name="BibleDataTextBox" Background="Transparent" 
                            TextWrapping="Wrap" Margin="0 0 0 20"
