@@ -12,12 +12,14 @@ namespace Ark.Views
 {
     public partial class BibleLibrary : UserControl
     {
+        //! Viewmodel
         private BibleLibraryViewModel _viewModel;
 
+        //! TypeAssistant
         TypeAssistant chapterAssistant, verseAssistant;
 
+        //! Variables
         int storeVerse;
-
         bool fromHistory;
 
         public BibleLibrary()
@@ -31,7 +33,6 @@ namespace Ark.Views
             //!? ====================================================
             //!? EVENTS
             //!? ====================================================
-
             //!? Event for HistoryObject Selection Changed
             HistoryViewModel.HistoryObjectSelected += HistoryObjectSelectedMethod;
 
@@ -69,11 +70,10 @@ namespace Ark.Views
                     _viewModel.BooksView.Refresh();
 
                     //!? Reset the other searches
-                    ChapterSearchTextBox.Text = "";
-                    VerseSearchTextBox.Text = "";
-
+                    ChapterSearchTextBox.Clear();
+                    VerseSearchTextBox.Clear();
                     if (tb.IsFocused)
-                        WideVerseSearchTextBox.Text = "";
+                        WideVerseSearchTextBox.Clear();
 
                     //!? If only one is remaining select and focus on next search
                     if (BookListBox.Items.Count == 1)
@@ -88,9 +88,9 @@ namespace Ark.Views
                 case "ChapterSearchTextBox":
 
                     //!? Reset the other searches
-                    VerseSearchTextBox.Text = "";
+                    VerseSearchTextBox.Clear();
                     if (tb.IsFocused)
-                        WideVerseSearchTextBox.Text = "";
+                        WideVerseSearchTextBox.Clear();
 
                     //!? If only one is remaining select and focus on next search
                     if (ChapterListBox.Items.Count == 1)
@@ -108,7 +108,7 @@ namespace Ark.Views
                 case "VerseSearchTextBox":
 
                     if (tb.IsFocused)
-                        WideVerseSearchTextBox.Text = "";
+                        WideVerseSearchTextBox.Clear();
                     verseAssistant.TextChanged();
 
                     break;
@@ -126,9 +126,9 @@ namespace Ark.Views
                         VerseListBox.Visibility = startsWithDot ? Visibility.Collapsed : Visibility.Visible;
 
                         //!? Reset the other searches
-                        BookSearchTextBox.Text = "";
-                        ChapterSearchTextBox.Text = "";
-                        VerseSearchTextBox.Text = "";
+                        BookSearchTextBox.Clear();
+                        ChapterSearchTextBox.Clear();
+                        VerseSearchTextBox.Clear();
                     }
                     else //!? If it Is Null
                     {
@@ -136,11 +136,8 @@ namespace Ark.Views
                         WideVerseListBox.Visibility = Visibility.Collapsed;
                         VerseListBox.Visibility = Visibility.Visible;
                         if (VerseListBox.SelectedItem != null)
-                        {
                             FocusListBoxItem(VerseListBox);
-                        }
                     }
-
                     break;
             }
         }
@@ -153,11 +150,11 @@ namespace Ark.Views
             this.Dispatcher.Invoke(() =>
             {
                 //!? Select the chapter number provided in the search then move on to Verse Search
-                if (!String.IsNullOrWhiteSpace(ChapterSearchTextBox.Text))
-                {
-                    ChapterListBox.SelectedIndex = Int32.Parse(ChapterSearchTextBox.Text) - 1;
-                    VerseSearchTextBox.Focus();
-                }
+                if (String.IsNullOrWhiteSpace(ChapterSearchTextBox.Text))
+                    return;
+                ChapterListBox.SelectedIndex = Int32.Parse(ChapterSearchTextBox.Text) - 1;
+                VerseSearchTextBox.Focus();
+
             });
         }
 
@@ -169,12 +166,10 @@ namespace Ark.Views
             this.Dispatcher.Invoke(() =>
             {
                 //!? Select the Searched Verse
-                if (!String.IsNullOrWhiteSpace(VerseSearchTextBox.Text))
-                {
-                    VerseListBox.SelectedIndex = Int32.Parse(VerseSearchTextBox.Text) - 1;
-
-                    FocusListBoxItem(VerseListBox);
-                }
+                if (String.IsNullOrWhiteSpace(VerseSearchTextBox.Text))
+                    return;
+                VerseListBox.SelectedIndex = Int32.Parse(VerseSearchTextBox.Text) - 1;
+                FocusListBoxItem(VerseListBox);
             });
         }
 
@@ -198,7 +193,7 @@ namespace Ark.Views
             if (e.Key != Key.Enter)
                 return;
 
-            switch (tb.Name)
+            switch (tb?.Name)
             {
                 //!? BOOK SEARCH
                 case "BookSearchTextBox":
@@ -206,7 +201,6 @@ namespace Ark.Views
                         BookListBox.SelectedIndex = 0;
 
                     ChapterSearchTextBox.Focus();
-
                     break;
 
                 //!? CHAPTER SEARCH

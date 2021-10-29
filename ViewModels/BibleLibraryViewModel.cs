@@ -25,72 +25,67 @@ namespace Ark.ViewModels
         public RangeObservableCollection<VerseData> Verses { get; set; }
         public RangeObservableCollection<VerseData> AllVerses { get; set; }
 
-        //! Verse Bits
+        //! Verse Portions
         public ObservableDictionary<int, string> VersePortions { get; set; }
         public string VerseHighlight
         {
-            get { return _VerseHighlight; }
+            get => _verseHighlight;
             set
             {
-                _VerseHighlight = value;
+                _verseHighlight = value;
                 OnPropertyChanged();
                 DisplayWindow.Instance.DisplayTextBox.HighlightPhrase = value;
             }
         }
-        private string _VerseHighlight;
+        private string _verseHighlight;
 
         //! Selected Books and Chapters
+        private BookData _selectedBook;
         public BookData SelectedBook
         {
-            get { return _selectedBook; }
+            get => _selectedBook;
             set
             {
                 _selectedBook = value;
                 OnPropertyChanged();
 
-                if (Chapters == null || SelectedBook == null)
-                    return;
+                if (value is null) return;
 
+                //!? Save Selected Chapter ID so it always has a chapter selected
                 int saveChapter = SelectedChapter != null ? SelectedChapter.ID : 1;
-
-                Chapters.Clear();
-                Chapters.AddRange(_selectedBook.Chapters);
-
-                SelectedChapter = Chapters.ToList().Find(x => x.ID == saveChapter);
+                Chapters?.Clear();
+                Chapters?.AddRange(value.Chapters);
+                SelectedChapter = Chapters?.ToList().Find(x => x.ID == saveChapter);
             }
         }
-        private BookData _selectedBook;
+
+        private ChapterData _selectedChapter;
         public ChapterData SelectedChapter
         {
-            get { return _selectedChapter; }
+            get => _selectedChapter;
             set
             {
                 _selectedChapter = value;
                 OnPropertyChanged();
 
-                if (Verses == null || SelectedChapter == null)
-                    return;
+                if (value == null) return;
 
-                Verses.Clear();
-                Verses.AddRange(_selectedChapter.Verses);
+                Verses?.Clear();
+                Verses?.AddRange(_selectedChapter.Verses);
             }
         }
-        private ChapterData _selectedChapter;
+
         public VerseData SelectedVerse
         {
-            get { return _selectedVerse; }
+            get => _selectedVerse;
             set
             {
                 _selectedVerse = value;
-                //!? Clear the Portions
+                OnPropertyChanged();
                 VersePortions?.Clear();
 
-                OnPropertyChanged();
+                if (value == null) return;
 
-                if (!Initialized || value == null) return;
-
-
-                //!? CONTINUE ON
                 //!? Clear the TextSearch
                 if (!String.IsNullOrWhiteSpace(_searchVerseText))
                     SearchVerseText = "";
@@ -100,16 +95,12 @@ namespace Ark.ViewModels
                 int Key = 1;
 
                 //!? Clear the Portions AGAIN
-                VersePortions.Clear();
-                foreach (string verseBit in verseBits)
-                {
-                    VersePortions.Add(Key++, verseBit);
-                }
+                VersePortions?.Clear();
+                verseBits.ToList().ForEach(x => VersePortions.Add(Key++, x));
 
-                HistoryViewModel.EventInvoking(value);
-
-                //!? Show the VERSE
+                //!? Events
                 OnSelectedVerseChanged?.Invoke(_selectedVerse);
+                HistoryViewModel.EventInvoking(value);
                 DisplayWindow.Instance.Show();
             }
         }
@@ -117,22 +108,21 @@ namespace Ark.ViewModels
 
         public VerseData SelectedWideVerse
         {
-            get { return _selectedWideVerse; }
+            get => _selectedWideVerse;
             set
             {
                 _selectedWideVerse = value;
                 OnPropertyChanged();
 
                 //!? Clear the Portions
-                VersePortions.Clear();
+                VersePortions?.Clear();
 
-                if (!Initialized || value == null) return;
+                if (value == null) return;
 
-                SelectedBook = (BookData)Books.ToList().Find(x => x.Name == value.FromBook);
-                SelectedChapter = (ChapterData)Chapters.ToList().Find(x => x.ID == value.FromChapter);
-                SelectedVerse = (VerseData)Verses.ToList().Find(x => x.ID == value.ID);
+                SelectedBook = Books.ToList().Find(x => x.Name == value.FromBook);
+                SelectedChapter = Chapters.ToList().Find(x => x.ID == value.FromChapter);
+                SelectedVerse = Verses.ToList().Find(x => x.ID == value.ID);
 
-                //!? CONTINUE ON
                 //!? Clear the TextSearch
                 if (!String.IsNullOrWhiteSpace(_searchVerseText))
                     SearchVerseText = "";
@@ -143,21 +133,19 @@ namespace Ark.ViewModels
         //!? Event for Verse Change
         public static event Action<VerseData> OnSelectedVerseChanged;
 
-        //! Bible Searching
-        public ICollectionView BooksView;          // CollectionView for the songs
-        public string SearchBookText;                // Gets the Book from Book Search
-
-        //! Collection Verse Views
-        public ICollectionView AllVerseView;          // CollectionView for the songs
-        public ICollectionView VerseView;          // CollectionView for the songs
+        //! Bible Search & CollectionViews
+        public ICollectionView BooksView;
+        public ICollectionView AllVerseView;
+        public ICollectionView VerseView;
+        public string SearchBookText;
         public string SearchVerseText
         {
-            get { return _searchVerseText; }
+            get => _searchVerseText;
             set
             {
                 _searchVerseText = value;
 
-                VersePortions.Clear();
+                VersePortions?.Clear();
                 VerseHighlight = value;
 
                 if (value.StartsWith("."))
@@ -167,26 +155,20 @@ namespace Ark.ViewModels
 
                 OnPropertyChanged();
 
-
             }
         }
         private string _searchVerseText;
 
-        bool Initialized = false;
-
         //! Language
+        private string _language;
         public string Language
         {
-            get { return _language; }
+            get => _language;
             set
             {
 
                 _language = value;
                 OnPropertyChanged();
-
-                //!? Property Change Stuff
-                if (!Initialized)
-                    return;
 
                 //!? Save selection
                 int SaveBook = SelectedBook.ID;
@@ -194,9 +176,9 @@ namespace Ark.ViewModels
                 int SaveVerse = SelectedVerse == null ? 0 : SelectedVerse.ID;
 
                 //!? Update Books
-                Books.Clear();
-                Books.AddRange(value.Contains("English") ? EnglishBooks : TagalogBooks);
-                SelectedBook = SaveBook.Equals(0) ? Books[0] : Books.ToList().Find(x => x.ID == SaveBook);
+                Books?.Clear();
+                Books?.AddRange(value.Contains("English") ? EnglishBooks : TagalogBooks);
+                SelectedBook = Books.ToList().Find(x => x.ID == SaveBook);
 
                 //!? Update AllVerses First, to get the "From" Data ( Check the GetAllVerses for more Info )
                 AllVerses.Clear();
@@ -205,15 +187,14 @@ namespace Ark.ViewModels
                 //!? Update Chapters
                 Chapters.Clear();
                 Chapters.AddRange(SelectedBook.Chapters);
-                SelectedChapter = SaveChapter.Equals(0) ? Chapters[0] : Chapters.ToList().Find(x => x.ID == SaveChapter);
+                SelectedChapter = Chapters.ToList().Find(x => x.ID == SaveChapter);
 
                 //!? Update Verses
                 Verses.Clear();
                 Verses.AddRange(SelectedChapter.Verses);
-                SelectedVerse = SaveVerse.Equals(0) ? null : Verses.ToList().Find(x => x.ID == SaveVerse);
+                SelectedVerse = Verses.ToList().Find(x => x.ID == SaveVerse);
             }
         }
-        private string _language;
 
         //? =============================[METHODS & MAIN]==============================
 
@@ -227,7 +208,6 @@ namespace Ark.ViewModels
             //!? BOOKS
             EnglishBooks = new List<BookData>(_database.GetBooks("English"));
             TagalogBooks = new List<BookData>(_database.GetBooks("Tagalog"));
-
             Books = new RangeObservableCollection<BookData>();
             Books.AddRange(EnglishBooks);
             SelectedBook = Books[0];
@@ -244,9 +224,6 @@ namespace Ark.ViewModels
             AllVerses.AddRange(GetAllVerses());
 
             VersePortions = new ObservableDictionary<int, string>();
-            VersePortions.Add(1, "tsest");
-
-            Initialized = true;
 
             //!? ====================================================
             //!? SEARCH FILTER: collection view filtering
@@ -265,15 +242,12 @@ namespace Ark.ViewModels
         //! ====================================================
         public bool SearchFilterView(object o)
         {
-            //!? Book Filter
             if (o is BookData)
             {
                 if (string.IsNullOrEmpty(SearchBookText))
                     return true;
                 else
-                {
-                    return (o as BookData).Name.Contains(SearchBookText, StringComparison.OrdinalIgnoreCase);
-                }
+                    return ((BookData)o).Name.Contains(SearchBookText, StringComparison.OrdinalIgnoreCase);
             }
             else if (o is VerseData)
             {
@@ -281,10 +255,10 @@ namespace Ark.ViewModels
                 if (string.IsNullOrEmpty(SearchVerseText))
                     return true;
                 else if (SearchVerseText.StartsWith("."))
-                    return (o as VerseData).Text.
+                    return ((VerseData)o).Text.
                         Contains(SearchVerseText.Replace(".", ""), StringComparison.OrdinalIgnoreCase);
                 else
-                    return (o as VerseData).Text.Contains(SearchVerseText, StringComparison.OrdinalIgnoreCase);
+                    return ((VerseData)o).Text.Contains(SearchVerseText, StringComparison.OrdinalIgnoreCase);
 
             }
             else
@@ -299,26 +273,23 @@ namespace Ark.ViewModels
             List<VerseData> list = new List<VerseData>();
 
             //!? For Every Book in Books
-            foreach (BookData book in Books)
+            Books.ToList().ForEach(b =>
             {
-                string fromBook = book.Name;
-
+                string fromBook = b.Name;
                 //!? For Every Chapter in said Book
-                foreach (ChapterData chapter in book.Chapters)
+                b.Chapters.ForEach(c =>
                 {
-                    int fromChapter = chapter.ID;
-
+                    int fromChapter = c.ID;
                     //!? For Every Verse in said Chapter 
                     //!? Amazingly, this helps us with setting FromBook and FromChapter
-                    foreach (VerseData verse in chapter.Verses)
+                    c.Verses.ForEach(v =>
                     {
-                        verse.FromBook = fromBook;
-                        verse.FromChapter = fromChapter;
-                        //!? Add VERSE
-                        list.Add(verse);
-                    }
-                }
-            }
+                        v.FromBook = fromBook;
+                        v.FromChapter = fromChapter;
+                        list.Add(v);
+                    });
+                });
+            });
 
             return list;
         }
