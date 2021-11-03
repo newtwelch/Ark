@@ -68,7 +68,7 @@ namespace Ark.ViewModels
                 _selectedChapter = value;
                 OnPropertyChanged();
 
-                if (value == null) return;
+                if (value is null) return;
 
                 Verses?.Clear();
                 Verses?.AddRange(_selectedChapter.Verses);
@@ -84,7 +84,7 @@ namespace Ark.ViewModels
                 OnPropertyChanged();
                 VersePortions?.Clear();
 
-                if (value == null) return;
+                if (value is null) return;
 
                 //!? Clear the TextSearch
                 if (!String.IsNullOrWhiteSpace(_searchVerseText))
@@ -117,7 +117,7 @@ namespace Ark.ViewModels
                 //!? Clear the Portions
                 VersePortions?.Clear();
 
-                if (value == null) return;
+                if (value is null) return;
 
                 SelectedBook = Books.ToList().Find(x => x.Name == value.FromBook);
                 SelectedChapter = Chapters.ToList().Find(x => x.ID == value.FromChapter);

@@ -25,7 +25,7 @@ namespace Ark.ViewModels
                 _selectedObject = value;
                 OnPropertyChanged();
 
-                if (value != null)
+                if (value is not null)
                     HistoryObjectSelected?.Invoke(_selectedObject.Item2);
             }
         }
@@ -47,7 +47,6 @@ namespace Ark.ViewModels
         //! ====================================================
         public static void EventInvoking(Object o) => AddObjectToHistory?.Invoke(o);
 
-
         //! ====================================================
         //! [+] HISTORY VIEW MODEL
         //! ====================================================
@@ -66,25 +65,14 @@ namespace Ark.ViewModels
                 HistoryObjects.RemoveAt(index);
             }
 
-            //!? If object is a song data
             if (o is SongData)
-            {
-                SongData song = (SongData)o;
-
-                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, song), $"♪ - { song.Title }");
-            }
-
-            //!? If object is a verse data
+                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, ((SongData)o)), $"♪ - { ((SongData)o).Title }");
             else if (o is VerseData)
-            {
-                VerseData verse = (VerseData)o;
-
-                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, verse),
-                            $"† - {verse.FromBook} {verse.FromChapter}:{verse.ID}");
-            }
+                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, ((VerseData)o)),
+                                    $"† - {((VerseData)o).FromBook} {((VerseData)o).FromChapter}:{((VerseData)o).ID}");
 
             //!? Move Object up top - Always
-            if (o != null)
+            if (o is not null)
                 HistoryObjects.Move(HistoryObjects.Count - 1, 0);
         }
     }

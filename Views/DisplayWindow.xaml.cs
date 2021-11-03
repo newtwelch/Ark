@@ -34,7 +34,6 @@ namespace Ark.Views
             //!? SETUP WINDOW: set window position, width and height
             //!? ====================================================
             SetWindow();
-
         }
 
         //! ====================================================
@@ -156,14 +155,9 @@ namespace Ark.Views
 
         //? =============================[LOADED & UNLOADED]==============================
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            MainWindow.CloseDisplayEvent += CloseDisplayMethod;
-        }
+        private void Window_Loaded(object sender, RoutedEventArgs e) => MainWindow.CloseDisplayEvent += CloseDisplayMethod;
 
-        private void Window_Unloaded(object sender, RoutedEventArgs e)
-        {
-            MainWindow.CloseDisplayEvent -= CloseDisplayMethod;
-        }
+        private void Window_Unloaded(object sender, RoutedEventArgs e) => MainWindow.CloseDisplayEvent -= CloseDisplayMethod;
+
     }
 }

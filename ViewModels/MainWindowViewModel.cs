@@ -19,8 +19,6 @@ namespace Ark.ViewModels
             SongLibrary = new SongLibrary();                                                // Initialize Song Library
             BibleLibrary = new BibleLibrary();                                              // Initialize Bible Library
             History = new History();                                                        // Initialize Bible Library
-
-            //!? Close the display Window ( For some reason it was being called at start, can't find where )
             DisplayWindow.Instance.Close();
         }
     }

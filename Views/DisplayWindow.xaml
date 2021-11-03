@@ -25,19 +25,18 @@
                             GlassFrameThickness="0" NonClientFrameEdges="None" />
     </shell:WindowChrome.WindowChrome>
 
-    <Grid>
+    <Grid Margin="100">
         <!-- =====================================
         VIEW BOX: easy resizing of content
         ========================================== -->
-        <Viewbox Stretch="Uniform" Margin="30">
-            <DockPanel>
+        <Viewbox Stretch="Uniform">
+            <DockPanel Width="2000" >
                 <TextBlock DockPanel.Dock="Top" x:Name="BibleDataTextBox" Background="Transparent" 
-                           TextWrapping="Wrap" Margin="0 0 0 20"
-                           Foreground="{StaticResource FocusedBrush}" Width="1920"
+                           TextWrapping="Wrap" Margin="0 0 0 20" 
+                           Foreground="{StaticResource FocusedBrush}" 
                            FontWeight="Bold" FontSize="120" TextAlignment="Center"/>
                 <hlpr:HighlightableTextBlock x:Name="DisplayTextBox" Background="Transparent" TextWrapping="Wrap"
-                                             Foreground="{StaticResource FocusedBrush}" Width="1920" 
-                                             FontSize="114" TextAlignment="Center"/>
+                                             Foreground="{StaticResource FocusedBrush}" FontSize="100" TextAlignment="Center"/>
             </DockPanel>
         </Viewbox>
     </Grid>

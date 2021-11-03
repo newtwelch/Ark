@@ -79,7 +79,7 @@ namespace Ark.ViewModels
                 OnPropertyChanged();
 
                 //!? If null don't continue
-                if (value == null)
+                if (value is null)
                     return;
 
                 //!? Setup second display, Invoking events
