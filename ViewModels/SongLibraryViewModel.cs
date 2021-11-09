@@ -16,7 +16,6 @@ namespace Ark.ViewModels
 {
     public class SongLibraryViewModel : ViewModelBase
     {
-
         //! Database access
         private SongLibraryDatabase _database;
 
@@ -79,8 +78,7 @@ namespace Ark.ViewModels
                 OnPropertyChanged();
 
                 //!? If null don't continue
-                if (value is null)
-                    return;
+                if (value is null) return;
 
                 //!? Setup second display, Invoking events
                 OnSelectedLyricChanged?.Invoke(_selectedLyric);
@@ -184,7 +182,7 @@ namespace Ark.ViewModels
             int storeIndex = Songs.IndexOf(SelectedSong);
             _database.DeleteSong(SelectedSong);
             Songs.Remove(SelectedSong);
-            SelectedSong = Songs[storeIndex != 0 ? storeIndex - 1 : storeIndex];
+            SelectedSong = Songs[!storeIndex.Equals(0) ? storeIndex - 1 : storeIndex];
         }
 
         //! ====================================================
@@ -202,8 +200,7 @@ namespace Ark.ViewModels
             //!? ====================================================
             //!? NONE: if text is empty, set every object to true
             //!? ====================================================
-            if (String.IsNullOrEmpty(SongFilter))
-                return true;
+            if (String.IsNullOrEmpty(SongFilter)) return true;
             //!? ====================================================
             //!? LYRIC SEARCH: if text starts with a DOT, match the lyrics
             //!? ====================================================
@@ -269,7 +266,7 @@ namespace Ark.ViewModels
             //!? ====================================================
             //!? DEFAULT SEQUENCE: default sequence, has 2 parts
             //!? ====================================================
-            if (Sequence == "o" || Sequence == null || Sequence == "")
+            if (Sequence == "o" || String.IsNullOrWhiteSpace(Sequence))
             {
                 foreach (LyricData lyric in tempLyrics)   // For every LyricData in "tempLyrics"                
                 {

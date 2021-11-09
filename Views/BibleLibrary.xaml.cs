@@ -50,11 +50,9 @@ namespace Ark.Views
         //! ====================================================
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (fromHistory)
-                return;
+            if (fromHistory) return;
 
             TextBox? tb = e.Source as TextBox;
-
             switch (tb.Name)
             {
                 //!? BOOK SEARCH
@@ -136,7 +134,7 @@ namespace Ark.Views
                         //!? then Show the default Verses
                         WideVerseListBox.Visibility = Visibility.Collapsed;
                         VerseListBox.Visibility = Visibility.Visible;
-                        if (VerseListBox.SelectedItem != null)
+                        if (VerseListBox.SelectedItem is not null)
                             FocusListBoxItem(VerseListBox);
                     }
                     break;
@@ -151,8 +149,7 @@ namespace Ark.Views
             this.Dispatcher.Invoke(() =>
             {
                 //!? Select the chapter number provided in the search then move on to Verse Search
-                if (String.IsNullOrWhiteSpace(ChapterSearchTextBox.Text))
-                    return;
+                if (String.IsNullOrWhiteSpace(ChapterSearchTextBox.Text)) return;
                 ChapterListBox.SelectedIndex = Int32.Parse(ChapterSearchTextBox.Text) - 1;
                 VerseSearchTextBox.Focus();
 
@@ -167,8 +164,7 @@ namespace Ark.Views
             this.Dispatcher.Invoke(() =>
             {
                 //!? Select the Searched Verse
-                if (String.IsNullOrWhiteSpace(VerseSearchTextBox.Text))
-                    return;
+                if (String.IsNullOrWhiteSpace(VerseSearchTextBox.Text)) return;
                 VerseListBox.SelectedIndex = Int32.Parse(VerseSearchTextBox.Text) - 1;
                 FocusListBoxItem(VerseListBox);
             });
@@ -191,8 +187,7 @@ namespace Ark.Views
             TextBox? tb = sender as TextBox;
 
             //!? If enter is pressed then do the following
-            if (e.Key != Key.Enter)
-                return;
+            if (e.Key != Key.Enter) return;
 
             switch (tb?.Name)
             {
@@ -234,7 +229,7 @@ namespace Ark.Views
             {
                 case "VerseListBox":
                     //!? If Pressing up on first Portion, Go Previous Verse
-                    if (e.Key == Key.Up && lb.SelectedIndex == 0)
+                    if (e.Key == Key.Up && lb.SelectedIndex == 0 && _viewModel.SelectedChapter.ID != 1)
                         ChapterListBox.SelectedIndex--;
 
                     //!? If Pressing down on last Portion, Go Next Verse
@@ -245,7 +240,7 @@ namespace Ark.Views
                     if (e.Key == Key.Enter)
                     {
 
-                        if (lb.SelectedItem == null)
+                        if (lb.SelectedItem is null)
                         {
                             lb.SelectedIndex = storeVerse;
                             FocusListBoxItem(lb);
@@ -279,18 +274,10 @@ namespace Ark.Views
         //! ====================================================
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            if (e.Source is RadioButton rb)
-            {
-                switch (rb.Name)
-                {
-                    case "EnglishRadioTab":
-                        _viewModel.Language = "English";
-                        break;
-                    case "TagalogRadioTab":
-                        _viewModel.Language = "Tagalog";
-                        break;
-                }
-            }
+            if (((RadioButton)sender).Name == "EnglishRadioTab")
+                _viewModel.Language = "English";
+            else
+                _viewModel.Language = "Tagalog";
         }
 
         //? =============================[METHODS]==============================
@@ -332,8 +319,7 @@ namespace Ark.Views
         //! ====================================================
         void FocusListBoxItem(ListBox lb)
         {
-            if (lb.SelectedItem == null)
-                return;
+            if (lb.SelectedItem is null) return;
 
             lb.UpdateLayout();
             lb.ScrollIntoView(lb.SelectedItem);
@@ -347,8 +333,7 @@ namespace Ark.Views
         //! ====================================================
         private void HistoryObjectSelectedMethod(Object o)
         {
-            if (o is not VerseData)
-                return;
+            if (o is not VerseData) return;
 
             VerseData verse = (VerseData)o;
 

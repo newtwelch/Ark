@@ -109,8 +109,7 @@ namespace Ark.Views
         //! ====================================================
         private void EditRawLyricsTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!_viewModel.IsEditMode)
-                return;
+            if (!_viewModel.IsEditMode) return;
 
             //!? Refresh, Parse Lyrics using text from RawLyricTextBox and SequenceTextBox
             _viewModel.Lyrics.Clear();
@@ -122,15 +121,12 @@ namespace Ark.Views
         //! ====================================================
         private void SongLyricListBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (!_viewModel.IsEditMode)
-                return;
+            if (!_viewModel.IsEditMode) return;
 
             //!? Update the RawLyrics when LostFocus 
             List<LyricData> lyrics = new List<LyricData>();
-            foreach (LyricData lyric in SongLyricListBox.Items)
-            {
-                lyrics.Add(lyric);
-            }
+            SongLyricListBox.Items.Cast<LyricData>().ToList().ForEach(x => lyrics.Add(x));
+
             EditRawLyricsTextBox.Text = ToRawLyrics(lyrics);
         }
 
@@ -139,8 +135,7 @@ namespace Ark.Views
         //! ====================================================
         private void ListBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (_viewModel.IsEditMode)
-                return;
+            if (_viewModel.IsEditMode) return;
 
             ListBox? lb = sender as ListBox;
             switch (lb.Name)
@@ -172,7 +167,7 @@ namespace Ark.Views
                         e.Handled = true;
                     }
 
-                    if (lb.SelectedItem == null && e.Key == Key.Enter)
+                    if (lb.SelectedItem is null && e.Key == Key.Enter)
                         lb.SelectedIndex = storeSongIndex;
 
                     FocusListBoxItem(lb);
@@ -209,7 +204,7 @@ namespace Ark.Views
         //! ====================================================
         void FocusListBoxItem(ListBox lb)
         {
-            if (lb.SelectedItem == null)
+            if (lb.SelectedItem is null)
                 return;
 
             lb.UpdateLayout();
@@ -286,8 +281,7 @@ namespace Ark.Views
         //! ====================================================
         private void HistoryObjectSelectedMethod(object o)
         {
-            if (o is not SongData)
-                return;
+            if (o is not SongData) return;
 
             _viewModel.SelectedSong = _viewModel.Songs.ToList().Find(x => x.ID == ((SongData)o).ID);
 

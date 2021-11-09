@@ -173,7 +173,7 @@ namespace Ark.ViewModels
                 //!? Save selection
                 int SaveBook = SelectedBook.ID;
                 int SaveChapter = SelectedChapter.ID;
-                int SaveVerse = SelectedVerse == null ? 0 : SelectedVerse.ID;
+                int SaveVerse = SelectedVerse is null ? 0 : SelectedVerse.ID;
 
                 //!? Update Books
                 Books?.Clear();

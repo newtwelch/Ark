@@ -30,13 +30,13 @@
         VIEW BOX: easy resizing of content
         ========================================== -->
         <Viewbox Stretch="Uniform">
-            <DockPanel Width="2000" >
+            <DockPanel Width="3000" >
                 <TextBlock DockPanel.Dock="Top" x:Name="BibleDataTextBox" Background="Transparent" 
                            TextWrapping="Wrap" Margin="0 0 0 20" 
                            Foreground="{StaticResource FocusedBrush}" 
-                           FontWeight="Bold" FontSize="120" TextAlignment="Center"/>
+                           FontWeight="Bold" FontSize="140" TextAlignment="Center"/>
                 <hlpr:HighlightableTextBlock x:Name="DisplayTextBox" Background="Transparent" TextWrapping="Wrap"
-                                             Foreground="{StaticResource FocusedBrush}" FontSize="100" TextAlignment="Center"/>
+                                             Foreground="{StaticResource FocusedBrush}" FontSize="140" TextAlignment="Center"/>
             </DockPanel>
         </Viewbox>
     </Grid>

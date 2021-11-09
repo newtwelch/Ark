@@ -48,7 +48,7 @@
             <TextBox x:Name="EditRawLyricsTextBox"
                      AcceptsReturn="True" TextChanged="EditRawLyricsTextBox_TextChanged"
                      Style="{StaticResource SongLyricsTextBox}"
-                     Text="{Binding SelectedSong.RawLyrics, Mode=OneWay}"
+                     Text="{Binding SelectedSong.RawLyrics, Mode=TwoWay}"
                      Margin="0 20 0 0" Padding="20" 
                      TextWrapping="Wrap" VerticalContentAlignment="Top"
                      VerticalScrollBarVisibility="Auto"/>

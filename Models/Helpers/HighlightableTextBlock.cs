@@ -96,12 +96,12 @@ namespace Ark.Models.Helpers
                 highlightPhrase = highlightPhrase.Replace(".", "");
             }
 
-            if (tb == null)
+            if (tb is null)
                 return;
 
             tb.Inlines.Clear();
             tb.SetValue(MatchCountPropertyKey, 0);
-            if (tb == null || string.IsNullOrWhiteSpace(text)) return;
+            if (tb is null || string.IsNullOrWhiteSpace(text)) return;
             if (string.IsNullOrWhiteSpace(highlightPhrase))
             {
                 var completeRun = new Run(text);

@@ -13,8 +13,7 @@ namespace Ark.Models.Helpers
     {
         public void AddRange(IEnumerable<T> list)
         {
-            if (list == null)
-                return;
+            if (list is null) return;
 
             foreach (T item in list)
                 Items.Add(item);
@@ -24,8 +23,7 @@ namespace Ark.Models.Helpers
 
         public void RemoveRange(IEnumerable<T> list)
         {
-            if (list == null)
-                return;
+            if (list is null) return;
 
             foreach (T item in list)
                 Items.Remove(item);

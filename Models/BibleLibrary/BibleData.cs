@@ -6,7 +6,7 @@ namespace Ark.Models.BibleLibrary
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public List<ChapterData> Chapters;
+        public List<ChapterData> Chapters { get; set; }
     }
     public class ChapterData
     {

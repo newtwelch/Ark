@@ -40,7 +40,7 @@
            TargetType="ListBoxItem">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
-        <Setter Property="FontFamily" Value="/Resources/Fonts/#Gontserrat" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#Gontserrat" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling" />
         <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />

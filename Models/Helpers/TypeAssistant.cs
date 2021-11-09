@@ -11,19 +11,14 @@ namespace Ark.Models.Helpers
     {
         public event EventHandler Idled = delegate { };
         public int WaitingMilliSeconds { get; set; }
-        System.Threading.Timer waitingTimer;
+        Timer waitingTimer;
 
         public TypeAssistant(int waitingMilliSeconds = 500)
         {
             WaitingMilliSeconds = waitingMilliSeconds;
-            waitingTimer = new Timer(p =>
-            {
-                Idled(this, EventArgs.Empty);
-            });
+            waitingTimer = new Timer(p => { Idled(this, EventArgs.Empty); });
         }
-        public void TextChanged()
-        {
-            waitingTimer.Change(WaitingMilliSeconds, System.Threading.Timeout.Infinite);
-        }
+        public void TextChanged() => waitingTimer.Change(WaitingMilliSeconds, System.Threading.Timeout.Infinite);
+
     }
 }

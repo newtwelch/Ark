@@ -7,7 +7,7 @@
     DEFAULT: base style
     ========================================== -->
     <Style x:Key="DefaultTextBox" TargetType="TextBox">
-        <Setter Property="FontFamily" Value="#Gontserrat" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/#Gontserrat" />
         <Setter Property="Background" Value="{StaticResource ContainerDarkBrush}" />
         <Setter Property="Foreground" Value="{StaticResource UnfocusedBrush}" />
         <Setter Property="FontSize" Value="20" />
