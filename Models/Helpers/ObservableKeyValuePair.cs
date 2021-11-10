@@ -14,7 +14,7 @@ namespace Ark.Models.Helpers
 
         public TKey Key
         {
-            get { return key; }
+            get => key;
             set
             {
                 key = value;
@@ -24,7 +24,7 @@ namespace Ark.Models.Helpers
 
         public TValue Value
         {
-            get { return value; }
+            get => value;
             set
             {
                 this.value = value;
@@ -41,7 +41,7 @@ namespace Ark.Models.Helpers
         public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(name));
+            if (handler is not null) handler(this, new PropertyChangedEventArgs(name));
         }
 
         #endregion
@@ -55,10 +55,8 @@ namespace Ark.Models.Helpers
 
         public void Add(TKey key, TValue value)
         {
-            if (ContainsKey(key))
-            {
-                throw new ArgumentException("The dictionary already contains the key");
-            }
+            if (ContainsKey(key)) throw new ArgumentException("The dictionary already contains the key");
+
             base.Add(new ObservableKeyValuePair<TKey, TValue>() { Key = key, Value = value });
         }
 
@@ -70,28 +68,23 @@ namespace Ark.Models.Helpers
             return !Equals(default(ObservableKeyValuePair<TKey, TValue>), r);
         }
 
-        bool Equals<TKey>(TKey a, TKey b)
-        {
-            return EqualityComparer<TKey>.Default.Equals(a, b);
-        }
+        bool Equals<TKey>(TKey a, TKey b) => EqualityComparer<TKey>.Default.Equals(a, b);
 
-        private ObservableCollection<ObservableKeyValuePair<TKey, TValue>> ThisAsCollection()
-        {
-            return this;
-        }
+
+        private ObservableCollection<ObservableKeyValuePair<TKey, TValue>> ThisAsCollection() => this;
+
 
         public ICollection<TKey> Keys
         {
-            get { return (from i in ThisAsCollection() select i.Key).ToList(); }
+            get => (from i in ThisAsCollection() select i.Key).ToList();
         }
 
         public bool Remove(TKey key)
         {
             var remove = ThisAsCollection().Where(pair => Equals(key, pair.Key)).ToList();
             foreach (var pair in remove)
-            {
                 ThisAsCollection().Remove(pair);
-            }
+
             return remove.Count > 0;
         }
 
@@ -99,22 +92,19 @@ namespace Ark.Models.Helpers
         {
             value = default(TValue);
             var r = GetKvpByTheKey(key);
+
             if (!Equals(r, default(ObservableKeyValuePair<TKey, TValue>)))
-            {
                 return false;
-            }
+
             value = r.Value;
             return true;
         }
 
-        private ObservableKeyValuePair<TKey, TValue> GetKvpByTheKey(TKey key)
-        {
-            return ThisAsCollection().FirstOrDefault((i) => i.Key.Equals(key));
-        }
+        private ObservableKeyValuePair<TKey, TValue> GetKvpByTheKey(TKey key) => ThisAsCollection().FirstOrDefault((i) => i.Key.Equals(key));
 
         public ICollection<TValue> Values
         {
-            get { return (from i in ThisAsCollection() select i.Value).ToList(); }
+            get => (from i in ThisAsCollection() select i.Value).ToList();
         }
 
         public TValue this[TKey key]
@@ -122,22 +112,16 @@ namespace Ark.Models.Helpers
             get
             {
                 TValue result;
-                if (!TryGetValue(key, out result))
-                {
-                    throw new ArgumentException("Key not found");
-                }
+                if (!TryGetValue(key, out result)) throw new ArgumentException("Key not found");
+
                 return result;
             }
             set
             {
                 if (ContainsKey(key))
-                {
                     GetKvpByTheKey(key).Value = value;
-                }
                 else
-                {
                     Add(key, value);
-                }
             }
         }
 
@@ -145,10 +129,8 @@ namespace Ark.Models.Helpers
 
         #region ICollection<KeyValuePair<TKey,TValue>> Members
 
-        public void Add(KeyValuePair<TKey, TValue> item)
-        {
-            Add(item.Key, item.Value);
-        }
+        public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
+
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
@@ -160,27 +142,23 @@ namespace Ark.Models.Helpers
             return Equals(r.Value, item.Value);
         }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => throw new NotImplementedException();
+
 
         public bool IsReadOnly
         {
-            get { return false; }
+            get => false;
         }
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
             var r = GetKvpByTheKey(item.Key);
             if (Equals(r, default(ObservableKeyValuePair<TKey, TValue>)))
-            {
                 return false;
-            }
+
             if (!Equals(r.Value, item.Value))
-            {
                 return false;
-            }
+
             return ThisAsCollection().Remove(r);
         }
 
@@ -188,10 +166,9 @@ namespace Ark.Models.Helpers
 
         #region IEnumerable<KeyValuePair<TKey,TValue>> Members
 
-        public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            return (from i in ThisAsCollection() select new KeyValuePair<TKey, TValue>(i.Key, i.Value)).ToList().GetEnumerator();
-        }
+        public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() =>
+            (from i in ThisAsCollection() select new KeyValuePair<TKey, TValue>(i.Key, i.Value)).ToList().GetEnumerator();
+
 
         #endregion
     }

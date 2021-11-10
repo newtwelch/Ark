@@ -104,8 +104,6 @@
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            <!-- Preview -->
-            <d:ListBoxItem Content="Amazing Grace"/>
         </ListBox>
 
         <!-- ==============[ HALF: song detail and lyrics ]============== -->
@@ -182,24 +180,6 @@
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            <!-- Design Sample -->
-            <d:ListBoxItem>
-                <DockPanel>
-                    <Button Style="{StaticResource DefaultButton}"
-                            Content="1" DockPanel.Dock="Left" Width="40"
-                            Margin="-80 0 0 0" MinHeight="100"
-                            ToolTip="Add a Stanza or Verse" VerticalAlignment="Stretch"/>
-                    <Button Style="{StaticResource IconButton}"
-                            Content="D" DockPanel.Dock="Right" Width="40"
-                            Margin="0 0 -80 0" Visibility="{Binding EditModeVisible}"
-                            ToolTip="Erase this block of lyric" VerticalAlignment="Stretch"/>
-                    <Button Style="{StaticResource IconButton}" DockPanel.Dock="Right" Width="40"
-                            Margin="0 0 -80 0" VerticalAlignment="Stretch"/>
-                    <TextBlock  VerticalAlignment="Center" Text="Amazing grace, how sweet the sound"
-                                TextAlignment="Center"
-                                HorizontalAlignment="Stretch"/>
-                </DockPanel>
-            </d:ListBoxItem>
         </ListBox>
 
         <!-- =====================================
@@ -230,10 +210,6 @@
                             Text="{Binding Language}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            <d:ListBoxItem Content="ENGLISH"/>
-            <d:ListBoxItem Content="ENGLISH"/>
-            <d:ListBoxItem Content="ENGLISH"/>
-            <d:ListBoxItem Content="ENGLISH"/>
         </ListBox>
         
         <!-- =====================================

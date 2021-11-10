@@ -12,8 +12,8 @@ namespace Ark.Models.Helpers
 
         public new string Text
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
         }
 
         private static readonly DependencyPropertyKey MatchCountPropertyKey
@@ -34,8 +34,8 @@ namespace Ark.Models.Helpers
 
         public string HighlightPhrase
         {
-            get { return (string)GetValue(HighlightPhraseProperty); }
-            set { SetValue(HighlightPhraseProperty, value); }
+            get => (string)GetValue(HighlightPhraseProperty);
+            set => SetValue(HighlightPhraseProperty, value);
         }
 
         public static readonly DependencyProperty HighlightPhraseProperty =
@@ -45,8 +45,8 @@ namespace Ark.Models.Helpers
 
         public Brush HighlightBrush
         {
-            get { return (Brush)GetValue(HighlightBrushProperty); }
-            set { SetValue(HighlightBrushProperty, value); }
+            get => (Brush)GetValue(HighlightBrushProperty);
+            set => SetValue(HighlightBrushProperty, value);
         }
 
         public static readonly DependencyProperty HighlightBrushProperty =
@@ -56,14 +56,14 @@ namespace Ark.Models.Helpers
 
         public bool IsCaseSensitive
         {
-            get { return (bool)GetValue(IsCaseSensitiveProperty); }
-            set { SetValue(IsCaseSensitiveProperty, value); }
+            get => (bool)GetValue(IsCaseSensitiveProperty);
+            set => SetValue(IsCaseSensitiveProperty, value);
         }
 
         public bool IgnoreDot
         {
-            get { return (bool)GetValue(IsCaseSensitiveProperty); }
-            set { SetValue(IsCaseSensitiveProperty, value); }
+            get => (bool)GetValue(IsCaseSensitiveProperty);
+            set => SetValue(IsCaseSensitiveProperty, value);
         }
 
         public int MatchCount
@@ -77,10 +77,9 @@ namespace Ark.Models.Helpers
             typeof(HighlightableTextBlock), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender,
                 new PropertyChangedCallback(UpdateHighlighting)));
 
-        private static void UpdateHighlighting(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        private static void UpdateHighlighting(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
             ApplyHighlight(d as HighlightableTextBlock);
-        }
+
 
         #endregion
 
@@ -92,16 +91,15 @@ namespace Ark.Models.Helpers
             string text = tb.Text;
 
             if (tb.IgnoreDot)
-            {
                 highlightPhrase = highlightPhrase.Replace(".", "");
-            }
 
-            if (tb is null)
-                return;
+            if (tb is null) return;
 
             tb.Inlines.Clear();
             tb.SetValue(MatchCountPropertyKey, 0);
-            if (tb is null || string.IsNullOrWhiteSpace(text)) return;
+
+            if (string.IsNullOrWhiteSpace(text)) return;
+
             if (string.IsNullOrWhiteSpace(highlightPhrase))
             {
                 var completeRun = new Run(text);

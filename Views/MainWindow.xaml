@@ -79,7 +79,7 @@
                          Visibility="Hidden"
                          Style="{StaticResource IconRadioButton}" />
                     <!-- Version -->
-            <TextBlock Text="1.3.1" FontFamily="Gontserrat" Foreground="{StaticResource UnfocusedBrush}"
+            <TextBlock Text="1.3.2" FontFamily="Gontserrat" Foreground="{StaticResource UnfocusedBrush}"
                        FontSize="20" DockPanel.Dock="Bottom" HorizontalAlignment="Center" TextAlignment="Center" 
                        Margin="0 20 0 20"/>
             

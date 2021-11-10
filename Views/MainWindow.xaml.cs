@@ -100,12 +100,8 @@ namespace Ark.Views
         //! ====================================================
         //! [+] CONTENTFRAME NAVIGATING: prevent default navigation
         //! ====================================================
-        private void ContentFrame_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
-        {
-            if (e.NavigationMode == NavigationMode.Forward ||
-                e.NavigationMode == NavigationMode.Back)
-                e.Cancel = true;
-        }
+        private void ContentFrame_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e) =>
+            e.Cancel = e.NavigationMode.Equals(NavigationMode.Forward) || e.NavigationMode.Equals(NavigationMode.Back);
 
         #region Window Maximize Fix
         //! ====================================================
@@ -113,9 +109,6 @@ namespace Ark.Views
         //! ====================================================
         private void MainWindow_SourceInitialized(object? sender, EventArgs e)
         {
-            //!? ====================================================
-            //!? WINDOWPROC: use this as callback method to process native stuff
-            //!? ====================================================
             IntPtr handle = new WindowInteropHelper(this).Handle;
             HwndSource.FromHwnd(handle)?.AddHook(WindowProc);
         }
