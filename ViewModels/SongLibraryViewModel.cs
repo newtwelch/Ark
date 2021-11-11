@@ -56,7 +56,7 @@ namespace Ark.ViewModels
                 OnPropertyChanged();
 
                 //!? Set the LanguageView Filter
-                if (SongLanguagesView != null && value.Number != previous)
+                if (SongLanguagesView is not null && value.Number != previous)
                     SongLanguagesView.Filter = o => ((SongData)o).Number.Equals(SelectedSong.Number);  // Filter SongLanguages
 
                 //!? Parse the Lyrics and Add them

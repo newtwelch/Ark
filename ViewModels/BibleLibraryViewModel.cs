@@ -52,7 +52,8 @@ namespace Ark.ViewModels
                 if (value is null) return;
 
                 //!? Save Selected Chapter ID so it always has a chapter selected
-                int saveChapter = SelectedChapter != null ? SelectedChapter.ID : 1;
+                int saveChapter = SelectedChapter?.ID ?? 1;
+
                 Chapters?.Clear();
                 Chapters?.AddRange(value.Chapters);
                 SelectedChapter = Chapters?.ToList().Find(x => x.ID == saveChapter);
