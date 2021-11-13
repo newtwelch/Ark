@@ -41,16 +41,22 @@ namespace Ark.Views
         //! ====================================================
         void ChangeText(object o)
         {
+            DisplayBibleTextBox.Visibility = Visibility.Collapsed;
+            BibleDataTextBox.Visibility = Visibility.Collapsed;
+            DisplaySongTextBox.Visibility = Visibility.Collapsed;
+
             if (o is LyricData)
             {
-                BibleDataTextBox.Visibility = Visibility.Collapsed;
-                DisplayTextBox.Text = (o as LyricData).Text;
+                DisplaySongTextBox.Visibility = Visibility.Visible;
+                DisplaySongTextBox.Text = (o as LyricData).Text;
             }
             else if (o is VerseData)
             {
-                VerseData verse = o as VerseData;
-                DisplayTextBox.Text = verse.Text;
+                DisplayBibleTextBox.Visibility = Visibility.Visible;
                 BibleDataTextBox.Visibility = Visibility.Visible;
+
+                VerseData verse = o as VerseData;
+                DisplayBibleTextBox.Text = verse.Text;
                 BibleDataTextBox.Text = $"{verse.FromBook} {verse.FromChapter}:{verse.ID}";
             }
         }
@@ -121,7 +127,7 @@ namespace Ark.Views
         //! ====================================================
         public void CloseDisplayMethod()
         {
-            DisplayTextBox.HighlightPhrase = "";
+            DisplayBibleTextBox.HighlightPhrase = "";
             Close();
         }
 

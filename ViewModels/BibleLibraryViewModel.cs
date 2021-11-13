@@ -34,7 +34,7 @@ namespace Ark.ViewModels
             {
                 _verseHighlight = value;
                 OnPropertyChanged();
-                DisplayWindow.Instance.DisplayTextBox.HighlightPhrase = value;
+                DisplayWindow.Instance.DisplayBibleTextBox.HighlightPhrase = value;
             }
         }
         private string _verseHighlight;

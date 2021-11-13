@@ -143,7 +143,7 @@
                  Style="{StaticResource DefaultListBox}" 
                  ItemContainerStyle="{StaticResource SongLyricsItem}"
                  SelectedItem="{Binding SelectedLyric, UpdateSourceTrigger=PropertyChanged}"
-                 KeyDown="ListBox_KeyDown" KeyboardNavigation.DirectionalNavigation="Cycle"
+                 KeyDown="ListBox_KeyDown"
                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                  Margin="20 60 0 0" MinHeight="200" LostFocus="SongLyricListBox_LostFocus"
                  Grid.Column="1" Grid.Row="1" Background="Transparent" Grid.ColumnSpan="2">
