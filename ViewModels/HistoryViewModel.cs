@@ -65,11 +65,11 @@ namespace Ark.ViewModels
                 HistoryObjects.RemoveAt(index);
             }
 
-            if (o is SongData)
-                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, ((SongData)o)), $"♪ - { ((SongData)o).Title }");
-            else if (o is VerseData)
-                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, ((VerseData)o)),
-                                    $"† - {((VerseData)o).FromBook} {((VerseData)o).FromChapter}:{((VerseData)o).ID}");
+            if (o is SongData song)
+                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, song), $"♪ - { song.Title }");
+            else if (o is VerseData verse)
+                HistoryObjects.Add(new Tuple<int, Object>(uniqueKey++, verse),
+                                    $"† - {verse.FromBook} {verse.FromChapter}:{verse.ID}");
 
             //!? Move Object up top - Always
             if (o is not null)

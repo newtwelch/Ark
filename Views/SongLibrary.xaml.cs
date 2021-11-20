@@ -40,7 +40,8 @@ namespace Ark.Views
         //? =============================[EVENTS]==============================
 
         //! ====================================================
-        //! [+] BUTTON CLICKS: this has 2 buttons connected to it
+        //! [+] BUTTON CLICKS: th
+        //has 2 buttons connected to it
         //!         with 2 states, therefore 4 cases.
         //! ====================================================
         private void EditButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -281,13 +282,15 @@ namespace Ark.Views
         //! ====================================================
         private void HistoryObjectSelectedMethod(object o)
         {
-            if (o is not SongData) return;
+            if (o is SongData song)
+            {
 
-            _viewModel.SelectedSong = _viewModel.Songs.ToList().Find(x => x.ID == ((SongData)o).ID);
+                _viewModel.SelectedSong = _viewModel.Songs.ToList().Find(x => x.ID == song.ID);
 
-            SongSearchTextBox.Clear();
-            FocusListBoxItem(SongListBox);
-            fromHistory = true;
+                SongSearchTextBox.Clear();
+                FocusListBoxItem(SongListBox);
+                fromHistory = true;
+            }
         }
 
         //! ====================================================

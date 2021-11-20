@@ -45,17 +45,16 @@ namespace Ark.Views
             BibleDataTextBox.Visibility = Visibility.Collapsed;
             DisplaySongTextBox.Visibility = Visibility.Collapsed;
 
-            if (o is LyricData)
+            if (o is LyricData lyric)
             {
                 DisplaySongTextBox.Visibility = Visibility.Visible;
-                DisplaySongTextBox.Text = (o as LyricData).Text;
+                DisplaySongTextBox.Text = lyric.Text;
             }
-            else if (o is VerseData)
+            else if (o is VerseData verse)
             {
                 DisplayBibleTextBox.Visibility = Visibility.Visible;
                 BibleDataTextBox.Visibility = Visibility.Visible;
 
-                VerseData verse = o as VerseData;
                 DisplayBibleTextBox.Text = verse.Text;
                 BibleDataTextBox.Text = $"{verse.FromBook} {verse.FromChapter}:{verse.ID}";
             }

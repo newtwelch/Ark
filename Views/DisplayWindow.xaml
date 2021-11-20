@@ -25,7 +25,7 @@
                             GlassFrameThickness="0" NonClientFrameEdges="None" />
     </shell:WindowChrome.WindowChrome>
 
-    <Grid Margin="100">
+    <Grid Margin="20">
         <!-- =====================================
         VIEW BOX: easy resizing of content
         ========================================== -->
@@ -41,14 +41,12 @@
                                              FontSize="80" TextAlignment="Center"/>
             </DockPanel>
         </Viewbox>
-        
+
         <Viewbox Stretch="Uniform">
-            <DockPanel Width="1920" >
-                <hlpr:HighlightableTextBlock x:Name="DisplaySongTextBox" Background="Transparent" 
-                                             TextWrapping="Wrap"
+            <hlpr:HighlightableTextBlock x:Name="DisplaySongTextBox" Background="Transparent" 
+                                             TextWrapping="Wrap" Width="1920"
                                              Foreground="{StaticResource FocusedBrush}" 
                                              FontSize="90" TextAlignment="Center"/>
-            </DockPanel>
         </Viewbox>
     </Grid>
 </Window>

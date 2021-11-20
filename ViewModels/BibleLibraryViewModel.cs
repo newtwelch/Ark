@@ -243,23 +243,23 @@ namespace Ark.ViewModels
         //! ====================================================
         public bool SearchFilterView(object o)
         {
-            if (o is BookData)
+            if (o is BookData book)
             {
                 if (string.IsNullOrEmpty(SearchBookText))
                     return true;
                 else
-                    return ((BookData)o).Name.Contains(SearchBookText, StringComparison.OrdinalIgnoreCase);
+                    return book.Name.Contains(SearchBookText, StringComparison.OrdinalIgnoreCase);
             }
-            else if (o is VerseData)
+            else if (o is VerseData verse)
             {
 
                 if (string.IsNullOrEmpty(SearchVerseText))
                     return true;
                 else if (SearchVerseText.StartsWith("."))
-                    return ((VerseData)o).Text.
+                    return verse.Text.
                         Contains(SearchVerseText.Replace(".", ""), StringComparison.OrdinalIgnoreCase);
                 else
-                    return ((VerseData)o).Text.Contains(SearchVerseText, StringComparison.OrdinalIgnoreCase);
+                    return verse.Text.Contains(SearchVerseText, StringComparison.OrdinalIgnoreCase);
 
             }
             else

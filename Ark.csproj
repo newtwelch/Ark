@@ -7,8 +7,9 @@
 	  
 	<UseWPF>true</UseWPF>
 	<PublishSingleFile>true</PublishSingleFile>
+	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
 	  
-	<Version>1.3.6</Version>
+	<Version>1.4.0</Version>
     <Authors>Newt Welch</Authors>
     <Company>Welch Engines</Company>
     <ApplicationIcon>Ark_Logo.ico</ApplicationIcon>
