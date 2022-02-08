@@ -17,35 +17,5 @@ namespace Ark.Models.SongLibrary
     //! [+] ENUMS: three types of lyrics
     //! ====================================================
     public enum LyricType { Bridge, Stanza, Chorus }
-
-    //! ====================================================
-    //! [+] ENUM CONVERTER: make everything easier for the Enums
-    //! ====================================================
-    class EnumConverter
-    {
-        public static string SongEnumToString(LyricType e)
-        {
-            return e switch
-            {
-                LyricType.Bridge => "Bridge",
-                LyricType.Chorus => "Chorus",
-                LyricType.Stanza => "Stanza",
-                _ => throw new ArgumentNullException()
-            };
-        }
-
-        public static LyricType StringToSongEnum(string s)
-        {
-            return s switch
-            {
-                "Bridge" => LyricType.Bridge,
-                "Chorus" => LyricType.Chorus,
-                "Stanza" => LyricType.Stanza,
-                "bridge" => LyricType.Bridge,
-                "chorus" => LyricType.Chorus,
-                "stanza" => LyricType.Stanza,
-                _ => throw new ArgumentException()
-            };
-        }
-    }
+    
 }

@@ -71,6 +71,7 @@ namespace Ark.ViewModels
 
                 if (value is null) return;
 
+                SearchVerseText = "";
                 Verses?.Clear();
                 Verses?.AddRange(_selectedChapter.Verses);
             }
@@ -148,6 +149,8 @@ namespace Ark.ViewModels
 
                 VersePortions?.Clear();
                 VerseHighlight = value;
+
+                if(String.IsNullOrEmpty(value)) return;
 
                 if (value.StartsWith("."))
                     AllVerseView.Refresh();

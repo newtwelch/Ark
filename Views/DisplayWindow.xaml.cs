@@ -1,8 +1,10 @@
 ﻿using Ark.Models.BibleLibrary;
 using Ark.Models.SongLibrary;
 using Ark.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Interop;
 using WpfScreenHelper;
 using WpfScreenHelper.Enum;
 
@@ -163,6 +165,28 @@ namespace Ark.Views
         private void Window_Loaded(object sender, RoutedEventArgs e) => MainWindow.CloseDisplayEvent += CloseDisplayMethod;
 
         private void Window_Unloaded(object sender, RoutedEventArgs e) => MainWindow.CloseDisplayEvent -= CloseDisplayMethod;
+
+        //!? ====================================================
+        //!? DISABLES FOCUS ON THIS WINDOW
+        //!? ====================================================
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            var source = PresentationSource.FromVisual(this) as HwndSource;
+            source.AddHook(WndProc);
+        }
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == WM_MOUSEACTIVATE)
+            {
+                handled = true;
+                return new IntPtr(MA_NOACTIVATE);
+            }
+            else return IntPtr.Zero;
+        }
+        private const int WM_MOUSEACTIVATE = 0x0021;
+        private const int MA_NOACTIVATE = 0x0003;
+
 
     }
 }

@@ -41,7 +41,7 @@ namespace Ark.Views
             chapterAssistant = new TypeAssistant();
             chapterAssistant.Idled += chapterTextBoxIdled;
 
-            verseAssistant = new TypeAssistant(250);
+            verseAssistant = new TypeAssistant();
             verseAssistant.Idled += verseTextBoxIdled;
         }
 
@@ -71,8 +71,7 @@ namespace Ark.Views
                     //!? Reset the other searches
                     ChapterSearchTextBox.Clear();
                     VerseSearchTextBox.Clear();
-                    if (tb.IsFocused)
-                        WideVerseSearchTextBox.Clear();
+                    if (tb.IsFocused) WideVerseSearchTextBox.Clear();
 
                     //!? If only one is remaining select and focus on next search
                     if (BookListBox.Items.Count == 1)
@@ -88,8 +87,7 @@ namespace Ark.Views
 
                     //!? Reset the other searches
                     VerseSearchTextBox.Clear();
-                    if (tb.IsFocused)
-                        WideVerseSearchTextBox.Clear();
+                    if (tb.IsFocused) WideVerseSearchTextBox.Clear();
 
                     //!? If only one is remaining select and focus on next search
                     if (ChapterListBox.Items.Count == 1)
@@ -106,8 +104,7 @@ namespace Ark.Views
                 //!? ____________________________________________
                 case "VerseSearchTextBox":
 
-                    if (tb.IsFocused)
-                        WideVerseSearchTextBox.Clear();
+                    if (tb.IsFocused) WideVerseSearchTextBox.Clear();
                     verseAssistant.TextChanged();
 
                     break;
@@ -134,8 +131,7 @@ namespace Ark.Views
                         //!? then Show the default Verses
                         WideVerseListBox.Visibility = Visibility.Collapsed;
                         VerseListBox.Visibility = Visibility.Visible;
-                        if (VerseListBox.SelectedItem is not null)
-                            FocusListBoxItem(VerseListBox);
+                        if (VerseListBox.SelectedItem is not null) FocusListBoxItem(VerseListBox);
                     }
                     break;
             }
